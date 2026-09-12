@@ -10,14 +10,46 @@
     
     /* Menu Lateral */
     #sidebar {
-      width: 280px;
+      width: 300px;
       background: #ffffff;
       border-right: 1px solid #ddd;
       padding: 20px;
       overflow-y: auto;
       flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
     }
-    #sidebar h2 { font-size: 20px; margin-bottom: 15px; color: #333; border-bottom: 2px solid #eee; padding-bottom: 8px; }
+    
+    /* Controles de Navegação e Contador */
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #eee;
+    }
+    .btn-nav {
+      background-color: #222;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .btn-nav:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    .progress {
+      font-weight: bold;
+      color: #555;
+      font-size: 16px;
+    }
+
+    #sidebar h2 { font-size: 20px; margin-bottom: 15px; color: #333; }
     #sidebar ul { list-style: none; }
     #sidebar li { margin-bottom: 10px; }
     #sidebar a {
@@ -31,8 +63,12 @@
       transition: background 0.2s;
     }
     #sidebar a:hover { background: #dbe7f5; }
+    #sidebar a.active {
+      background: #0066cc;
+      color: white;
+    }
 
-    /* Área de Conteúdo (Exibe o HTML do verbo) */
+    /* Área de Conteúdo */
     #content { flex: 1; height: 100%; border: none; }
   </style>
 </head>
@@ -41,18 +77,71 @@
   <!-- Menu de Verbos -->
   <div id="sidebar">
     <h2>📚 Verbos</h2>
-    <ul>
+    
+    <!-- Painel de Controles -->
+    <div class="controls">
+      <button id="btn-prev" class="btn-nav" onclick="navegar(-1)">◀ Anterior</button>
+      <span id="counter" class="progress">1/1</span>
+      <button id="btn-next" class="btn-nav" onclick="navegar(1)">Avançar ▶</button>
+    </div>
+
+    <!-- Lista de Verbos (Adicione novos itens aqui) -->
+    <ul id="verb-list">
       <li><a href="02-To Wash.html" target="conteudo-frame">02 - To Wash</a></li>
       <li><a href="03-To knock.html" target="conteudo-frame">03 - To Knock</a></li>
       <li><a href="04-To iron.html" target="conteudo-frame">04 - To Iron</a></li>
       <li><a href="05-To hear.html" target="conteudo-frame">05 - To Hear</a></li>
       <li><a href="06-To Throw.html" target="conteudo-frame">06 - To Throw</a></li>
-      <!-- Adicione novos verbos abaixo mantendo o target="conteudo-frame" -->
     </ul>
   </div>
 
   <!-- Painel Interativo -->
-  <iframe name="conteudo-frame" id="content" src="03-To knock.html"></iframe>
+  <iframe name="conteudo-frame" id="content"></iframe>
+
+  <script>
+    let currentIndex = 0;
+    const links = document.querySelectorAll('#verb-list a');
+    const total = links.length;
+    const iframe = document.getElementById('content');
+    const counter = document.getElementById('counter');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+
+    function updateView(index) {
+      currentIndex = index;
+      
+      // Atualiza o iframe e o destaque do item selecionado
+      iframe.src = links[currentIndex].getAttribute('href');
+      links.forEach((link, i) => {
+        link.classList.toggle('active', i === currentIndex);
+      });
+
+      // Atualiza a fração no formato "1/N"
+      counter.textContent = `${currentIndex + 1}/${total}`;
+
+      // Gerencia o estado dos botões
+      btnPrev.disabled = currentIndex === 0;
+      btnNext.disabled = currentIndex === total - 1;
+    }
+
+    function navegar(direction) {
+      const newIndex = currentIndex + direction;
+      if (newIndex >= 0 && newIndex < total) {
+        updateView(newIndex);
+      }
+    }
+
+    // Permite trocar ao clicar diretamente nos itens da lista
+    links.forEach((link, index) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        updateView(index);
+      });
+    });
+
+    // Inicializa na primeira posição
+    updateView(0);
+  </script>
 
 </body>
 </html>
