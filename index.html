@@ -3,22 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meus Arquivos - Verbos</title>
+  <title>Estudo de Verbos</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 30px; background-color: #f7f7f7; color: #222; }
-    h1 { border-bottom: 2px solid #ccc; padding-bottom: 10px; }
-    ul { list-style: none; padding: 0; }
-    li { margin: 12px 0; }
-    a { text-decoration: none; color: #0066cc; font-size: 18px; font-weight: bold; }
-    a:hover { text-decoration: underline; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; display: flex; height: 100vh; overflow: hidden; background-color: #f7f7f7; }
+    
+    /* Menu Lateral */
+    #sidebar {
+      width: 280px;
+      background: #ffffff;
+      border-right: 1px solid #ddd;
+      padding: 20px;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    #sidebar h2 { font-size: 20px; margin-bottom: 15px; color: #333; border-bottom: 2px solid #eee; padding-bottom: 8px; }
+    #sidebar ul { list-style: none; }
+    #sidebar li { margin-bottom: 10px; }
+    #sidebar a {
+      display: block;
+      padding: 10px 12px;
+      color: #0066cc;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 6px;
+      background: #f0f4f8;
+      transition: background 0.2s;
+    }
+    #sidebar a:hover { background: #dbe7f5; }
+
+    /* Área de Conteúdo (Exibe o HTML do verbo) */
+    #content { flex: 1; height: 100%; border: none; }
   </style>
 </head>
 <body>
-  <h1>Meus Arquivos HTML</h1>
-  <ul>
-    <li><a href="03-To knock.html">03 - To knock</a></li>
-    <li><a href="02-To Wash.html">02 - To Wash</a></li>
-   
-  </ul>
+
+  <!-- Menu de Verbos -->
+  <div id="sidebar">
+    <h2>📚 Verbos</h2>
+    <ul>
+      <li><a href="02-To Wash.html" target="conteudo-frame">02 - To Wash</a></li>
+      <li><a href="03-To knock.html" target="conteudo-frame">03 - To Knock</a></li>
+      <!-- Adicione novos verbos abaixo mantendo o target="conteudo-frame" -->
+    </ul>
+  </div>
+
+  <!-- Painel Interativo -->
+  <iframe name="conteudo-frame" id="content" src="03-To knock.html"></iframe>
+
 </body>
 </html>
