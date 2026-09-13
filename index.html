@@ -224,6 +224,7 @@
   </div>
 
   <script>
+    <script>
     let currentIndex = 0;
     const links = document.querySelectorAll('#verb-list a');
     const total = links.length;
@@ -235,14 +236,11 @@
 
     function updateView(index) {
       currentIndex = index;
-      
       iframe.src = links[currentIndex].getAttribute('href');
       links.forEach((link, i) => {
         link.classList.toggle('active', i === currentIndex);
       });
-
       counter.textContent = `${currentIndex + 1}/${total}`;
-
       btnPrev.disabled = currentIndex === 0;
       btnNext.disabled = currentIndex === total - 1;
     }
@@ -258,16 +256,73 @@
       sidebar.classList.toggle('open');
     }
 
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      applyDarkToIframe();
+    }
+
+    // Injeta CSS global no iframe para corrigir fundos brancos e cores de texto
+    function applyDarkToIframe() {
+      try {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        if (!iframeDoc || !iframeDoc.body) return;
+
+        let darkStyle = iframeDoc.getElementById('custom-dark-style');
+
+        if (document.body.classList.contains('dark-mode')) {
+          if (!darkStyle) {
+            darkStyle = iframeDoc.createElement('style');
+            darkStyle.id = 'custom-dark-style';
+            iframeDoc.head.appendChild(darkStyle);
+          }
+          
+          darkStyle.innerHTML = `
+            /* Fundo geral */
+            html, body {
+              background-color: #323b4c !important;
+              color: #ffffff !important;
+            }
+            /* Transforma qualquer bloco/card branco em bloco escuro */
+            div, section, article, table, tr, td, .card, .box, .item, [style*="background"] {
+              background-color: #252c38 !important;
+              color: #ffffff !important;
+              border-color: #4a566d !important;
+            }
+            /* Força todos os textos para branco/claro */
+            h1, h2, h3, h4, h5, h6, p, span, strong, a, label, li {
+              color: #ffffff !important;
+            }
+            /* Cores de destaque para fonética e traduções */
+            [class*="ipa"], [class*="phonetic"], small, .subtext {
+              color: #94a3b8 !important;
+            }
+            [class*="trans"], [class*="traducao"], a {
+              color: #60a5fa !important;
+            }
+          `;
+        } else {
+          if (darkStyle) {
+            darkStyle.remove();
+          }
+        }
+      } catch (e) {
+        // Trata eventuais bloqueios de segurança do navegador
+      }
+    }
+
+    // Aplica o tema sempre que uma nova página for carregada no iframe
+    iframe.addEventListener('load', applyDarkToIframe);
+
     links.forEach((link, index) => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
         updateView(index);
-        sidebar.classList.remove('open'); // Fecha o menu ao selecionar um item
+        sidebar.classList.remove('open');
       });
     });
 
-    // Inicializa na primeira página
     updateView(0);
+  </script>
   </script>
 
 </body>
