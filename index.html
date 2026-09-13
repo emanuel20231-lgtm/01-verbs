@@ -6,7 +6,21 @@
   <title>Estudo de Verbos</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: Arial, sans-serif; display: flex; height: 100vh; overflow: hidden; background-color: #f7f7f7; position: relative; }
+    
+    body { 
+      font-family: Arial, sans-serif; 
+      display: flex; 
+      height: 100vh; 
+      overflow: hidden; 
+      background-color: #f7f7f7; 
+      position: relative; 
+      transition: background-color 0.3s ease;
+    }
+
+    /* Estilo para o Modo Escuro */
+    body.dark-mode {
+      background-color: #323b4c; /* Tom azul suave enviado */
+    }
     
     /* Menu Lateral Deslizante */
     #sidebar {
@@ -17,20 +31,26 @@
       height: 100%;
       background: #ffffff;
       border-right: 1px solid #ddd;
-      padding: 70px 20px 20px 20px; /* Espaço no topo para não cobrir o botão LISTA */
+      padding: 70px 20px 20px 20px;
       overflow-y: auto;
       z-index: 90;
       transform: translateX(-100%);
-      transition: transform 0.3s ease;
+      transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
       box-shadow: 2px 0 10px rgba(0,0,0,0.1);
     }
     
-    /* Estado aberto do menu */
     #sidebar.open {
       transform: translateX(0);
     }
 
+    body.dark-mode #sidebar {
+      background: #252c38;
+      border-right-color: #1e242f;
+    }
+
     #sidebar h2 { font-size: 20px; margin-bottom: 15px; color: #333; border-bottom: 2px solid #eee; padding-bottom: 8px; }
+    body.dark-mode #sidebar h2 { color: #fff; border-bottom-color: #3a4559; }
+    
     #sidebar ul { list-style: none; }
     #sidebar li { margin-bottom: 10px; }
     #sidebar a {
@@ -41,20 +61,35 @@
       font-weight: bold;
       border-radius: 6px;
       background: #f0f4f8;
-      transition: background 0.2s;
+      transition: background 0.2s, color 0.2s;
     }
     #sidebar a:hover { background: #dbe7f5; }
     #sidebar a.active {
       background: #0066cc;
       color: white;
     }
+    body.dark-mode #sidebar a {
+      background: #323b4c;
+      color: #72b6ff;
+    }
+    body.dark-mode #sidebar a.active {
+      background: #0066cc;
+      color: white;
+    }
 
-    /* Botão Flutuante LISTA (Canto Superior Esquerdo) */
-    .btn-lista {
+    /* Contêiner de Botões Superiores */
+    .top-buttons {
       position: fixed;
       top: 20px;
       left: 20px;
       z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Botão LISTA */
+    .btn-lista {
       background-color: #ffffff;
       color: #cc0000;
       border: 2px solid #cc0000;
@@ -72,6 +107,48 @@
       color: #ffffff;
     }
 
+    /* Botão MODO ESCURO (Lua) */
+    .btn-dark {
+      background-color: #ffffff;
+      border: 2px solid #cc0000;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      transition: all 0.2s;
+    }
+
+    .btn-dark svg {
+      width: 20px;
+      height: 20px;
+      fill: #cc0000;
+      transition: fill 0.2s;
+    }
+
+    .btn-dark:hover {
+      background-color: #cc0000;
+    }
+
+    .btn-dark:hover svg {
+      fill: #ffffff;
+    }
+
+    /* Bandeira dos EUA no Topo */
+    .us-flag {
+      position: fixed;
+      top: 15px;
+      right: 220px;
+      z-index: 80;
+      width: 85px;
+      height: auto;
+      pointer-events: none;
+      filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.15));
+    }
+
     /* Container do Conteúdo Principal */
     #main-container {
       flex: 1;
@@ -84,9 +161,10 @@
       width: 100%; 
       height: 100%; 
       border: none; 
+      background: transparent;
     }
 
-    /* Barra Inferior Flutuante de Navegação (Centralizada Embaixo) */
+    /* Barra Inferior Flutuante de Navegação */
     .bottom-nav {
       position: fixed;
       bottom: 20px;
@@ -101,6 +179,12 @@
       align-items: center;
       gap: 15px;
       border: 1px solid #ddd;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    body.dark-mode .bottom-nav {
+      background: rgba(37, 44, 56, 0.95);
+      border-color: #4a566d;
     }
 
     .btn-arrow {
@@ -115,14 +199,8 @@
       transition: color 0.2s;
     }
 
-    .btn-arrow:hover {
-      color: #880000;
-    }
-
-    .btn-arrow:disabled {
-      color: #ccc;
-      cursor: not-allowed;
-    }
+    .btn-arrow:hover { color: #880000; }
+    .btn-arrow:disabled { color: #ccc; cursor: not-allowed; }
 
     .progress {
       font-weight: bold;
@@ -134,8 +212,18 @@
 </head>
 <body>
 
-  <!-- Botão Fixo LISTA -->
-  <button class="btn-lista" onclick="toggleMenu()">Lista</button>
+  <!-- Botões Fixos no Topo -->
+  <div class="top-buttons">
+    <button class="btn-lista" onclick="toggleMenu()">Lista</button>
+    <button class="btn-dark" onclick="toggleDarkMode()" title="Alternar Modo Escuro">
+      <svg viewBox="0 0 24 24">
+        <path d="M12.3 2a10 10 0 0 0 9.7 12.3 10 10 0 1 1-9.7-12.3z"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Bandeira dos Estados Unidos -->
+  <img class="us-flag" src="https://flagcdn.com/w160/us.png" alt="Bandeira EUA">
 
   <!-- Menu Lateral Deslizante -->
   <div id="sidebar">
@@ -207,8 +295,7 @@
       <li><a href="64-To buy.html" target="conteudo-frame">64 - To Buy</a></li>
       <li><a href="65-To pay.html" target="conteudo-frame">65 - To Pay</a></li>
       <li><a href="66-To hear.html" target="conteudo-frame">66 - To Hear</a></li>
-      
-      </ul>
+    </ul>
   </div>
 
   <!-- Área Principal -->
@@ -222,9 +309,7 @@
     <span id="counter" class="progress">1/1</span>
     <button id="btn-next" class="btn-arrow" onclick="navegar(1)">▷</button>
   </div>
-
-  <script>
-    
+<script>
     let currentIndex = 0;
     const links = document.querySelectorAll('#verb-list a');
     const total = links.length;
@@ -261,7 +346,7 @@
       applyDarkToIframe();
     }
 
-    // Injeta CSS global no iframe para corrigir fundos brancos e cores de texto
+    // Estiliza de forma abrangente o conteúdo interno do iframe no modo escuro
     function applyDarkToIframe() {
       try {
         const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
@@ -277,26 +362,27 @@
           }
           
           darkStyle.innerHTML = `
-            /* Fundo geral */
-            html, body {
+            body {
               background-color: #323b4c !important;
+              color: #e2e8f0 !important;
+            }
+            h1, h2, h3, h4, header, div, span, p, label {
               color: #ffffff !important;
             }
-            /* Transforma qualquer bloco/card branco em bloco escuro */
-            div, section, article, table, tr, td, .card, .box, .item, [style*="background"] {
+            p.subtext, small, .help-text, caption {
+              color: #cbd5e1 !important;
+            }
+            /* Converte blocos/cards brancos para escuro com texto visível */
+            .card, .item, .row, .box, div[style*="background"], table, tr, td {
               background-color: #252c38 !important;
               color: #ffffff !important;
               border-color: #4a566d !important;
             }
-            /* Força todos os textos para branco/claro */
-            h1, h2, h3, h4, h5, h6, p, span, strong, a, label, li {
-              color: #ffffff !important;
-            }
-            /* Cores de destaque para fonética e traduções */
-            [class*="ipa"], [class*="phonetic"], small, .subtext {
+            /* Transcrições fonéticas e traduções */
+            .ipa, .phonetic, [class*="ipa"], [class*="phonetic"] {
               color: #94a3b8 !important;
             }
-            [class*="trans"], [class*="traducao"], a {
+            .translation, .traducao, [class*="trans"] {
               color: #60a5fa !important;
             }
           `;
@@ -304,13 +390,14 @@
           if (darkStyle) {
             darkStyle.remove();
           }
+          iframeDoc.body.style.backgroundColor = '';
+          iframeDoc.body.style.color = '';
         }
       } catch (e) {
-        // Trata eventuais bloqueios de segurança do navegador
+        // Trata eventuais restrições do navegador
       }
     }
 
-    // Aplica o tema sempre que uma nova página for carregada no iframe
     iframe.addEventListener('load', applyDarkToIframe);
 
     links.forEach((link, index) => {
@@ -322,9 +409,8 @@
     });
 
     updateView(0);
-  
   </script>
+  
 
 </body>
 </html>
-
