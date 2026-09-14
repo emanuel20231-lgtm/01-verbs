@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vocabulário</title>
+  <title>Verbos</title>
   <style>
     * {
       box-sizing: border-box;
@@ -11,167 +11,162 @@
       padding: 0;
     }
 
-    body {
+    body, html {
+      width: 100%;
+      height: 100%;
+      background-color: #1e2530;
       font-family: Arial, sans-serif;
-      background-color: #323b4c;
-      color: #ffffff;
       overflow: hidden;
-      height: 100vh;
-      display: flex;
     }
 
-    /* Menu Lateral / Sidebar */
-    #sidebar {
+    /* Botão de Lista (Sempre visível no topo esquerdo) */
+    .btn-lista {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      z-index: 100;
+      background-color: rgba(30, 37, 48, 0.9);
+      color: #ffffff;
+      border: 2px solid #ffffff;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-lista:hover {
+      background-color: #ffffff;
+      color: #1e2530;
+    }
+
+    /* Menu Lateral */
+    .sidebar {
       position: fixed;
       top: 0;
       left: -280px;
       width: 280px;
       height: 100%;
-      background-color: #1e2530;
-      box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+      background-color: #161b22;
+      z-index: 200;
       transition: left 0.3s ease;
-      z-index: 1000;
-      padding: 20px 10px;
+      padding: 60px 20px 20px 20px;
       overflow-y: auto;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
     }
 
-    #sidebar.open {
+    .sidebar.open {
       left: 0;
     }
 
-    #sidebar h2 {
-      color: #ffffff;
-      margin-bottom: 15px;
-      font-size: 1.2rem;
-      text-align: center;
-      border-bottom: 1px solid #3a4556;
-      padding-bottom: 10px;
-    }
-
-    #verb-list {
+    .sidebar ul {
       list-style: none;
     }
 
-    #verb-list li {
-      margin-bottom: 5px;
+    .sidebar li {
+      margin-bottom: 12px;
     }
 
-    #verb-list a {
-      display: block;
-      padding: 10px 15px;
+    .sidebar a {
       color: #ffffff;
       text-decoration: none;
-      border-radius: 5px;
-      transition: background 0.2s;
+      font-size: 16px;
+      display: block;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: background-color 0.2s ease;
     }
 
-    #verb-list a:hover, #verb-list a.active {
-      background-color: #252c38;
+    .sidebar a:hover, .sidebar a.active {
+      background-color: #2b3544;
       color: #60a5fa;
       font-weight: bold;
     }
 
-    /* Topo Fixado */
-    #top-bar {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      z-index: 100;
-    }
-
-    .btn-lista {
-      background-color: #ffffff;
-      color: #d97706;
-      border: 2px solid #d97706;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-
-    /* Container Principal */
-    #main-container {
-      flex: 1;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
+    /* Container do Iframe */
+    .content-container {
+      width: 100%;
+      height: 100%;
+      background-color: #1e2530;
     }
 
     iframe {
       width: 100%;
       height: 100%;
       border: none;
-      background-color: #323b4c;
+      background-color: #1e2530;
     }
 
-    /* Barra Inferior de Navegação */
-    #bottom-bar {
+    /* NAVEGAÇÃO INFERIOR (Sempre visível e centralizado) */
+    .nav-controls {
       position: fixed;
-      bottom: 15px;
+      bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
+      z-index: 100;
       display: flex;
       align-items: center;
-      gap: 12px;
-      background-color: rgba(25, 31, 41, 0.95);
-      border: 1px solid #4a566d;
-      padding: 6px 20px;
+      gap: 15px;
+      background-color: rgba(22, 27, 34, 0.9);
+      padding: 8px 20px;
       border-radius: 25px;
-      z-index: 100;
-      color: #ffffff;
-      font-weight: bold;
+      border: 1px solid #3b4758;
     }
 
     .nav-btn {
       background: none;
       border: none;
       color: #ffffff;
-      font-size: 1.2rem;
+      font-size: 20px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: transform 0.1s ease, color 0.2s ease;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      color: #60a5fa;
+      transform: scale(1.2);
     }
 
     .nav-btn:disabled {
-      color: #526077;
+      color: #555555;
       cursor: not-allowed;
     }
 
-    #counter {
+    .counter {
       color: #ffffff;
-      font-size: 1rem;
+      font-weight: bold;
+      font-size: 16px;
+      user-select: none;
     }
   </style>
 </head>
 <body>
 
-  <!-- Botão de abrir menu -->
-  <div id="top-bar">
-    <button class="btn-lista" onclick="toggleMenu()">Lista</button>
-  </div>
+  <!-- Botão para abrir o menu -->
+  <button class="btn-lista" onclick="toggleMenu()">Lista</button>
 
-  <!-- Menu Lateral de Verbos -->
-  <div id="sidebar">
-    <h2>Lista de Verbos</h2>
+  <!-- Menu Lateral -->
+  <div class="sidebar" id="sidebar">
     <ul id="verb-list">
-      <!-- Adicione os novos links dos verbos aqui conforme for enviando os arquivos -->
+      <!-- Adicione seus novos arquivos aqui -->
       <li><a href="01-To collaborate.html">01 - To collaborate</a></li>
       <li><a href="02-To Wash.html">02 - To Wash</a></li>
       <li><a href="03-To knock.html">03 - To knock</a></li>
     </ul>
   </div>
 
-  <!-- Exibição do Conteúdo -->
-  <div id="main-container">
-    <iframe id="content" src=""></iframe>
+  <!-- Exibição das páginas -->
+  <div class="content-container">
+    <iframe id="content"></iframe>
   </div>
 
-  <!-- Controles Inferiores (Voltar / Contador / Avançar) -->
-  <div id="bottom-bar">
+  <!-- Controles Inferiores (Retroceder / Fração / Avançar) -->
+  <div class="nav-controls">
     <button class="nav-btn" id="btn-prev" onclick="navegar(-1)">&#9664;</button>
-    <span id="counter">1/1</span>
+    <span class="counter" id="counter">1/3</span>
     <button class="nav-btn" id="btn-next" onclick="navegar(1)">&#9654;</button>
   </div>
 
@@ -189,9 +184,11 @@
       if (total === 0) return;
       currentIndex = index;
       iframe.src = links[currentIndex].getAttribute('href');
+      
       links.forEach((link, i) => {
         link.classList.toggle('active', i === currentIndex);
       });
+      
       counter.textContent = `${currentIndex + 1}/${total}`;
       btnPrev.disabled = currentIndex === 0;
       btnNext.disabled = currentIndex === total - 1;
@@ -216,9 +213,8 @@
       });
     });
 
-    if (total > 0) {
-      updateView(0);
-    }
+    // Inicializa a primeira página da lista
+    updateView(0);
   </script>
 </body>
 </html>
