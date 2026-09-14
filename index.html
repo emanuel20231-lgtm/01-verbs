@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verbos</title>
+  <title>Vocabulário</title>
   <style>
     * {
       box-sizing: border-box;
@@ -20,7 +20,7 @@
       color: #ffffff;
     }
 
-    /* Botão de Lista (Garantido no topo absoluto) */
+    /* Botão Lista (Sempre visível no topo) */
     .btn-lista {
       position: fixed;
       top: 15px;
@@ -46,13 +46,13 @@
     .sidebar {
       position: fixed;
       top: 0;
-      left: -280px;
-      width: 280px;
+      left: -300px;
+      width: 300px;
       height: 100%;
       background-color: #161b22;
       z-index: 9998;
       transition: left 0.3s ease;
-      padding: 60px 20px 20px 20px;
+      padding: 60px 15px 20px 15px;
       overflow-y: auto;
       box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
     }
@@ -61,31 +61,84 @@
       left: 0;
     }
 
-    .sidebar ul {
-      list-style: none;
+    /* Estilo das Pastas */
+    .folder {
+      margin-bottom: 8px;
     }
 
-    .sidebar li {
-      margin-bottom: 12px;
-    }
-
-    .sidebar a {
+    .folder-title {
+      width: 100%;
+      background-color: #252c38;
       color: #ffffff;
-      text-decoration: none;
-      font-size: 16px;
-      display: block;
-      padding: 8px 12px;
+      border: 1px solid #3b4758;
+      padding: 10px 14px;
       border-radius: 6px;
+      font-size: 15px;
+      font-weight: bold;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       transition: background-color 0.2s ease;
     }
 
-    .sidebar a:hover, .sidebar a.active {
+    .folder-title:hover {
       background-color: #2b3544;
+    }
+
+    .folder-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      padding-left: 10px;
+    }
+
+    .folder.active .folder-content {
+      max-height: 2000px; /* Expande o conteúdo */
+      margin-top: 5px;
+    }
+
+    .folder.active .folder-arrow {
+      transform: rotate(90deg);
+    }
+
+    .folder-arrow {
+      transition: transform 0.2s ease;
+      font-size: 12px;
+    }
+
+    /* Links de Verbos/Substantivos dentro da pasta */
+    .folder-content ul {
+      list-style: none;
+    }
+
+    .folder-content li {
+      margin: 4px 0;
+    }
+
+    .folder-content a {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 14px;
+      display: block;
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .folder-content a:hover {
+      background-color: #2b3544;
+      color: #ffffff;
+    }
+
+    .folder-content a.active {
+      background-color: #3b4758;
       color: #60a5fa;
       font-weight: bold;
     }
 
-    /* Area Principal */
+    /* Áreas de visualização */
     .content-container {
       width: 100%;
       height: 100%;
@@ -102,7 +155,7 @@
       background-color: #1e2530;
     }
 
-    /* Navegação Inferior */
+    /* Controles Inferiores */
     .nav-controls {
       position: fixed;
       bottom: 20px;
@@ -151,23 +204,54 @@
 </head>
 <body>
 
-  <!-- Botão fixo no topo esquerdo -->
   <button class="btn-lista" onclick="toggleMenu()">Lista</button>
 
-  <!-- Menu Lateral -->
   <div class="sidebar" id="sidebar">
-    <ul id="verb-list">
-      <!-- Adicione seus novos verbos no formato abaixo: -->
-      <!-- <li><a href="01-To collaborate.html">01 - To collaborate</a></li> -->
-    </ul>
+    
+    <!-- PASTA 1: VERBOS -->
+    <div class="folder">
+      <button class="folder-title" onclick="toggleFolder(this)">
+        📁 01 - Verbos <span class="folder-arrow">▶</span>
+      </button>
+      <div class="folder-content">
+        <ul>
+          <!-- Adicione seus verbos aqui -->
+          <!-- <li><a href="01-verbs/01-To collaborate.html">01 - To collaborate</a></li> -->
+        </ul>
+      </div>
+    </div>
+
+    <!-- PASTA 2: SUBSTANTIVOS -->
+    <div class="folder">
+      <button class="folder-title" onclick="toggleFolder(this)">
+        📁 02 - Substantivos <span class="folder-arrow">▶</span>
+      </button>
+      <div class="folder-content">
+        <ul>
+          <!-- Adicione seus substantivos aqui -->
+          <!-- <li><a href="02-nouns/01-House.html">01 - House</a></li> -->
+        </ul>
+      </div>
+    </div>
+
+    <!-- PASTA 3: ADJETIVOS -->
+    <div class="folder">
+      <button class="folder-title" onclick="toggleFolder(this)">
+        📁 03 - Adjetivos <span class="folder-arrow">▶</span>
+      </button>
+      <div class="folder-content">
+        <ul>
+          <!-- Adicione seus adjetivos aqui -->
+        </ul>
+      </div>
+    </div>
+
   </div>
 
-  <!-- Exibição das páginas -->
   <div class="content-container">
     <iframe id="content"></iframe>
   </div>
 
-  <!-- Controles Inferiores -->
   <div class="nav-controls">
     <button class="nav-btn" id="btn-prev" onclick="navegar(-1)">&#9664;</button>
     <span class="counter" id="counter">0/0</span>
@@ -175,55 +259,74 @@
   </div>
 
   <script>
+    let activeLinks = [];
     let currentIndex = 0;
-    const links = document.querySelectorAll('#verb-list a');
-    const total = links.length;
+
     const iframe = document.getElementById('content');
     const counter = document.getElementById('counter');
     const btnPrev = document.getElementById('btn-prev');
     const btnNext = document.getElementById('btn-next');
     const sidebar = document.getElementById('sidebar');
 
-    function updateView(index) {
-      if (total === 0) {
+    function toggleMenu() {
+      sidebar.classList.toggle('open');
+    }
+
+    function toggleFolder(element) {
+      const folder = element.parentElement;
+      folder.classList.toggle('open');
+    }
+
+    function setupLinks() {
+      const allLinks = document.querySelectorAll('.folder-content a');
+      
+      allLinks.forEach((link) => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          
+          // Define a lista ativa como os links da pasta atual
+          const parentFolder = link.closest('.folder-content');
+          activeLinks = Array.from(parentFolder.querySelectorAll('a'));
+          currentIndex = activeLinks.indexOf(link);
+
+          // Atualiza estilos de ativo
+          allLinks.forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
+
+          updateView();
+          sidebar.classList.remove('open');
+        });
+      });
+    }
+
+    function updateView() {
+      if (activeLinks.length === 0) {
         counter.textContent = "0/0";
         btnPrev.disabled = true;
         btnNext.disabled = true;
         return;
       }
 
-      currentIndex = index;
-      iframe.src = links[currentIndex].getAttribute('href');
-      
-      links.forEach((link, i) => {
-        link.classList.toggle('active', i === currentIndex);
-      });
-      
-      counter.textContent = `${currentIndex + 1}/${total}`;
+      iframe.src = activeLinks[currentIndex].getAttribute('href');
+      counter.textContent = `${currentIndex + 1}/${activeLinks.length}`;
       btnPrev.disabled = currentIndex === 0;
-      btnNext.disabled = currentIndex === total - 1;
+      btnNext.disabled = currentIndex === activeLinks.length - 1;
     }
 
     function navegar(direction) {
       const newIndex = currentIndex + direction;
-      if (newIndex >= 0 && newIndex < total) {
-        updateView(newIndex);
+      if (newIndex >= 0 && newIndex < activeLinks.length) {
+        currentIndex = newIndex;
+        
+        document.querySelectorAll('.folder-content a').forEach(l => l.classList.remove('active'));
+        activeLinks[currentIndex].classList.add('active');
+        
+        updateView();
       }
     }
 
-    function toggleMenu() {
-      sidebar.classList.toggle('open');
-    }
-
-    links.forEach((link, index) => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        updateView(index);
-        sidebar.classList.remove('open');
-      });
-    });
-
-    updateView(0);
+    setupLinks();
+    updateView();
   </script>
 </body>
 </html>
