@@ -42,43 +42,45 @@
       color: #1e2530;
     }
 
-    /* BANNER DE NOME E ÁGUIA (Sempre visível no topo direito) */
+    /* BANNER DE NOME E ÁGUIA ABAIXO (Topo Direito) */
     .brand-container {
       position: fixed;
       top: 15px;
       right: 15px;
       z-index: 9999;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 10px;
-      background-color: rgba(22, 27, 34, 0.85);
-      padding: 6px 14px;
-      border-radius: 20px;
+      gap: 6px;
+      background-color: rgba(22, 27, 34, 0.9);
+      padding: 8px 14px;
+      border-radius: 16px;
       border: 1px solid #3b4758;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-      pointer-events: none; /* Evita bloquear cliques abaixo se necessário */
+      pointer-events: none;
     }
 
     .brand-text {
       color: #ffffff;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: bold;
       white-space: nowrap;
     }
 
     .brand-eagle {
-      width: 28px;
-      height: 28px;
-      object-fit: contain;
+      width: 45px;
+      height: 45px;
+      object-fit: cover;
+      border-radius: 8px;
     }
 
-    /* Ajuste para Celulares (Diminui o tamanho para não cobrir o conteúdo) */
+    /* Regras para Celular */
     @media (max-width: 600px) {
       .brand-container {
         top: 10px;
         right: 10px;
-        padding: 4px 10px;
-        gap: 6px;
+        padding: 6px 10px;
+        gap: 4px;
       }
 
       .brand-text {
@@ -86,8 +88,8 @@
       }
 
       .brand-eagle {
-        width: 20px;
-        height: 20px;
+        width: 32px;
+        height: 32px;
       }
 
       .btn-lista {
@@ -262,10 +264,10 @@
   <!-- Botão de Lista -->
   <button class="btn-lista" onclick="toggleMenu()">Lista</button>
 
-  <!-- Marca Emanuel learn + Águia dos EUA (Topo Direito) -->
+  <!-- Banner: Nome no topo e Águia logo abaixo -->
   <div class="brand-container">
     <span class="brand-text">Emanuel learn</span>
-    <img class="brand-eagle" src="https://upload.wikimedia.org/wikipedia/commons/8/82/Great_Seal_of_the_United_States_%2(Obverse%).svg" alt="Águia EUA" onerror="this.src='https://cdn-icons-png.flaticon.com/512/8242/8242880.png'">
+    <img class="brand-eagle" src="aguia.jpg" alt="Águia EUA">
   </div>
 
   <!-- Menu Lateral -->
