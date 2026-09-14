@@ -20,7 +20,7 @@
       color: #ffffff;
     }
 
-    /* Botão Lista (Sempre visível no topo) */
+    /* Botão Lista (Sempre visível no topo esquerdo) */
     .btn-lista {
       position: fixed;
       top: 15px;
@@ -40,6 +40,62 @@
     .btn-lista:hover {
       background-color: #ffffff;
       color: #1e2530;
+    }
+
+    /* BANNER DE NOME E ÁGUIA (Sempre visível no topo direito) */
+    .brand-container {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: rgba(22, 27, 34, 0.85);
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid #3b4758;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      pointer-events: none; /* Evita bloquear cliques abaixo se necessário */
+    }
+
+    .brand-text {
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .brand-eagle {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+    }
+
+    /* Ajuste para Celulares (Diminui o tamanho para não cobrir o conteúdo) */
+    @media (max-width: 600px) {
+      .brand-container {
+        top: 10px;
+        right: 10px;
+        padding: 4px 10px;
+        gap: 6px;
+      }
+
+      .brand-text {
+        font-size: 11px;
+      }
+
+      .brand-eagle {
+        width: 20px;
+        height: 20px;
+      }
+
+      .btn-lista {
+        top: 10px;
+        left: 10px;
+        padding: 6px 12px;
+        font-size: 13px;
+      }
     }
 
     /* Menu Lateral */
@@ -95,7 +151,7 @@
     }
 
     .folder.active .folder-content {
-      max-height: 2000px; /* Expande o conteúdo */
+      max-height: 2000px;
       margin-top: 5px;
     }
 
@@ -108,7 +164,6 @@
       font-size: 12px;
     }
 
-    /* Links de Verbos/Substantivos dentro da pasta */
     .folder-content ul {
       list-style: none;
     }
@@ -138,7 +193,7 @@
       font-weight: bold;
     }
 
-    /* Áreas de visualização */
+    /* Área Principal */
     .content-container {
       width: 100%;
       height: 100%;
@@ -155,7 +210,7 @@
       background-color: #1e2530;
     }
 
-    /* Controles Inferiores */
+    /* Navegação Inferior */
     .nav-controls {
       position: fixed;
       bottom: 20px;
@@ -204,67 +259,59 @@
 </head>
 <body>
 
+  <!-- Botão de Lista -->
   <button class="btn-lista" onclick="toggleMenu()">Lista</button>
 
+  <!-- Marca Emanuel learn + Águia dos EUA (Topo Direito) -->
+  <div class="brand-container">
+    <span class="brand-text">Emanuel learn</span>
+    <img class="brand-eagle" src="https://upload.wikimedia.org/wikipedia/commons/8/82/Great_Seal_of_the_United_States_%2(Obverse%).svg" alt="Águia EUA" onerror="this.src='https://cdn-icons-png.flaticon.com/512/8242/8242880.png'">
+  </div>
+
+  <!-- Menu Lateral -->
   <div class="sidebar" id="sidebar">
     
-    <!-- PASTA 1: VERBOS -->
     <div class="folder">
       <button class="folder-title" onclick="toggleFolder(this)">
-        📚📁 01 - Verbos <span class="folder-arrow">▶</span>
+        📁 🇺🇸 01 - Verbos <span class="folder-arrow">▶</span>
       </button>
       <div class="folder-content">
         <ul>
-          <!-- Adicione seus verbos aqui -->
-          <!-- <li><a href="01-verbs/01-To collaborate.html">01 - To collaborate</a></li> -->
+          <!-- Adicione seus links de verbos aqui -->
         </ul>
       </div>
     </div>
 
-    <!-- PASTA 2: SUBSTANTIVOS -->
     <div class="folder">
       <button class="folder-title" onclick="toggleFolder(this)">
-        📚:us:📁 02 - Vocabulario Idiomas Globo <span class="folder-arrow">▶</span>
+        📁 📚 02 - Substantivos <span class="folder-arrow">▶</span>
       </button>
       <div class="folder-content">
         <ul>
-          <!-- Adicione seus substantivos aqui -->
-          <!-- <li><a href="02-nouns/01-House.html">01 - House</a></li> -->
+          <!-- Adicione seus links de substantivos aqui -->
         </ul>
       </div>
     </div>
 
-    <!-- PASTA 3: ADJETIVOS -->
     <div class="folder">
       <button class="folder-title" onclick="toggleFolder(this)">
-        🇺🇸📁 03 - Adjetivos <span class="folder-arrow">▶</span>
+        📁 🎮 Jogos <span class="folder-arrow">▶</span>
       </button>
       <div class="folder-content">
         <ul>
-          <!-- Adicione seus adjetivos aqui -->
+          <!-- Adicione seus links de jogos aqui -->
         </ul>
       </div>
     </div>
-    <!-- NOVA PASTA -->
-<div class="folder">
-  <button class="folder-title" onclick="toggleFolder(this)">
-    🎮🇺🇸📁 jogos <span class="folder-arrow">▶</span>
-  </button>
-  <div class="folder-content">
-    <ul>
-      <!-- Adicione os links dos seus arquivos aqui -->
-      <li><a href="caminho/do/seu-arquivo.html">01 - Nome do Item</a></li>
-      <li><a href="caminho/do/seu-arquivo2.html">02 - Outro Item</a></li>
-    </ul>
-  </div>
-</div>
 
   </div>
 
+  <!-- Container do iframe -->
   <div class="content-container">
     <iframe id="content"></iframe>
   </div>
 
+  <!-- Controles Inferiores -->
   <div class="nav-controls">
     <button class="nav-btn" id="btn-prev" onclick="navegar(-1)">&#9664;</button>
     <span class="counter" id="counter">0/0</span>
@@ -287,7 +334,7 @@
 
     function toggleFolder(element) {
       const folder = element.parentElement;
-      folder.classList.toggle('open');
+      folder.classList.toggle('active');
     }
 
     function setupLinks() {
@@ -297,12 +344,10 @@
         link.addEventListener('click', (e) => {
           e.preventDefault();
           
-          // Define a lista ativa como os links da pasta atual
           const parentFolder = link.closest('.folder-content');
           activeLinks = Array.from(parentFolder.querySelectorAll('a'));
           currentIndex = activeLinks.indexOf(link);
 
-          // Atualiza estilos de ativo
           allLinks.forEach(l => l.classList.remove('active'));
           link.classList.add('active');
 
