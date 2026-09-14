@@ -3,313 +3,179 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Estudo de Verbos</title>
+  <title>Vocabulário</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    body { 
-      font-family: Arial, sans-serif; 
-      display: flex; 
-      height: 100vh; 
-      overflow: hidden; 
-      background-color: #f7f7f7; 
-      position: relative; 
-      transition: background-color 0.3s ease;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    /* Estilo para o Modo Escuro */
-    body.dark-mode {
-      background-color: #323b4c; /* Tom azul suave enviado */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #323b4c;
+      color: #ffffff;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
     }
-    
-    /* Menu Lateral Deslizante */
+
+    /* Menu Lateral / Sidebar */
     #sidebar {
       position: fixed;
       top: 0;
-      left: 0;
+      left: -280px;
       width: 280px;
       height: 100%;
-      background: #ffffff;
-      border-right: 1px solid #ddd;
-      padding: 70px 20px 20px 20px;
+      background-color: #1e2530;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+      transition: left 0.3s ease;
+      z-index: 1000;
+      padding: 20px 10px;
       overflow-y: auto;
-      z-index: 90;
-      transform: translateX(-100%);
-      transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
-      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
     }
-    
+
     #sidebar.open {
-      transform: translateX(0);
+      left: 0;
     }
 
-    body.dark-mode #sidebar {
-      background: #252c38;
-      border-right-color: #1e242f;
+    #sidebar h2 {
+      color: #ffffff;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+      text-align: center;
+      border-bottom: 1px solid #3a4556;
+      padding-bottom: 10px;
     }
 
-    #sidebar h2 { font-size: 20px; margin-bottom: 15px; color: #333; border-bottom: 2px solid #eee; padding-bottom: 8px; }
-    body.dark-mode #sidebar h2 { color: #fff; border-bottom-color: #3a4559; }
-    
-    #sidebar ul { list-style: none; }
-    #sidebar li { margin-bottom: 10px; }
-    #sidebar a {
+    #verb-list {
+      list-style: none;
+    }
+
+    #verb-list li {
+      margin-bottom: 5px;
+    }
+
+    #verb-list a {
       display: block;
-      padding: 10px 12px;
-      color: #0066cc;
+      padding: 10px 15px;
+      color: #ffffff;
       text-decoration: none;
+      border-radius: 5px;
+      transition: background 0.2s;
+    }
+
+    #verb-list a:hover, #verb-list a.active {
+      background-color: #252c38;
+      color: #60a5fa;
       font-weight: bold;
-      border-radius: 6px;
-      background: #f0f4f8;
-      transition: background 0.2s, color 0.2s;
-    }
-    #sidebar a:hover { background: #dbe7f5; }
-    #sidebar a.active {
-      background: #0066cc;
-      color: white;
-    }
-    body.dark-mode #sidebar a {
-      background: #323b4c;
-      color: #72b6ff;
-    }
-    body.dark-mode #sidebar a.active {
-      background: #0066cc;
-      color: white;
     }
 
-    /* Contêiner de Botões Superiores */
-    .top-buttons {
-      position: fixed;
-      top: 20px;
-      left: 20px;
+    /* Topo Fixado */
+    #top-bar {
+      position: absolute;
+      top: 15px;
+      left: 15px;
       z-index: 100;
-      display: flex;
-      align-items: center;
-      gap: 12px;
     }
 
-    /* Botão LISTA */
     .btn-lista {
       background-color: #ffffff;
-      color: #cc0000;
-      border: 2px solid #cc0000;
-      padding: 8px 18px;
+      color: #d97706;
+      border: 2px solid #d97706;
+      padding: 6px 16px;
       border-radius: 20px;
-      cursor: pointer;
       font-weight: bold;
-      font-size: 16px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      transition: all 0.2s;
-    }
-
-    .btn-lista:hover {
-      background-color: #cc0000;
-      color: #ffffff;
-    }
-
-    /* Botão MODO ESCURO (Lua) */
-    .btn-dark {
-      background-color: #ffffff;
-      border: 2px solid #cc0000;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      transition: all 0.2s;
+      font-size: 0.9rem;
     }
 
-    .btn-dark svg {
-      width: 20px;
-      height: 20px;
-      fill: #cc0000;
-      transition: fill 0.2s;
-    }
-
-    .btn-dark:hover {
-      background-color: #cc0000;
-    }
-
-    .btn-dark:hover svg {
-      fill: #ffffff;
-    }
-
-    /* Bandeira dos EUA no Topo */
-    .us-flag {
-      position: fixed;
-      top: 15px;
-      right: 220px;
-      z-index: 80;
-      width: 85px;
-      height: auto;
-      pointer-events: none;
-      filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.15));
-    }
-
-    /* Container do Conteúdo Principal */
+    /* Container Principal */
     #main-container {
       flex: 1;
       height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    iframe {
       width: 100%;
-      position: relative;
+      height: 100%;
+      border: none;
+      background-color: #323b4c;
     }
 
-    #content { 
-      width: 100%; 
-      height: 100%; 
-      border: none; 
-      background: transparent;
-    }
-
-    /* Barra Inferior Flutuante de Navegação */
-    .bottom-nav {
+    /* Barra Inferior de Navegação */
+    #bottom-bar {
       position: fixed;
-      bottom: 20px;
+      bottom: 15px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 80;
-      background: rgba(255, 255, 255, 0.95);
-      padding: 8px 20px;
-      border-radius: 30px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
       display: flex;
       align-items: center;
-      gap: 15px;
-      border: 1px solid #ddd;
-      transition: background-color 0.3s, border-color 0.3s;
+      gap: 12px;
+      background-color: rgba(25, 31, 41, 0.95);
+      border: 1px solid #4a566d;
+      padding: 6px 20px;
+      border-radius: 25px;
+      z-index: 100;
+      color: #ffffff;
+      font-weight: bold;
     }
 
-    body.dark-mode .bottom-nav {
-      background: rgba(37, 44, 56, 0.95);
-      border-color: #4a566d;
-    }
-
-    .btn-arrow {
+    .nav-btn {
       background: none;
       border: none;
-      color: #cc0000;
-      font-size: 22px;
+      color: #ffffff;
+      font-size: 1.2rem;
       cursor: pointer;
-      font-weight: bold;
-      padding: 0 5px;
-      line-height: 1;
-      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .btn-arrow:hover { color: #880000; }
-    .btn-arrow:disabled { color: #ccc; cursor: not-allowed; }
+    .nav-btn:disabled {
+      color: #526077;
+      cursor: not-allowed;
+    }
 
-    .progress {
-      font-weight: bold;
-      color: #cc0000;
-      font-size: 20px;
-      font-family: Arial, sans-serif;
+    #counter {
+      color: #ffffff;
+      font-size: 1rem;
     }
   </style>
 </head>
 <body>
 
-  <!-- Botões Fixos no Topo -->
-  <div class="top-buttons">
+  <!-- Botão de abrir menu -->
+  <div id="top-bar">
     <button class="btn-lista" onclick="toggleMenu()">Lista</button>
-    <button class="btn-dark" onclick="toggleDarkMode()" title="Alternar Modo Escuro">
-      <svg viewBox="0 0 24 24">
-        <path d="M12.3 2a10 10 0 0 0 9.7 12.3 10 10 0 1 1-9.7-12.3z"/>
-      </svg>
-    </button>
   </div>
 
-  <!-- Bandeira dos Estados Unidos -->
-  <img class="us-flag" src="https://flagcdn.com/w160/us.png" alt="Bandeira EUA">
-
-  <!-- Menu Lateral Deslizante -->
+  <!-- Menu Lateral de Verbos -->
   <div id="sidebar">
-    <h2>📚 Verbos</h2>
+    <h2>Lista de Verbos</h2>
     <ul id="verb-list">
-      <li><a href="01-To collaborate.html" target="conteudo-frame">01 - To Collaborate</a></li>
-      <li><a href="02-To Wash.html" target="conteudo-frame">02 - To Wash</a></li>
-      <li><a href="03-To knock.html" target="conteudo-frame">03 - To Knock</a></li>
-      <li><a href="04-To iron.html" target="conteudo-frame">04 - To Iron</a></li>
-      <li><a href="05-To hear.html" target="conteudo-frame">05 - To Hear</a></li>
-      <li><a href="06-To Throw.html" target="conteudo-frame">06 - To Throw</a></li>
-      <li><a href="07-To say.html" target="conteudo-frame">07 - To Say</a></li>
-      <li><a href="08-To speak.html" target="conteudo-frame">08 - To Speak</a></li>
-      <li><a href="09-To travel.html" target="conteudo-frame">09 - To Travel</a></li>
-      <li><a href="10-To leave.html" target="conteudo-frame">10 - To Leave</a></li>
-      <li><a href="11-To get.html" target="conteudo-frame">11 - To Get</a></li>
-      <li><a href="12-To brush.html" target="conteudo-frame">12 - To Brush</a></li>
-      <li><a href="13-To comb.html" target="conteudo-frame">13 - To Comb</a></li>
-      <li><a href="14-To see.html" target="conteudo-frame">14 - To See</a></li>
-      <li><a href="15-To sleep.html" target="conteudo-frame">15 - To Sleep</a></li>
-      <li><a href="16-To wake up.html" target="conteudo-frame">16 - To Wake Up</a></li>
-      <li><a href="17-To surround.html" target="conteudo-frame">17 - To Surround</a></li>
-      <li><a href="18-To guide.html" target="conteudo-frame">18 - To Guide</a></li>
-      <li><a href="19-To land.html" target="conteudo-frame">19 - To Land</a></li>
-      <li><a href="20-To pilot.html" target="conteudo-frame">20 - To Pilot</a></li>
-      <li><a href="21-To ride.html" target="conteudo-frame">21 - To Ride</a></li>
-      <li><a href="22-To do.html" target="conteudo-frame">22 - To Do</a></li>
-      <li><a href="23-To be.html" target="conteudo-frame">23 - To Be</a></li>
-      <li><a href="24-To have.html" target="conteudo-frame">24 - To Have</a></li>
-      <li><a href="25-To give.html" target="conteudo-frame">25 - To Give</a></li>
-      <li><a href="26-To carry.html" target="conteudo-frame">26 - To Carry</a></li>
-      <li><a href="27-To sit.html" target="conteudo-frame">27 - To Sit</a></li>
-      <li><a href="28-To help.html" target="conteudo-frame">28 - To Help</a></li>
-      <li><a href="29-To need.html" target="conteudo-frame">29 - To Need</a></li>
-      <li><a href="30-To pick up.html" target="conteudo-frame">30 - To Pick Up</a></li>
-      <li><a href="31-To stand.html" target="conteudo-frame">31 - To Stand</a></li>
-      <li><a href="32-To study.html" target="conteudo-frame">32 - To Study</a></li>
-      <li><a href="33-To upgrade.html" target="conteudo-frame">33 - To Upgrade</a></li>
-      <li><a href="34-To keep.html" target="conteudo-frame">34 - To Keep</a></li>
-      <li><a href="35-To stay.html" target="conteudo-frame">35 - To Stay</a></li>
-      <li><a href="36-To occupy.html" target="conteudo-frame">36 - To Occupy</a></li>
-      <li><a href="37-happen.html" target="conteudo-frame">37 - To Happen</a></li>
-      <li><a href="38-To know.html" target="conteudo-frame">38 - To Know</a></li>
-      <li><a href="39-To call.html" target="conteudo-frame">39 - To Call</a></li>
-      <li><a href="40-To catch.html" target="conteudo-frame">40 - To Catch</a></li>
-      <li><a href="41-To insert.html" target="conteudo-frame">41 - To Insert</a></li>
-      <li><a href="42-To save.html" target="conteudo-frame">42 - To Save</a></li>
-      <li><a href="43-To swim.html" target="conteudo-frame">43 - To Swim</a></li>
-      <li><a href="44-To die.html" target="conteudo-frame">44 - To Die</a></li>
-      <li><a href="45-To fly.html" target="conteudo-frame">45 - To Fly</a></li>
-      <li><a href="46-To fall.html" target="conteudo-frame">46 - To Fall</a></li>
-      <li><a href="47-To grow.html" target="conteudo-frame">47 - To Grow</a></li>
-      <li><a href="48-To increase.html" target="conteudo-frame">48 - To Increase</a></li>
-      <li><a href="49-To add.html" target="conteudo-frame">49 - To Add</a></li>
-      <li><a href="50-To hate.html" target="conteudo-frame">50 - To Hate</a></li>
-      <li><a href="51-To strike.html" target="conteudo-frame">51 - To Strike</a></li>
-      <li><a href="52-To hit.html" target="conteudo-frame">52 - To Hit</a></li>
-      <li><a href="53-To touch.html" target="conteudo-frame">53 - To Touch</a></li>
-      <li><a href="54-To kick.html" target="conteudo-frame">54 - To Kick</a></li>
-      <li><a href="55-To pull.html" target="conteudo-frame">55 - To Pull</a></li>
-      <li><a href="56-To kill.html" target="conteudo-frame">56 - To Kill</a></li>
-      <li><a href="57-To bite.html" target="conteudo-frame">57 - To Bite</a></li>
-      <li><a href="58-To swear.html" target="conteudo-frame">58 - To Swear</a></li>
-      <li><a href="59-To cook.html" target="conteudo-frame">59 - To Cook</a></li>
-      <li><a href="60-To iron.html" target="conteudo-frame">60 - To Iron</a></li>
-      <li><a href="61-To sew.html" target="conteudo-frame">61 - To Sew</a></li>
-      <li><a href="62-To want.html" target="conteudo-frame">62 - To Want</a></li>
-      <li><a href="63-To wash.html" target="conteudo-frame">63 - To Wash</a></li>
-      <li><a href="64-To buy.html" target="conteudo-frame">64 - To Buy</a></li>
-      <li><a href="65-To pay.html" target="conteudo-frame">65 - To Pay</a></li>
-      <li><a href="66-To hear.html" target="conteudo-frame">66 - To Hear</a></li>
+      <!-- Adicione os novos links dos verbos aqui conforme for enviando os arquivos -->
+      <li><a href="01-To collaborate.html">01 - To collaborate</a></li>
+      <li><a href="02-To Wash.html">02 - To Wash</a></li>
+      <li><a href="03-To knock.html">03 - To knock</a></li>
     </ul>
   </div>
 
-  <!-- Área Principal -->
+  <!-- Exibição do Conteúdo -->
   <div id="main-container">
-    <iframe name="conteudo-frame" id="content"></iframe>
+    <iframe id="content" src=""></iframe>
   </div>
 
-  <!-- Barra Flutuante de Navegação Inferior -->
-  <div class="bottom-nav">
-    <button id="btn-prev" class="btn-arrow" onclick="navegar(-1)">◁</button>
-    <span id="counter" class="progress">1/1</span>
-    <button id="btn-next" class="btn-arrow" onclick="navegar(1)">▷</button>
+  <!-- Controles Inferiores (Voltar / Contador / Avançar) -->
+  <div id="bottom-bar">
+    <button class="nav-btn" id="btn-prev" onclick="navegar(-1)">&#9664;</button>
+    <span id="counter">1/1</span>
+    <button class="nav-btn" id="btn-next" onclick="navegar(1)">&#9654;</button>
   </div>
-<script>
+
+  <script>
     let currentIndex = 0;
     const links = document.querySelectorAll('#verb-list a');
     const total = links.length;
@@ -320,6 +186,7 @@
     const sidebar = document.getElementById('sidebar');
 
     function updateView(index) {
+      if (total === 0) return;
       currentIndex = index;
       iframe.src = links[currentIndex].getAttribute('href');
       links.forEach((link, i) => {
@@ -341,65 +208,6 @@
       sidebar.classList.toggle('open');
     }
 
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
-      applyDarkToIframe();
-    }
-
-    // Estiliza de forma abrangente o conteúdo interno do iframe no modo escuro
-    function applyDarkToIframe() {
-      try {
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-        if (!iframeDoc || !iframeDoc.body) return;
-
-        let darkStyle = iframeDoc.getElementById('custom-dark-style');
-
-        if (document.body.classList.contains('dark-mode')) {
-          if (!darkStyle) {
-            darkStyle = iframeDoc.createElement('style');
-            darkStyle.id = 'custom-dark-style';
-            iframeDoc.head.appendChild(darkStyle);
-          }
-          
-          darkStyle.innerHTML = `
-            body {
-              background-color: #323b4c !important;
-              color: #e2e8f0 !important;
-            }
-            h1, h2, h3, h4, header, div, span, p, label {
-              color: #ffffff !important;
-            }
-            p.subtext, small, .help-text, caption {
-              color: #cbd5e1 !important;
-            }
-            /* Converte blocos/cards brancos para escuro com texto visível */
-            .card, .item, .row, .box, div[style*="background"], table, tr, td {
-              background-color: #252c38 !important;
-              color: #ffffff !important;
-              border-color: #4a566d !important;
-            }
-            /* Transcrições fonéticas e traduções */
-            .ipa, .phonetic, [class*="ipa"], [class*="phonetic"] {
-              color: #94a3b8 !important;
-            }
-            .translation, .traducao, [class*="trans"] {
-              color: #60a5fa !important;
-            }
-          `;
-        } else {
-          if (darkStyle) {
-            darkStyle.remove();
-          }
-          iframeDoc.body.style.backgroundColor = '';
-          iframeDoc.body.style.color = '';
-        }
-      } catch (e) {
-        // Trata eventuais restrições do navegador
-      }
-    }
-
-    iframe.addEventListener('load', applyDarkToIframe);
-
     links.forEach((link, index) => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
@@ -408,9 +216,9 @@
       });
     });
 
-    updateView(0);
+    if (total > 0) {
+      updateView(0);
+    }
   </script>
-  
-
 </body>
 </html>
