@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulário — Palavra / IPA / Áudio</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #1a2233; /* Azul suave escuro inspirador da imagem */
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        header {
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #adb5bd;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+
+        .controls {
+            background-color: #242f44;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 24px;
+            width: fit-content;
+        }
+
+        .controls label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        .controls input[type="range"] {
+            cursor: pointer;
+        }
+
+        .rate-value {
+            font-weight: 700;
+            color: #ffc107;
+            min-width: 40px;
+        }
+
+        .card-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background-color: #242f44;
+            border-radius: 8px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #334155;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            transition: border-color 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: #475569;
+        }
+
+        .word-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .word {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff; /* Palavra principal em branco */
+            min-width: 180px;
+        }
+
+        .translation {
+            font-size: 0.9rem;
+            color: #60a5fa;
+            font-weight: 500;
+            margin-right: 8px;
+        }
+
+        .ipa {
+            font-family: "Lucida Sans Unicode", "DejaVu Sans", "Segoe UI Symbol", sans-serif;
+            color: #ffc107; /* IPA em amarelo para destaque */
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .audio-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-audio {
+            background-color: #0f172a;
+            color: #ffffff;
+            border: 1px solid #475569;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-audio:hover {
+            background-color: #334155;
+            border-color: #64748b;
+        }
+
+        .btn-audio:active {
+            transform: scale(0.96);
+        }
+
+        .btn-audio svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        footer {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .word-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            .audio-buttons {
+                width: 100%;
+            }
+
+            .btn-audio {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Vocabulário — Palavra / IPA / Áudio</h1>
+            <p class="subtitle">Clique em UK ou US para ouvir cada forma.</p>
+
+            <div class="controls">
+                <label for="rateRange">Velocidade da voz:</label>
+                <input type="range" id="rateRange" min="0.25" max="1.5" step="0.05" value="0.5" oninput="updateRateLabel(this.value)">
+                <span id="rateVal" class="rate-value">0.5x</span>
+            </div>
+        </header>
+
+        <main class="card-list">
+            <!-- To have (v) -->
+            <div class="card">
+                <div class="word-info">
+                    <span class="word">To have (v)</span>
+                    <span class="translation">ter</span>
+                    <span class="ipa">/UK tuː hæv/ /US tuː hæv/</span>
+                </div>
+                <div class="audio-buttons">
+                    <button class="btn-audio" onclick="speak('to have', 'en-GB')"><small>GB</small><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>UK</button>
+                    <button class="btn-audio" onclick="speak('to have', 'en-US')"><small>US</small><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>US</button>
+                </div>
+            </div>
+
+            <!-- Have (v) -->
+            <div class="card">
+                <div class="word-info">
+                    <span class="word">Have (v)</span>
+                    <span class="translation">tem</span>
+                    <span class="ipa">/UK hæv/ /US hæv/</span>
+                </div>
+                <div class="audio-buttons">
+                    <button class="btn-audio" onclick="speak('have', 'en-GB')"><small>GB</small><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>UK</button>
+                    <button class="btn-audio" onclick="speak('have', 'en-US')"><small>US</small><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>US</button>
+                </div>
+            </div>
+
+            <!-- Has (3ª p. sing) -->
+            <div class="card">
+                <div class="word-info">
+                    <span class="word">Has (3ª p. sing)</span>
+                    <span class="translation">tem</span>
+                    <span class="ipa">/UK hæz/ /US hæz/</span>
+                </div>
+                <div class="audio-buttons">
+                    <button class="btn-audio" onclick="speak('has', 'en-GB')"><small>GB</small><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>UK</button>
+                    <button class="btn-audio" onclick="speak('has', 'en-US')"><small>US</small><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>US</button>
+                </div>
+            </div>
+
+            <!-- Having (gerúndio) -->
+            <div class="card">
+                <div class="word-info">
+                    <span class="word">Having (gerúndio)</span>
+                    <span class="translation">tendo</span>
+                    <span class="ipa">/UK ˈhæv.ɪŋ/ /US ˈhæv.ɪŋ/</span>
+                </div>
+                <div class="audio-buttons">
+                    <button class="btn-audio" onclick="speak('having', 'en-GB')"><small>GB</small><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>UK</button>
+                    <button class="btn-audio" onclick="speak('having', 'en-US')"><small>US</small><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>US</button>
+                </div>
+            </div>
+
+            <!-- Had (passado / particípio) -->
+            <div class="card">
+                <div class="word-info">
+                    <span class="word">Had (passado / particípio)</span>
+                    <span class="translation">tinha, tido</span>
+                    <span class="ipa">/UK hæd/ /US hæd/</span>
+                </div>
+                <div class="audio-buttons">
+                    <button class="btn-audio" onclick="speak('had', 'en-GB')"><small>GB</small><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>UK</button>
+                    <button class="btn-audio" onclick="speak('had', 'en-US')"><small>US</small><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>US</button>
+                </div>
+            </div>
+
+            <!-- Haven't -->
+            <div class="card">
+                <div class="word-info">
+                    <span class="word">Haven't</span>
+                    <span class="translation">negação</span>
+                    <span class="ipa">/UK ˈhæv.ənt/ /US ˈhæv.ənt/</span>
+                </div>
+                <div class="audio-buttons">
+                    <button class="btn-audio" onclick="speak('haven\'t', 'en-GB')"><small>GB</small><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>UK</button>
+                    <button class="btn-audio" onclick="speak('haven\'t', 'en-US')"><small>US</small><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>US</button>
+                </div>
+            </div>
+
+            <!-- Hasn't -->
+            <div class="card">
+                <div class="word-info">
+                    <span class="word">Hasn't</span>
+                    <span class="translation">negação</span>
+                    <span class="ipa">/US ˈhæz.ənt/</span>
+                </div>
+                <div class="audio-buttons">
+                    <button class="btn-audio" onclick="speak('hasn\'t', 'en-GB')"><small>GB</small><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>UK</button>
+                    <button class="btn-audio" onclick="speak('hasn\'t', 'en-US')"><small>US</small><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>US</button>
+                </div>
+            </div>
+
+            <!-- Hadn't -->
+            <div class="card">
+                <div class="word-info">
+                    <span class="word">Hadn't</span>
+                    <span class="translation">negaçao</span>
+                    <span class="ipa">/US ˈhæd.ənt/</span>
+                </div>
+                <div class="audio-buttons">
+                    <button class="btn-audio" onclick="speak('hadn\'t', 'en-GB')"><small>GB</small><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>UK</button>
+                    <button class="btn-audio" onclick="speak('hadn\'t', 'en-US')"><small>US</small><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>US</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>A pronúncia é reproduzida pela síntese de voz do navegador na velocidade selecionada.</p>
+        </footer>
+    </div>
+
+    <script>
+        function updateRateLabel(val) {
+            document.getElementById('rateVal').innerText = val + 'x';
+        }
+
+        function speak(text, lang) {
+            window.speechSynthesis.cancel();
+
+            const currentRate = parseFloat(document.getElementById('rateRange').value);
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang;
+            utterance.rate = currentRate;
+
+            const voices = window.speechSynthesis.getVoices();
+            const selectedVoice = voices.find(voice => voice.lang === lang || voice.lang.replace('_', '-') === lang);
+
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+            }
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        window.speechSynthesis.onvoiceschanged = () => {
+            window.speechSynthesis.getVoices();
+        };
+    </script>
+</body>
+</html>
