@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Correspondência — To help</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a; /* Azul escuro noturno */
+            color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        header {
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+
+        .controls-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .controls {
+            background-color: #1e293b;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .controls label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        .controls input[type="range"] {
+            cursor: pointer;
+        }
+
+        .rate-value {
+            font-weight: 700;
+            color: #38bdf8;
+            min-width: 40px;
+        }
+
+        .btn-reload {
+            background-color: #1e293b;
+            color: #38bdf8;
+            border: 1px solid #334155;
+            padding: 0 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .btn-reload:hover {
+            background-color: #273548;
+            border-color: #38bdf8;
+        }
+
+        .btn-reload:active {
+            transform: scale(0.96);
+        }
+
+        .btn-reload svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .game-area {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .column-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #38bdf8;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+
+        .card {
+            background-color: #1e293b;
+            border-radius: 8px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #334155;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            min-height: 80px;
+        }
+
+        .card:hover {
+            border-color: #475569;
+            background-color: #273548;
+        }
+
+        .card.selected {
+            border-color: #38bdf8;
+            background-color: #1d4ed8;
+        }
+
+        .card.correct {
+            border-color: #22c55e !important;
+            background-color: #064e3b !important;
+            cursor: default;
+        }
+
+        .word-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .word {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+
+        .ipa {
+            font-family: monospace;
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+
+        .audio-buttons {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-audio {
+            background-color: #0f172a;
+            color: #ffffff;
+            border: 1px solid #475569;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .btn-audio:hover {
+            background-color: #334155;
+            border-color: #64748b;
+        }
+
+        .btn-audio:active {
+            transform: scale(0.96);
+        }
+
+        .btn-audio svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        footer {
+            margin-top: 30px;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .status-msg {
+            text-align: center;
+            margin-top: 15px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #38bdf8;
+            min-height: 24px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Jogo de Correspondência — To help</h1>
+            <p class="subtitle">Ouça o áudio à esquerda e clique na palavra correta correspondente à direita.</p>
+
+            <div class="controls-wrapper">
+                <div class="controls">
+                    <label for="rateRange">Velocidade da voz:</label>
+                    <input type="range" id="rateRange" min="0.25" max="1.5" step="0.05" value="0.5" oninput="updateRateLabel(this.value)">
+                    <span id="rateVal" class="rate-value">0.5x</span>
+                </div>
+                
+                <button class="btn-reload" onclick="window.location.reload()">
+                    <svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                    Atualizar Jogo
+                </button>
+            </div>
+        </header>
+
+        <div class="status-msg" id="statusMsg">Ouça um áudio para começar!</div>
+
+        <main class="game-area">
+            <!-- Coluna de Áudios (Embaralhada) -->
+            <div class="column">
+                <div class="column-title">1. Ouça os Áudios</div>
+                <div id="audioContainer" class="column"></div>
+            </div>
+
+            <!-- Coluna de Palavras (Embaralhada) -->
+            <div class="column">
+                <div class="column-title">2. Escolha a Palavra</div>
+                <div id="wordContainer" class="column"></div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Treinamento auditivo e de vocabulário adaptado para estudo — To help.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Dados adaptados de To help
+        const items = [
+            { id: 1, word: 'to_help', speakText: 'to help', displayHtml: 'To help', ipa: '/UK tuː help/ /US tuː help/' },
+            { id: 2, word: 'help', speakText: 'help', displayHtml: 'Help', ipa: '/UK help/ /US help/' },
+            { id: 3, word: 'helps', speakText: 'helps', displayHtml: 'Helps', ipa: '/UK helps/ /US helps/' },
+            { id: 4, word: 'helping', speakText: 'helping', displayHtml: 'Helping', ipa: '/UK ˈhel.pɪŋ/ /US ˈhel.pɪŋ/' },
+            { id: 5, word: 'helped', speakText: 'helped', displayHtml: 'Helped', ipa: '/UK helpt/ /US helpt/' }
+        ];
+
+        let selectedAudioItem = null;
+        let selectedAudioCardEl = null;
+        let selectedWordItem = null;
+        let selectedWordCardEl = null;
+        let correctMatches = 0;
+
+        function updateRateLabel(val) {
+            document.getElementById('rateVal').innerText = val + 'x';
+        }
+
+        function speak(text, lang) {
+            window.speechSynthesis.cancel();
+            const currentRate = parseFloat(document.getElementById('rateRange').value);
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang;
+            utterance.rate = currentRate;
+
+            const voices = window.speechSynthesis.getVoices();
+            const selectedVoice = voices.find(voice => voice.lang === lang || voice.lang.replace('_', '-') === lang);
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+            }
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function playSuccessSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const playTone = (freq, startTime, duration) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime + startTime);
+                    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + startTime + duration);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(audioCtx.currentTime + startTime);
+                    osc.stop(audioCtx.currentTime + startTime + duration);
+                };
+                playTone(523.25, 0, 0.15); // C5
+                playTone(659.25, 0.1, 0.15); // E5
+                playTone(783.99, 0.2, 0.3);  // G5
+            } catch (e) {
+                console.log("Áudio bloqueado ou não suportado sem interação prévia.");
+            }
+        }
+
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex != 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function initGame() {
+            const audioContainer = document.getElementById('audioContainer');
+            const wordContainer = document.getElementById('wordContainer');
+            
+            audioContainer.innerHTML = '';
+            wordContainer.innerHTML = '';
+
+            let audioList = shuffle([...items]);
+            let wordList = shuffle([...items]);
+
+            audioList.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.dataset.id = item.id;
+                
+                card.innerHTML = `
+                    <div class="audio-buttons">
+                        <button class="btn-audio" onclick="event.stopPropagation(); speak('${item.speakText}', 'en-GB'); selectAudioCard(${item.id}, this.closest('.card'))">
+                            <small>GB</small><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>UK
+                        </button>
+                        <button class="btn-audio" onclick="event.stopPropagation(); speak('${item.speakText}', 'en-US'); selectAudioCard(${item.id}, this.closest('.card'))">
+                            <small>US</small><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>US
+                        </button>
+                    </div>
+                `;
+                audioContainer.appendChild(card);
+            });
+
+            wordList.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.dataset.id = item.id;
+                
+                card.innerHTML = `
+                    <div class="word-info">
+                        <span class="word">${item.displayHtml}</span>
+                        <span class="ipa">${item.ipa}</span>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => {
+                    if (card.classList.contains('correct')) return;
+                    selectWordCard(item.id, card);
+                });
+
+                wordContainer.appendChild(card);
+            });
+        }
+
+        function selectAudioCard(id, cardEl) {
+            if (cardEl.classList.contains('correct')) return;
+            
+            document.querySelectorAll('#audioContainer .card').forEach(c => {
+                if (!c.classList.contains('correct')) c.classList.remove('selected');
+            });
+
+            selectedAudioItem = id;
+            selectedAudioCardEl = cardEl;
+            cardEl.classList.add('selected');
+
+            checkMatch();
+        }
+
+        function selectWordCard(id, cardEl) {
+            if (cardEl.classList.contains('correct')) return;
+
+            document.querySelectorAll('#wordContainer .card').forEach(c => {
+                if (!c.classList.contains('correct')) c.classList.remove('selected');
+            });
+
+            selectedWordItem = id;
+            selectedWordCardEl = cardEl;
+            cardEl.classList.add('selected');
+
+            checkMatch();
+        }
+
+        function checkMatch() {
+            const msgEl = document.getElementById('statusMsg');
+
+            if (selectedAudioItem !== null && selectedWordItem !== null) {
+                if (selectedAudioItem === selectedWordItem) {
+                    playSuccessSound();
+                    msgEl.innerText = "Parabéns! Acertou a correspondência!";
+                    msgEl.style.color = "#22c55e";
+
+                    selectedAudioCardEl.classList.remove('selected');
+                    selectedWordCardEl.classList.remove('selected');
+
+                    selectedAudioCardEl.classList.add('correct');
+                    selectedWordCardEl.classList.add('correct');
+
+                    selectedAudioItem = null;
+                    selectedAudioCardEl = null;
+                    selectedWordItem = null;
+                    selectedWordCardEl = null;
+
+                    correctMatches++;
+                    if (correctMatches === items.length) {
+                        setTimeout(() => {
+                            msgEl.innerText = "🎉 Incrível! Você completou todas as formas do verbo To help!";
+                        }, 500);
+                    }
+                } else {
+                    msgEl.innerText = "Ops! Não correspondem. Tente novamente.";
+                    msgEl.style.color = "#ef4444";
+
+                    setTimeout(() => {
+                        if (selectedAudioCardEl) selectedAudioCardEl.classList.remove('selected');
+                        if (selectedWordCardEl) selectedWordCardEl.classList.remove('selected');
+                        selectedAudioItem = null;
+                        selectedAudioCardEl = null;
+                        selectedWordItem = null;
+                        selectedWordCardEl = null;
+                    }, 800);
+                }
+            }
+        }
+
+        window.speechSynthesis.onvoiceschanged = () => {
+            window.speechSynthesis.getVoices();
+        };
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
