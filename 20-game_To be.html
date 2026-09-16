@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Correspondência — To be</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        header {
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+
+        .controls-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .controls {
+            background-color: #1e293b;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .controls label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        .controls input[type="range"] {
+            cursor: pointer;
+        }
+
+        .rate-value {
+            font-weight: 700;
+            color: #38bdf8;
+            min-width: 40px;
+        }
+
+        .btn-reload {
+            background-color: #1e293b;
+            color: #38bdf8;
+            border: 1px solid #334155;
+            padding: 0 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .btn-reload:hover {
+            background-color: #273548;
+            border-color: #38bdf8;
+        }
+
+        .btn-reload:active {
+            transform: scale(0.96);
+        }
+
+        .btn-reload svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .game-area {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .column-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #38bdf8;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+
+        .card {
+            background-color: #1e293b;
+            border-radius: 8px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #334155;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            min-height: 80px;
+        }
+
+        .card:hover {
+            border-color: #475569;
+            background-color: #273548;
+        }
+
+        .card.selected {
+            border-color: #38bdf8;
+            background-color: #1d4ed8;
+        }
+
+        .card.correct {
+            border-color: #22c55e !important;
+            background-color: #064e3b !important;
+            cursor: default;
+        }
+
+        .word-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .word {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+
+        .word span.gray-part {
+            color: #94a3b8;
+            font-weight: normal;
+        }
+
+        .translation {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .ipa {
+            font-family: monospace;
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+
+        .audio-buttons {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-audio {
+            background-color: #0f172a;
+            color: #ffffff;
+            border: 1px solid #475569;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .btn-audio:hover {
+            background-color: #334155;
+            border-color: #64748b;
+        }
+
+        .btn-audio:active {
+            transform: scale(0.96);
+        }
+
+        .btn-audio svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        footer {
+            margin-top: 30px;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .status-msg {
+            text-align: center;
+            margin-top: 15px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #38bdf8;
+            min-height: 24px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Jogo de Correspondência — To be</h1>
+            <p class="subtitle">Ouça o áudio à esquerda e clique na palavra correta correspondente à direita.</p>
+
+            <div class="controls-wrapper">
+                <div class="controls">
+                    <label for="rateRange">Velocidade da voz:</label>
+                    <input type="range" id="rateRange" min="0.25" max="1.5" step="0.05" value="0.5" oninput="updateRateLabel(this.value)">
+                    <span id="rateVal" class="rate-value">0.5x</span>
+                </div>
+
+                <button class="btn-reload" id="reloadButton" type="button">
+                    <svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                    Atualizar Jogo
+                </button>
+            </div>
+        </header>
+
+        <div class="status-msg" id="statusMsg">Ouça um áudio para começar!</div>
+
+        <main class="game-area">
+            <div class="column">
+                <div class="column-title">1. Ouça os Áudios</div>
+                <div id="audioContainer" class="column"></div>
+            </div>
+
+            <div class="column">
+                <div class="column-title">2. Escolha a Palavra</div>
+                <div id="wordContainer" class="column"></div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Treinamento auditivo e de vocabulário adaptado para estudo — To be.</p>
+        </footer>
+    </div>
+
+    
+<script>
+    // Dados preservados do arquivo original "To be"
+    const items = [
+        {"id":1,"word":"to be","speakText":"to be","displayHtml":"To be (v)","translation":"ser, estar","ipa":"/UK tuː biː/ /US tuː biː/"},
+        {"id":2,"word":"is","speakText":"is","displayHtml":"Is","translation":"é, esta","ipa":"/ɪz/"},
+        {"id":3,"word":"am","speakText":"am","displayHtml":"Am","translation":"é, está","ipa":"/æm/"},
+        {"id":4,"word":"are","speakText":"are","displayHtml":"Are (presente)","translation":"é, está, são","ipa":"/UK ɑː/ /US ɑːr/"},
+        {"id":5,"word":"being","speakText":"being","displayHtml":"Being (gerúndio)","translation":"estando, sendo","ipa":"/UK ˈbiː.ɪŋ/ /US ˈbiː.ɪŋ/"},
+        {"id":6,"word":"was","speakText":"was","displayHtml":"Was","translation":"era, estava","ipa":"/UK wɒz/ /US wʌz/"},
+        {"id":7,"word":"were","speakText":"were","displayHtml":"Were (passado)","translation":"era, estava, eram, estavam","ipa":"/UK wɒz, wɜː/ /US wʌz, wɜːr/"},
+        {"id":8,"word":"been","speakText":"been","displayHtml":"Been","translation":"estado, sido","ipa":"/UK biːn/ /US bɪn/"},
+        {"id":9,"word":"isn't","speakText":"isn't","displayHtml":"Isn't (v - contração)","translation":"negação","ipa":"/UK ˈɪz.ənt/ /US ˈɪz.ənt/"},
+        {"id":10,"word":"aren't","speakText":"aren't","displayHtml":"Aren't (v - contração)","translation":"negação","ipa":"/UK ɑːnt/ /US ɑːrnt/"},
+        {"id":11,"word":"wasn't","speakText":"wasn't","displayHtml":"Wasn't (v - contração)","translation":"negação","ipa":"/UK ˈwɒz.ənt/ /US ˈwʌz.ənt/"},
+        {"id":12,"word":"weren't","speakText":"weren't","displayHtml":"Weren't (v - contração)","translation":"negação","ipa":"/UK wɜːnt/ /US wɜːnt/"},
+        {"id":13,"word":"won't","speakText":"won't","displayHtml":"Won't (v - contração)","translation":"negação","ipa":"/UK wəʊnt/ /US woʊnt/"}
+    ];
+
+    let selectedAudioItem = null;
+    let selectedAudioCardEl = null;
+    let selectedWordItem = null;
+    let selectedWordCardEl = null;
+    let correctMatches = 0;
+
+    const speakerIcon = `
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71 0 3.17-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+        </svg>`;
+
+    function updateRateLabel(val) {
+        const el = document.getElementById("rateVal");
+        if (el) el.textContent = Number(val).toFixed(2).replace(/0+$/,"").replace(/\.$/,"") + "x";
+    }
+
+    function speak(text, lang) {
+        // O jogo continua funcionando mesmo em ambientes que não oferecem
+        // Speech Synthesis (alguns visualizadores/preview de HTML).
+        if (!("speechSynthesis" in window) || !window.speechSynthesis) {
+            const msg = document.getElementById("statusMsg");
+            if (msg) {
+                msg.textContent = "O navegador não disponibiliza áudio de voz neste ambiente.";
+                msg.style.color = "#f59e0b";
+            }
+            return;
+        }
+
+        window.speechSynthesis.cancel();
+
+        const rateEl = document.getElementById("rateRange");
+        const currentRate = rateEl ? parseFloat(rateEl.value) : 0.5;
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang;
+        utterance.rate = currentRate;
+        utterance.pitch = 1;
+
+        const voices = window.speechSynthesis.getVoices();
+        const exact = voices.find(v => v.lang && v.lang.toLowerCase() === lang.toLowerCase());
+        const regional = voices.find(v => v.lang && v.lang.toLowerCase().startsWith(lang.slice(0,2).toLowerCase()));
+
+        if (exact) utterance.voice = exact;
+        else if (regional) utterance.voice = regional;
+
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function playSuccessSound() {
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+
+            const audioCtx = new AudioCtx();
+            const tones = [
+                [523.25, 0, 0.15],
+                [659.25, 0.10, 0.15],
+                [783.99, 0.20, 0.30]
+            ];
+
+            tones.forEach(([freq, start, duration]) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = "triangle";
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime + start);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime + start);
+                gain.gain.exponentialRampToValueAtTime(
+                    0.00001,
+                    audioCtx.currentTime + start + duration
+                );
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(audioCtx.currentTime + start);
+                osc.stop(audioCtx.currentTime + start + duration);
+            });
+        } catch (e) {
+            // O som de acerto é opcional; o jogo não depende dele.
+        }
+    }
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function clearSelection() {
+        if (selectedAudioCardEl) selectedAudioCardEl.classList.remove("selected");
+        if (selectedWordCardEl) selectedWordCardEl.classList.remove("selected");
+
+        selectedAudioItem = null;
+        selectedAudioCardEl = null;
+        selectedWordItem = null;
+        selectedWordCardEl = null;
+    }
+
+    function selectAudioCard(id, cardEl) {
+        if (!cardEl || cardEl.classList.contains("correct")) return;
+
+        document.querySelectorAll("#audioContainer .card").forEach(card => {
+            if (!card.classList.contains("correct")) card.classList.remove("selected");
+        });
+
+        selectedAudioItem = id;
+        selectedAudioCardEl = cardEl;
+        cardEl.classList.add("selected");
+
+        checkMatch();
+    }
+
+    function selectWordCard(id, cardEl) {
+        if (!cardEl || cardEl.classList.contains("correct")) return;
+
+        document.querySelectorAll("#wordContainer .card").forEach(card => {
+            if (!card.classList.contains("correct")) card.classList.remove("selected");
+        });
+
+        selectedWordItem = id;
+        selectedWordCardEl = cardEl;
+        cardEl.classList.add("selected");
+
+        checkMatch();
+    }
+
+    function checkMatch() {
+        const msgEl = document.getElementById("statusMsg");
+
+        if (selectedAudioItem === null || selectedWordItem === null) return;
+
+        if (selectedAudioItem === selectedWordItem) {
+            playSuccessSound();
+
+            msgEl.textContent = "Parabéns! Acertou a correspondência!";
+            msgEl.style.color = "#22c55e";
+
+            selectedAudioCardEl.classList.remove("selected");
+            selectedWordCardEl.classList.remove("selected");
+
+            selectedAudioCardEl.classList.add("correct");
+            selectedWordCardEl.classList.add("correct");
+
+            selectedAudioItem = null;
+            selectedAudioCardEl = null;
+            selectedWordItem = null;
+            selectedWordCardEl = null;
+
+            correctMatches++;
+
+            if (correctMatches === items.length) {
+                setTimeout(() => {
+                    msgEl.textContent = "🎉 Incrível! Você completou todas as formas do verbo To be!";
+                }, 500);
+            }
+        } else {
+            msgEl.textContent = "Ops! Não correspondem. Tente novamente.";
+            msgEl.style.color = "#ef4444";
+
+            const oldAudio = selectedAudioCardEl;
+            const oldWord = selectedWordCardEl;
+
+            setTimeout(() => {
+                if (oldAudio) oldAudio.classList.remove("selected");
+                if (oldWord) oldWord.classList.remove("selected");
+
+                selectedAudioItem = null;
+                selectedAudioCardEl = null;
+                selectedWordItem = null;
+                selectedWordCardEl = null;
+            }, 800);
+        }
+    }
+
+    function makeAudioCard(item) {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.dataset.id = item.id;
+
+        const audioButtons = document.createElement("div");
+        audioButtons.className = "audio-buttons";
+
+        const ukButton = document.createElement("button");
+        ukButton.type = "button";
+        ukButton.className = "btn-audio";
+        ukButton.innerHTML = "<small>GB</small>" + speakerIcon + "<span>UK</span>";
+        ukButton.addEventListener("click", (event) => {
+            event.stopPropagation();
+            speak(item.speakText, "en-GB");
+            selectAudioCard(item.id, card);
+        });
+
+        const usButton = document.createElement("button");
+        usButton.type = "button";
+        usButton.className = "btn-audio";
+        usButton.innerHTML = "<small>US</small>" + speakerIcon + "<span>US</span>";
+        usButton.addEventListener("click", (event) => {
+            event.stopPropagation();
+            speak(item.speakText, "en-US");
+            selectAudioCard(item.id, card);
+        });
+
+        audioButtons.appendChild(ukButton);
+        audioButtons.appendChild(usButton);
+        card.appendChild(audioButtons);
+
+        return card;
+    }
+
+    function makeWordCard(item) {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.dataset.id = item.id;
+
+        const wordInfo = document.createElement("div");
+        wordInfo.className = "word-info";
+
+        const word = document.createElement("span");
+        word.className = "word";
+        word.textContent = item.displayHtml;
+
+        const translation = document.createElement("span");
+        translation.className = "translation";
+        translation.textContent = item.translation;
+
+        const ipa = document.createElement("span");
+        ipa.className = "ipa";
+        ipa.textContent = item.ipa;
+
+        wordInfo.appendChild(word);
+        wordInfo.appendChild(translation);
+        wordInfo.appendChild(ipa);
+
+        card.appendChild(wordInfo);
+
+        card.addEventListener("click", () => {
+            selectWordCard(item.id, card);
+        });
+
+        return card;
+    }
+
+    function initGame() {
+        const audioContainer = document.getElementById("audioContainer");
+        const wordContainer = document.getElementById("wordContainer");
+        const msgEl = document.getElementById("statusMsg");
+
+        if (!audioContainer || !wordContainer) return;
+
+        if ("speechSynthesis" in window && window.speechSynthesis) {
+            try { window.speechSynthesis.cancel(); } catch (e) {}
+        }
+
+        selectedAudioItem = null;
+        selectedAudioCardEl = null;
+        selectedWordItem = null;
+        selectedWordCardEl = null;
+        correctMatches = 0;
+
+        audioContainer.innerHTML = "";
+        wordContainer.innerHTML = "";
+
+        if (msgEl) {
+            msgEl.textContent = "Ouça um áudio para começar!";
+            msgEl.style.color = "#38bdf8";
+        }
+
+        const audioList = shuffle([...items]);
+        const wordList = shuffle([...items]);
+
+        audioList.forEach(item => {
+            audioContainer.appendChild(makeAudioCard(item));
+        });
+
+        wordList.forEach(item => {
+            wordContainer.appendChild(makeWordCard(item));
+        });
+    }
+
+    // Inicializa sem depender de window.onload e sem assumir que
+    // Speech Synthesis existe. Isso evita a tela vazia em visualizadores
+    // que não oferecem a API de voz.
+    function start() {
+        const rateRange = document.getElementById("rateRange");
+        if (rateRange) {
+            updateRateLabel(rateRange.value);
+            rateRange.addEventListener("input", () => updateRateLabel(rateRange.value));
+        }
+
+        const reloadButton = document.getElementById("reloadButton");
+        if (reloadButton) {
+            reloadButton.addEventListener("click", initGame);
+        }
+
+        initGame();
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", start, {once:true});
+    } else {
+        start();
+    }
+
+    if ("speechSynthesis" in window && window.speechSynthesis) {
+        window.speechSynthesis.onvoiceschanged = () => {
+            try { window.speechSynthesis.getVoices(); } catch (e) {}
+        };
+    }
+</script>
+
+</body>
+</html>
