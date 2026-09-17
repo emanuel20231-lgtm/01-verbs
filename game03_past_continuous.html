@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Learn — Past Progressive Individual (5k+ Verbs)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 950px;
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            color: #f8fafc;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+        }
+
+        /* Barra de Progresso */
+        .progress-container {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-bottom: 6px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background-color: #334155;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #38bdf8;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Controles, Áudio e Medalhas */
+        .controls-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .controls {
+            background-color: #0f172a;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .controls label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #cbd5e1;
+        }
+
+        .controls input[type="range"] {
+            cursor: pointer;
+            width: 90px;
+        }
+
+        .rate-value {
+            font-weight: 700;
+            color: #38bdf8;
+            min-width: 30px;
+            font-size: 0.8rem;
+        }
+
+        .medal-box {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 6px 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #f59e0b;
+            transition: transform 0.1s ease;
+        }
+
+        @keyframes vibrateMedal {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(-3px, 2px) rotate(-6deg); }
+            40% { transform: translate(3px, -2px) rotate(6deg); }
+            60% { transform: translate(-3px, -2px) rotate(-4deg); }
+            80% { transform: translate(3px, 2px) rotate(4deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        .medal-box.vibrating {
+            animation: vibrateMedal 0.4s ease-in-out;
+            background-color: #451a03;
+            border-color: #f59e0b;
+        }
+
+        .medal-icon {
+            font-size: 1.1rem;
+        }
+
+        .audio-box {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .audio-box p {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+
+        .audio-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .btn-audio {
+            background-color: #1e293b;
+            color: #ffffff;
+            border: 1px solid #475569;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-audio:hover {
+            background-color: #334155;
+            border-color: #38bdf8;
+        }
+
+        .status-msg {
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #38bdf8;
+            margin-bottom: 15px;
+            min-height: 22px;
+        }
+
+        /* 3 Colunas principais */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 750px) {
+            .game-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .column {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 440px;
+            overflow-y: auto;
+        }
+
+        .column-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #38bdf8;
+            text-align: center;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 6px;
+            margin-bottom: 4px;
+        }
+
+        .pair-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+
+        .option-btn {
+            background-color: #1e293b;
+            color: #f8fafc;
+            border: 1px solid #475569;
+            padding: 9px 4px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled), .key-btn:hover:not(:disabled), .submenu-btn:hover:not(:disabled) {
+            background-color: #334155;
+            border-color: #38bdf8;
+        }
+
+        .option-btn.correct, .key-btn.correct, .submenu-btn.correct {
+            background-color: #064e3b !important;
+            border-color: #22c55e !important;
+            color: #22c55e !important;
+        }
+
+        .option-btn.wrong, .key-btn.wrong, .submenu-btn.wrong {
+            background-color: #7f1d1d !important;
+            border-color: #ef4444 !important;
+            color: #fca5a5 !important;
+        }
+
+        .verb-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: 100%;
+        }
+
+        .verb-submenu {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            padding-left: 10px;
+            border-left: 2px solid #38bdf8;
+            margin-bottom: 6px;
+        }
+
+        .verb-submenu.open {
+            display: flex;
+        }
+
+        .submenu-btn {
+            background-color: #0f172a;
+            color: #38bdf8;
+            border: 1px solid #334155;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .reveal-box {
+            background-color: #0f172a;
+            border: 2px dashed #22c55e;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+            display: none;
+            margin-bottom: 15px;
+        }
+
+        .reveal-box h3 {
+            color: #22c55e;
+            font-size: 1rem;
+            margin-bottom: 6px;
+        }
+
+        .reveal-box p {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-action {
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-action:hover {
+            background-color: #0369a1;
+        }
+
+        footer {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>I Learn — Past Progressive Individual</h1>
+            <p class="subtitle">Monte a frase no passado progressivo seguindo estritamente a ordem do áudio</p>
+
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span id="progressText">Verbos percorridos: 0 / 62</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                </div>
+            </div>
+
+            <div class="controls-wrapper">
+                <div class="controls">
+                    <label for="rateRange">Velocidade:</label>
+                    <input type="range" id="rateRange" min="0.25" max="1.5" step="0.05" value="0.6" oninput="updateRateLabel(this.value)">
+                    <span id="rateVal" class="rate-value">0.6x</span>
+                </div>
+
+                <div class="medal-box" id="medalBox">
+                    <span class="medal-icon">🏅</span> <span id="medalCount">+0</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="audio-box">
+            <p>Ouça a frase gerada (com entonação ajustada):</p>
+            <div class="audio-buttons">
+                <button class="btn-audio" onclick="verifyAndSpeak('en-GB')">🔊 UK Audio</button>
+                <button class="btn-audio" onclick="verifyAndSpeak('en-US')">🔊 US Audio</button>
+            </div>
+        </div>
+
+        <div class="status-msg" id="statusMsg">Ouça o áudio e monte a frase na ordem exata em que as palavras são ditas.</div>
+
+        <main class="game-grid">
+            <!-- Coluna 1: Auxiliar / To Be -->
+            <div class="column">
+                <div class="column-title">1. Auxiliar (Was / Were)</div>
+                <div id="auxContainer" class="pair-grid"></div>
+            </div>
+
+            <!-- Coluna 2: Pronome -->
+            <div class="column">
+                <div class="column-title">2. Pronome</div>
+                <div id="pronounsContainer" class="pair-grid"></div>
+            </div>
+
+            <!-- Coluna 3: Verbo com Gerúndio & Símbolos -->
+            <div class="column">
+                <div class="column-title">3. Verbo (-ing) & Símbolos</div>
+                <div id="verbsContainer" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px;"></div>
+                <div id="symbolContainer" style="display: flex; justify-content: center;"></div>
+            </div>
+        </main>
+
+        <div class="reveal-box" id="revealBox">
+            <h3 id="revealTitle">🎉 Frase Completa Revelada!</h3>
+            <p id="revealedSentence"></p>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn-action" id="nextBtn" onclick="initGame()">Avançar / Próximo ➔</button>
+        </div>
+
+        <footer>
+            <p>I Learn — Sistema Interativo de Treinamento Verbal.</p>
+        </footer>
+    </div>
+
+    <script>
+        /* =========================================================================
+           ✨ DICIONÁRIO INTERNO PARA PAST PROGRESSIVE (GERÚNDIO + DISTRAÇÃO) ✨
+           ========================================================================= */
+
+        const masterVerbsDatabase = {
+            "knock": { ing: "knocking", distractor: "knocked" },
+            "hear": { ing: "hearing", distractor: "heard" },
+            "speak": { ing: "speaking", distractor: "spoke" },
+            "say": { ing: "saying", distractor: "said" },
+            "throw": { ing: "throwing", distractor: "threw" },
+            "travel": { ing: "traveling", distractor: "traveled" },
+            "leave": { ing: "leaving", distractor: "left" },
+            "get": { ing: "getting", distractor: "got" },
+            "brush": { ing: "brushing", distractor: "brushed" },
+            "comb": { ing: "combing", distractor: "combed" },
+            "see": { ing: "seeing", distractor: "saw" },
+            "sleep": { ing: "sleeping", distractor: "slept" },
+            "wake up": { ing: "waking up", distractor: "woke up" },
+            "surround": { ing: "surrounding", distractor: "surrounded" },
+            "guide": { ing: "guiding", distractor: "guided" },
+            "land": { ing: "landing", distractor: "landed" },
+            "pilot": { ing: "piloting", distractor: "piloted" },
+            "ride": { ing: "riding", distractor: "rode" },
+            "do": { ing: "doing", distractor: "did" },
+            "be": { ing: "being", distractor: "was" },
+            "have": { ing: "having", distractor: "had" },
+            "give": { ing: "giving", distractor: "gave" },
+            "sit": { ing: "sitting", distractor: "sat" },
+            "help": { ing: "helping", distractor: "helped" },
+            "need": { ing: "needing", distractor: "needed" },
+            "stand": { ing: "standing", distractor: "stood" },
+            "study": { ing: "studying", distractor: "studied" },
+            "collaborate": { ing: "collaborating", distractor: "collaborated" },
+            "upgrade": { ing: "upgrading", distractor: "upgraded" },
+            "keep": { ing: "keeping", distractor: "kept" },
+            "stay": { ing: "staying", distractor: "stayed" },
+            "occupy": { ing: "occupying", distractor: "occupied" },
+            "happen": { ing: "happening", distractor: "happened" },
+            "know": { ing: "knowing", distractor: "knew" },
+            "call": { ing: "calling", distractor: "called" },
+            "catch": { ing: "catching", distractor: "caught" },
+            "insert": { ing: "inserting", distractor: "inserted" },
+            "save": { ing: "saving", distractor: "saved" },
+            "swim": { ing: "swimming", distractor: "swam" },
+            "drown": { ing: "drowning", distractor: "drowned" },
+            "die": { ing: "dying", distractor: "died" },
+            "fly": { ing: "flying", distractor: "flew" },
+            "fall": { ing: "falling", distractor: "fell" },
+            "grow": { ing: "growing", distractor: "grew" },
+            "increase": { ing: "increasing", distractor: "increased" },
+            "add": { ing: "adding", distractor: "added" },
+            "hate": { ing: "hating", distractor: "hated" },
+            "strike": { ing: "striking", distractor: "struck" },
+            "hit": { ing: "hitting", distractor: "hit" },
+            "touch": { ing: "touching", distractor: "touched" },
+            "kick": { ing: "kicking", distractor: "kicked" },
+            "pull": { ing: "pulling", distractor: "pulled" },
+            "kill": { ing: "killing", distractor: "killed" },
+            "bite": { ing: "biting", distractor: "bit" },
+            "swear": { ing: "swearing", distractor: "swore" },
+            "iron": { ing: "ironing", distractor: "ironed" },
+            "sew": { ing: "sewing", distractor: "sewed" },
+            "want": { ing: "wanting", distractor: "wanted" },
+            "wash": { ing: "washing", distractor: "washed" },
+            "buy": { ing: "buying", distractor: "bought" },
+            "pay": { ing: "paying", distractor: "paid" },
+            "cook": { ing: "cooking", distractor: "cooked" }
+        };
+
+        const masterVerbsList = Object.keys(masterVerbsDatabase).map(v => "To " + v);
+
+        let urnaDeSorteio = [...masterVerbsList];
+        let completedCount = 0;
+        let medalsEarned = 0;
+
+        const pronounPairs = [
+            { normal: { display: "I", value: "i" }, contraction: null },
+            { normal: { display: "You", value: "you" }, contraction: null },
+            { normal: { display: "He", value: "he" }, contraction: null },
+            { normal: { display: "She", value: "she" }, contraction: null },
+            { normal: { display: "It", value: "it" }, contraction: null },
+            { normal: { display: "We", value: "we" }, contraction: null },
+            { normal: { display: "They", value: "they" }, contraction: null }
+        ];
+
+        const fixedAuxPairs = [
+            ["was", "wasn't"],
+            ["were", "weren't"]
+        ];
+
+        let secretSentenceType = ""; 
+        let secretPronounObj = {};
+        let secretAux = "";
+        let secretVerbRaw = "";
+        let secretVerbClean = "";
+        let secretConjugatedForm = "";
+        let fullSentenceText = "";
+
+        let sentenceOrderType = "pronoun-first"; 
+        let currentAudioOrderStep = 0; 
+
+        let foundAux = false;
+        let foundPronoun = false;
+        let foundVerb = false;
+        let foundQuestionMark = false;
+        let requiresQuestionMark = false;
+
+        function updateRateLabel(val) {
+            document.getElementById('rateVal').innerText = val + 'x';
+        }
+
+        function playSuccessSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const playTone = (freq, startTime, duration) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime + startTime);
+                    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + startTime + duration);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(audioCtx.currentTime + startTime);
+                    osc.stop(audioCtx.currentTime + startTime + duration);
+                };
+                playTone(523.25, 0, 0.1);
+                playTone(659.25, 0.08, 0.15);
+                playTone(783.99, 0.16, 0.2);
+            } catch (e) {}
+        }
+
+        function playMedalSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const playTone = (freq, startTime, duration) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime + startTime);
+                    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + startTime + duration);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(audioCtx.currentTime + startTime);
+                    osc.stop(audioCtx.currentTime + startTime + duration);
+                };
+                playTone(440.00, 0.0, 0.08);
+                playTone(554.37, 0.08, 0.08);
+                playTone(659.25, 0.16, 0.08);
+                playTone(830.61, 0.24, 0.08);
+                playTone(1046.50, 0.32, 0.20);
+            } catch (e) {}
+        }
+
+        function entonadorParaPerguntas(text, isQuestion) {
+            if (!isQuestion) return text;
+            let cleanText = text.trim();
+            if (!cleanText.endsWith('?')) {
+                cleanText += '?';
+            }
+            return cleanText;
+        }
+
+        function verifyAndSpeak(lang) {
+            if (!fullSentenceText) return;
+            window.speechSynthesis.cancel();
+            
+            const statusMsg = document.getElementById('statusMsg');
+            const originalText = statusMsg.innerText;
+            const originalColor = statusMsg.style.color;
+
+            statusMsg.style.color = "#22c55e";
+            statusMsg.innerText = "🔍 Verificando gramática do Past Progressive...";
+
+            setTimeout(() => {
+                statusMsg.style.color = "#22c55e";
+                statusMsg.innerText = "✅ Gramática verificada! Entonador aplicando ajuste de pergunta...";
+
+                const currentRate = parseFloat(document.getElementById('rateRange').value);
+                const textToSpeak = entonadorParaPerguntas(fullSentenceText, requiresQuestionMark);
+                
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.lang = lang;
+                utterance.rate = currentRate;
+                
+                if (requiresQuestionMark) {
+                    utterance.pitch = 1.15; 
+                } else {
+                    utterance.pitch = 1.0;
+                }
+
+                window.speechSynthesis.speak(utterance);
+
+                setTimeout(() => {
+                    if (!foundVerb) {
+                        statusMsg.style.color = originalColor;
+                        statusMsg.innerText = originalText;
+                    }
+                }, 2000);
+
+            }, 800);
+        }
+
+        function updateProgressUI() {
+            let total = masterVerbsList.length;
+            let percent = Math.round((completedCount / total) * 100);
+            document.getElementById('progressText').innerText = `Verbos percorridos: ${completedCount} / ${total}`;
+            document.getElementById('progressPercent').innerText = `${percent}%`;
+            document.getElementById('progressBarFill').style.width = `${percent}%`;
+
+            let newMedals = Math.floor(completedCount / 10);
+            if (newMedals > medalsEarned) {
+                medalsEarned = newMedals;
+                playMedalSound();
+                
+                const medalBox = document.getElementById('medalBox');
+                medalBox.classList.add('vibrating');
+                setTimeout(() => medalBox.classList.remove('vibrating'), 400);
+            }
+            document.getElementById('medalCount').innerText = `+${medalsEarned}`;
+        }
+
+        function getVerbData(verbClean) {
+            let entry = masterVerbsDatabase[verbClean];
+            if (entry) {
+                return {
+                    base: verbClean,
+                    ing: entry.ing,
+                    distractor: entry.distractor
+                };
+            }
+            // Fallback genérico caso adicione verbos dinamicamente sem o dicionário completo
+            return {
+                base: verbClean,
+                ing: verbClean + 'ing',
+                distractor: verbClean + 'ed'
+            };
+        }
+
+        function formatPronounDisplay(pronounVal) {
+            if (pronounVal.toLowerCase() === 'i') {
+                return 'I';
+            }
+            return pronounVal.charAt(0).toUpperCase() + pronounVal.slice(1);
+        }
+
+        function getVerbFormsPastProgressive(verbClean, pronounVal, type) {
+            let v = verbClean.toLowerCase();
+            let pBase = pronounVal.toLowerCase();
+            let capitalizedPronoun = formatPronounDisplay(pBase);
+            let info = getVerbData(v);
+
+            // Regra do Be/Were para Past Progressive
+            let isWas = (pBase === 'i' || pBase === 'he' || pBase === 'she' || pBase === 'it');
+            let wordPos = isWas ? 'was' : 'were';
+            let wordNeg = isWas ? "wasn't" : "weren't";
+            let capPos = isWas ? 'Was' : 'Were';
+            let capNeg = isWas ? "Wasn't" : "Weren't";
+
+            if (type === 'positive') {
+                return { sentence: `${capitalizedPronoun} ${wordPos} ${info.ing}.`, aux: wordPos, verbForm: info.ing, isQuestion: false };
+            } else if (type === 'negative') {
+                return { sentence: `${capitalizedPronoun} ${wordNeg} ${info.ing}.`, aux: wordNeg, verbForm: info.ing, isQuestion: false };
+            } else if (type === 'interrogative') {
+                return { sentence: `${capPos} ${pBase} ${info.ing}?`, aux: wordPos, verbForm: info.ing, isQuestion: true };
+            } else {
+                return { sentence: `${capNeg} ${pBase} ${info.ing}?`, aux: wordNeg, verbForm: info.ing, isQuestion: true };
+            }
+        }
+
+        function gerarRegrasPastProgressive(verbCleanFixed = null) {
+            let pObj;
+            let verbRaw, verbClean;
+
+            if (!verbCleanFixed) {
+                if (urnaDeSorteio.length === 0) {
+                    urnaDeSorteio = [...masterVerbsList];
+                    completedCount = 0;
+                }
+                let randomIndex = Math.floor(Math.random() * urnaDeSorteio.length);
+                verbRaw = urnaDeSorteio.splice(randomIndex, 1)[0];
+                verbClean = verbRaw.replace(/^To\s+/i, '').toLowerCase();
+                completedCount++;
+                updateProgressUI();
+            } else {
+                verbClean = verbCleanFixed;
+                verbRaw = "To " + verbClean;
+            }
+
+            // Tipos de frase: Afirmativa, Negativa, Interrogativa, Interrogativa Negativa
+            let randVal = Math.random();
+            if (randVal < 0.40) {
+                secretSentenceType = "positive";
+            } else if (randVal < 0.60) {
+                secretSentenceType = "negative";
+            } else if (randVal < 0.80) {
+                secretSentenceType = "interrogative";
+            } else {
+                secretSentenceType = "negative_question";
+            }
+            
+            let flatPronouns = [];
+            pronounPairs.forEach(pair => {
+                flatPronouns.push(pair.normal);
+            });
+            pObj = flatPronouns[Math.floor(Math.random() * flatPronouns.length)];
+
+            secretPronounObj = pObj;
+            secretVerbRaw = verbRaw;
+            secretVerbClean = verbClean;
+
+            const resultData = getVerbFormsPastProgressive(secretVerbClean, secretPronounObj.value, secretSentenceType);
+            fullSentenceText = resultData.sentence;
+            secretAux = resultData.aux;
+            secretConjugatedForm = resultData.verbForm;
+            requiresQuestionMark = resultData.isQuestion;
+
+            if (secretSentenceType === "interrogative" || secretSentenceType === "negative_question") {
+                sentenceOrderType = "aux-first"; 
+            } else {
+                sentenceOrderType = "pronoun-first"; 
+            }
+        }
+
+        function shuffle(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function initGame() {
+            currentAudioOrderStep = 0;
+            foundAux = false;
+            foundPronoun = false;
+            foundVerb = false;
+            foundQuestionMark = false;
+
+            document.getElementById('revealBox').style.display = 'none';
+            document.getElementById('statusMsg').style.color = "#38bdf8";
+            document.getElementById('statusMsg').innerText = "Ouça o áudio e monte a frase na ordem exata em que as palavras são ditas.";
+
+            gerarRegrasPastProgressive();
+            renderizarInterfaceJogo();
+        }
+
+        function renderizarInterfaceJogo() {
+            const auxContainer = document.getElementById('auxContainer');
+            auxContainer.innerHTML = '';
+            fixedAuxPairs.forEach(pair => {
+                pair.forEach(itemText => {
+                    if (itemText === "") return;
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerText = itemText;
+                    btn.onclick = () => checkAux(itemText, btn);
+                    auxContainer.appendChild(btn);
+                });
+            });
+
+            const pContainer = document.getElementById('pronounsContainer');
+            pContainer.innerHTML = '';
+            pronounPairs.forEach(pair => {
+                const btnNorm = document.createElement('button');
+                btnNorm.className = 'option-btn';
+                btnNorm.innerText = pair.normal.display;
+                btnNorm.onclick = () => checkPronoun(pair.normal.value, btnNorm);
+                pContainer.appendChild(btnNorm);
+            });
+
+            const verbsContainer = document.getElementById('verbsContainer');
+            verbsContainer.innerHTML = '';
+
+            let otherVerbsPool = masterVerbsList.filter(v => v !== secretVerbRaw);
+            let shuffledOther = shuffle(otherVerbsPool).slice(0, 3);
+            let shuffledVerbs = shuffle([secretVerbRaw, ...shuffledOther]);
+
+            shuffledVerbs.forEach(vItem => {
+                let vClean = vItem.replace(/^To\s+/i, '').toLowerCase();
+                let info = getVerbData(vClean);
+                
+                // Leque de opções: O gerúndio correto + a forma de distração (passado simples ou outra forma)
+                let lequeOptions = [info.ing, info.distractor];
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'verb-wrapper';
+
+                const mainBtn = document.createElement('button');
+                mainBtn.className = 'option-btn';
+                mainBtn.innerText = vItem;
+                
+                const submenu = document.createElement('div');
+                submenu.className = 'verb-submenu';
+
+                mainBtn.onclick = () => {
+                    if (!checkOrderBeforeAction("verb")) return;
+                    document.querySelectorAll('.verb-submenu').forEach(s => {
+                        if (s !== submenu) s.classList.remove('open');
+                    });
+                    submenu.classList.toggle('open');
+                };
+
+                shuffle(lequeOptions).forEach(opt => {
+                    const subBtn = document.createElement('button');
+                    subBtn.className = 'submenu-btn';
+                    subBtn.innerText = opt;
+                    
+                    subBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        checkVerbSubmenuChoice(vItem, opt, subBtn, mainBtn, submenu);
+                    };
+                    submenu.appendChild(subBtn);
+                });
+
+                wrapper.appendChild(mainBtn);
+                wrapper.appendChild(submenu);
+                verbsContainer.appendChild(wrapper);
+            });
+
+            const symbolContainer = document.getElementById('symbolContainer');
+            symbolContainer.innerHTML = '';
+            const qBtn = document.createElement('button');
+            qBtn.className = 'option-btn';
+            qBtn.style.width = '60px';
+            qBtn.innerText = '?';
+            qBtn.onclick = () => checkQuestionMark(qBtn);
+            symbolContainer.appendChild(qBtn);
+        }
+
+        function showOrderError() {
+            const statusMsg = document.getElementById('statusMsg');
+            statusMsg.style.color = "#ef4444";
+            statusMsg.innerText = "Siga a ordem com que as palavras foram ditas no áudio";
+            setTimeout(() => {
+                if (!foundVerb) {
+                    statusMsg.style.color = "#38bdf8";
+                    statusMsg.innerText = "Ouça o áudio e monte a frase na ordem exata em que as palavras são ditas.";
+                }
+            }, 2500);
+        }
+
+        function checkOrderBeforeAction(targetType) {
+            if (sentenceOrderType === "aux-first") {
+                if (targetType === 'aux' && currentAudioOrderStep === 0) return true;
+                if (targetType === 'pronoun' && currentAudioOrderStep === 1) return true;
+                if (targetType === 'verb' && currentAudioOrderStep === 2) return true;
+                if (targetType === 'question' && currentAudioOrderStep === 3) return true;
+            } else {
+                if (targetType === 'pronoun' && currentAudioOrderStep === 0) return true;
+                if (targetType === 'aux' && currentAudioOrderStep === 1) return true;
+                if (targetType === 'verb' && currentAudioOrderStep === 2) return true;
+            }
+
+            showOrderError();
+            return false;
+        }
+
+        function checkAux(selectedAux, btn) {
+            if (foundAux) return;
+            if (!checkOrderBeforeAction("aux")) {
+                btn.classList.add('wrong');
+                setTimeout(() => btn.classList.remove('wrong'), 400);
+                return;
+            }
+
+            if (selectedAux.toLowerCase().trim() === secretAux.toLowerCase().trim()) {
+                playSuccessSound();
+                btn.classList.add('correct');
+                foundAux = true;
+                currentAudioOrderStep++;
+                document.getElementById('statusMsg').style.color = "#38bdf8";
+                document.getElementById('statusMsg').innerText = "Correto! Continue seguindo a ordem do áudio.";
+            } else {
+                btn.classList.add('wrong');
+                setTimeout(() => btn.classList.remove('wrong'), 400);
+            }
+        }
+
+        function checkPronoun(selectedVal, btn) {
+            if (foundPronoun) return;
+            if (!checkOrderBeforeAction("pronoun")) {
+                btn.classList.add('wrong');
+                setTimeout(() => btn.classList.remove('wrong'), 400);
+                return;
+            }
+
+            if (selectedVal.toLowerCase().trim() === secretPronounObj.value.toLowerCase().trim()) {
+                playSuccessSound();
+                btn.classList.add('correct');
+                foundPronoun = true;
+                currentAudioOrderStep++;
+                document.getElementById('statusMsg').style.color = "#38bdf8";
+                document.getElementById('statusMsg').innerText = "Perfeito! Continue seguindo a ordem do áudio.";
+            } else {
+                btn.classList.add('wrong');
+                setTimeout(() => btn.classList.remove('wrong'), 400);
+            }
+        }
+
+        function checkVerbSubmenuChoice(verItem, selectedOpt, subBtn, mainBtn, submenu) {
+            if (foundVerb) return;
+            if (!checkOrderBeforeAction("verb")) {
+                subBtn.classList.add('wrong');
+                setTimeout(() => subBtn.classList.remove('wrong'), 400);
+                return;
+            }
+            
+            let isCorrectVerb = (verItem.toLowerCase().trim() === secretVerbRaw.toLowerCase().trim());
+            let isCorrectForm = (selectedOpt.toLowerCase().trim() === secretConjugatedForm.toLowerCase().trim());
+
+            if (isCorrectVerb && isCorrectForm) {
+                playSuccessSound();
+                mainBtn.classList.add('correct');
+                subBtn.classList.add('correct');
+                submenu.classList.remove('open');
+                foundVerb = true;
+                currentAudioOrderStep++;
+
+                if (requiresQuestionMark) {
+                    document.getElementById('statusMsg').style.color = "#38bdf8";
+                    document.getElementById('statusMsg').innerText = "Excelente! Para finalizar, clique no ponto de interrogação (?)";
+                } else {
+                    checkVictory();
+                }
+            } else {
+                subBtn.classList.add('wrong');
+                setTimeout(() => subBtn.classList.remove('wrong'), 400);
+            }
+        }
+
+        function checkQuestionMark(btn) {
+            if (foundQuestionMark) return;
+            if (!requiresQuestionMark) {
+                showOrderError();
+                btn.classList.add('wrong');
+                setTimeout(() => btn.classList.remove('wrong'), 400);
+                return;
+            }
+            if (!checkOrderBeforeAction("question")) {
+                btn.classList.add('wrong');
+                setTimeout(() => btn.classList.remove('wrong'), 400);
+                return;
+            }
+
+            playSuccessSound();
+            btn.classList.add('correct');
+            foundQuestionMark = true;
+            checkVictory();
+        }
+
+        function checkVictory() {
+            let finalMsg = "Parabéns! Todos os acertos realizados!";
+            if (completedCount >= masterVerbsList.length && urnaDeSorteio.length === 0) {
+                finalMsg = `You are amazing! You conquered ${medalsEarned} medals!`;
+            }
+
+            document.getElementById('statusMsg').innerText = finalMsg;
+            document.getElementById('statusMsg').style.color = "#22c55e";
+            
+            const revealBox = document.getElementById('revealBox');
+            document.getElementById('revealTitle').innerText = `🎉 Frase Completa Revelada (${secretSentenceType.toUpperCase()}):`;
+            document.getElementById('revealedSentence').innerText = fullSentenceText;
+            revealBox.style.display = 'block';
+            
+            verifyAndSpeak('en-US');
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
