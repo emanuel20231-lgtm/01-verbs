@@ -511,6 +511,18 @@
   </div>
 
   <script>
+
+            // Oculta a apresentação após 3 segundos (3000ms)
+        window.addEventListener('DOMContentLoaded', () => {
+          setTimeout(() => {
+            const splash = document.getElementById('splash-screen');
+            if (splash) {
+              splash.classList.add('hidden');
+            }
+          }, 3000);
+        });
+
+    
     let activeLinks = [];
     let currentIndex = 0;
 
