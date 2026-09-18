@@ -408,7 +408,7 @@
     
     <div class="folder">
       <button class="folder-title" onclick="toggleFolder(this)" data-has-nav="true" >
-        📁 🇺🇸 03 - Verbos <span class="folder-arrow">▶</span>
+        📁 📜03 - Verbos <span class="folder-arrow">▶</span>
       </button>
       <div class="folder-content">
         <ul>
@@ -587,7 +587,7 @@
 
     <div class="folder">
       <button class="folder-title" onclick="toggleFolder(this)" data-has-nav="false" >
-        📁 🎮🕹️ 06 - Game Times <span class="folder-arrow">▶</span>
+        📁 🕹️ 06 - Game Times <span class="folder-arrow">▶</span>
       </button>
       <div class="folder-content">
         <ul>
@@ -647,49 +647,25 @@
     
     
     // Alterna o estado da pasta, verifica permissão de navegação e atualiza o total de itens
-  function toggleFolder(element) {
-  const folder = element.parentElement;
-  folder.classList.toggle('active');
+          function toggleFolder(element) {
+            const folder = element.parentElement;
+            folder.classList.toggle('active');
+          
+            const hasNav = element.getAttribute('data-has-nav') === 'true' || 
+                           folder.getAttribute('data-has-nav') === 'true';
+          
+            const navContainer = document.getElementById('counter-container') || document.querySelector('.nav-controls');
+          
+            if (navContainer) {
+              if (hasNav) {
+                navContainer.style.setProperty('display', 'flex', 'important');
+              } else {
+                navContainer.style.setProperty('display', 'none', 'important');
+              }
+            }
+          }
 
-  const hasNav = element.getAttribute('data-has-nav') === 'true' || 
-                 folder.getAttribute('data-has-nav') === 'true';
-
-  const navContainer = document.getElementById('counter-container') || document.querySelector('.nav-controls');
-
-  if (navContainer) {
-    if (hasNav) {
-      navContainer.style.setProperty('display', 'flex', 'important');
-
-      // Conta automaticamente os itens existentes na pasta
-      const items = folder.querySelectorAll('.folder-content > *'); 
-      totalItems = items.length;
-      currentIndex = 1;
-
-      atualizarVisor();
-    } else {
-      navContainer.style.setProperty('display', 'none', 'important');
-    }
-  }
-}
-
-// PASSO 3: Atualiza o número exibido na tela (ex: 1/62) e gerencia os cliques nas setas de navegação
-function atualizarVisor() {
-  const counterElement = document.getElementById('counter');
-  if (counterElement) {
-    counterElement.textContent = `${currentIndex}/${totalItems}`;
-  }
-}
-
-function navegar(direcao) {
-  if (totalItems === 0) return;
-
-  currentIndex += direcao;
-
-  if (currentIndex < 1) currentIndex = 1;
-  if (currentIndex > totalItems) currentIndex = totalItems;
-
-  atualizarVisor();
-}
+  
 
     function setupLinks() {
       const allLinks = document.querySelectorAll('.folder-content a');
