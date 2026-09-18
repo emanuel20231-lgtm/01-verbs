@@ -654,18 +654,17 @@
                  folder.getAttribute('data-has-nav') === 'true';
 
   const navContainer = document.getElementById('counter-container') || document.querySelector('.nav-controls');
-  const counterElement = document.getElementById('counter');
 
   if (navContainer) {
     if (hasNav) {
       navContainer.style.setProperty('display', 'flex', 'important');
 
-      // Busca todos os links/itens contidos nesta pasta específica
-      const folderLinks = folder.querySelectorAll('.folder-content a');
-      
-      if (folderLinks.length > 0 && counterElement) {
-        // Exibe 1/Total assim que a pasta abre
-        counterElement.textContent = `1/${folderLinks.length}`;
+      // Captura todos os links de dentro da pasta clicada
+      activeLinks = Array.from(folder.querySelectorAll('.folder-content a'));
+      currentIndex = 0; // Começa no primeiro item (índice 0)
+
+      if (activeLinks.length > 0) {
+        updateView();
       }
     } else {
       navContainer.style.setProperty('display', 'none', 'important');
