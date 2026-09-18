@@ -707,7 +707,7 @@
       }, 3000);
     }
     // apresentações de tela dinâmica para cada pasta individual //
-  function setupLinks()  {
+function setupLinks() {
   const allLinks = document.querySelectorAll('.folder-content a');
   
   allLinks.forEach((link) => {
@@ -715,22 +715,36 @@
       e.preventDefault();
       
       const parentFolder = link.closest('.folder-content');
+      const folderElement = link.closest('.folder');
+
       if (parentFolder) {
-        // Atualiza a lista de links ativos e a contagem (ex: 1/62)
+        // Atualiza a lista de links ativos e o contador da pasta atual
         activeLinks = Array.from(parentFolder.querySelectorAll('a'));
         currentIndex = activeLinks.indexOf(link);
 
-        // Garante que o container da barra de navegação volte a ficar visível
+        // Verifica se a pasta atual ou o botão da pasta têm a permissão de navegação
+        const folderTitleBtn = folderElement ? folderElement.querySelector('.folder-title') : null;
+        const hasNav = (folderElement && folderElement.getAttribute('data-has-nav') === 'true') || 
+                       (folderTitleBtn && folderTitleBtn.getAttribute('data-has-nav') === 'true');
+
         const navContainer = document.getElementById('counter-container') || document.querySelector('.nav-controls');
+        
         if (navContainer) {
-          navContainer.style.setProperty('display', 'flex', 'important');
-          navContainer.classList.add('visible');
+          if (hasNav) {
+            // Mostra a barra de navegação apenas para pastas especificadas
+            navContainer.style.setProperty('display', 'flex', 'important');
+            navContainer.classList.add('visible');
+          } else {
+            // Oculta a barra de navegação para as demais pastas
+            navContainer.style.setProperty('display', 'none', 'important');
+            navContainer.classList.remove('visible');
+          }
         }
 
         allLinks.forEach(l => l.classList.remove('active'));
         link.classList.add('active');
 
-        // Dispara a animação e depois atualiza a visualização do iframe e contador
+        // Dispara a animação splash e depois atualiza o iframe e contador
         acionarSplashScreenDaPasta(link, () => {
           updateView();
         });
