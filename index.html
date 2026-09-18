@@ -647,24 +647,29 @@
     
     // Alterna o estado da pasta, verifica permissão de navegação e atualiza o total de itens
           function toggleFolder(element) {
-            const folder = element.parentElement;
-            folder.classList.toggle('active');
-          
-            const hasNav = element.getAttribute('data-has-nav') === 'true' || 
-                           folder.getAttribute('data-has-nav') === 'true';
-          
-            const navContainer = document.getElementById('counter-container') || document.querySelector('.nav-controls');
-          
-            if (navContainer) {
-              if (hasNav) {
-                navContainer.style.setProperty('display', 'flex', 'important');
-              } else {
-                navContainer.style.setProperty('display', 'none', 'important');
+          const folder = element.parentElement;
+          folder.classList.toggle('active');
+        
+          const hasNav = element.getAttribute('data-has-nav') === 'true' || 
+                         folder.getAttribute('data-has-nav') === 'true';
+        
+          const navContainer = document.getElementById('counter-container') || document.querySelector('.nav-controls');
+        
+          if (navContainer) {
+            if (hasNav) {
+              navContainer.style.setProperty('display', 'flex', 'important');
+              
+              // Atualiza o visor com a fração (1/62) assim que abre a pasta
+              if (typeof updateView === 'function') {
+                updateView();
               }
+            } else {
+              navContainer.style.setProperty('display', 'none', 'important');
             }
           }
+        }
 
-  
+  /////////////////////////////////////////////////////////////////////
 
     function setupLinks() {
       const allLinks = document.querySelectorAll('.folder-content a');
