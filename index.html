@@ -616,6 +616,10 @@
   </div>
 
   <script>
+    
+    //Controle do contador <0/0> e navegação dinâmica de itens da pasta
+    let currentIndex = 1; // Guarda o item atual selecionado
+    let totalItems = 0;   // Guarda a quantidade total de itens na pasta aberta
 
             // Oculta a apresentação após 4 segundos (4000ms)
         window.addEventListener('DOMContentLoaded', () => {
@@ -641,26 +645,50 @@
       sidebar.classList.toggle('open');
     }
     
-    // função para o botão < 0/0 >//
-    function toggleFolder(element) {
-  const folder = element.parentElement;
-  folder.classList.toggle('active');
+    
+    // Alterna o estado da pasta, verifica permissão de navegação e atualiza o total de itens
+  function toggleFolder(element) {
+    const folder = element.parentElement;
+    folder.classList.toggle('active');
 
-  // Procura se o botão clicado ou a pasta mãe tem o parâmetro data-has-nav
-  const hasNav = element.getAttribute('data-has-nav') === 'true' || 
-                 folder.getAttribute('data-has-nav') === 'true';
+    const hasNav = element.getAttribute('data-has-nav') === 'true' || 
+                   folder.getAttribute('data-has-nav') === 'true';
 
-  // Seleciona o elemento dos botões pelo ID ou pela classe
-  const navContainer = document.getElementById('counter-container') || document.querySelector('.nav-controls');
+    const navContainer = document.getElementById('counter-container') || document.querySelector('.nav-controls');
 
-  if (navContainer) {
-    if (hasNav) {
-      navContainer.style.setProperty('display', 'flex', 'important');
-    } else {
-      navContainer.style.setProperty('display', 'none', 'important');
+    if (navContainer) {
+      if (hasNav) {
+        navContainer.style.setProperty('display', 'flex', 'important');
+
+        // Conta automaticamente os itens existentes na pasta
+        const items = folder.querySelectorAll('.folder-content > *'); 
+        totalItems = items.length;
+        currentIndex = 1;
+
+        atualizarVisor();
+      } else {
+        navContainer.style.setProperty('display', 'none', 'important');
+      }
     }
   }
-}
+    // atualiza visor < 1/62 >
+    function atualizarVisor() {
+    const counterElement = document.getElementById('counter');
+    if (counterElement) {
+      counterElement.textContent = `${currentIndex}/${totalItems}`;
+    }
+  }
+
+  function navegar(direcao) {
+    if (totalItems === 0) return;
+
+    currentIndex += direcao;
+
+    if (currentIndex < 1) currentIndex = 1;
+    if (currentIndex > totalItems) currentIndex = totalItems;
+
+    atualizarVisor();
+  }
 
     function setupLinks() {
       const allLinks = document.querySelectorAll('.folder-content a');
