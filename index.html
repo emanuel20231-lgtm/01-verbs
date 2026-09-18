@@ -7,13 +7,13 @@
   <style>
 
            /* Esconde o container de navegação por padrão */
-          .nav-controls, #counter-container { 
-            display: none; 
+          #counter, #counter-container, .counter-container, .nav-controls {
+            display: none !important;
           }
           
           /* Classe que torna o controle visível quando necessário */
-          .nav-controls.visible, #counter-container.visible { 
-            display: flex; 
+          #counter.visible, #counter-container.visible, .counter-container.visible, .nav-controls.visible {
+            display: flex !important;
           }
     
         /* Splash Screen Fullscreen */
@@ -639,14 +639,18 @@
     function toggleMenu() {
       sidebar.classList.toggle('open');
     }
-
+    
+    // função para o botão < 0/0 >//
     function toggleFolder(element) {
   const folder = element.parentElement;
   folder.classList.toggle('active');
 
   // Verifica se a pasta clicada possui a permissão para mostrar os botões
   const needsNav = element.getAttribute('data-has-nav') === 'true';
-  const navContainer = document.getElementById('counter') || document.getElementById('counter-container');
+  const navContainer = document.getElementById('counter') || 
+                       document.getElementById('counter-container') || 
+                       document.querySelector('.counter-container') || 
+                       document.querySelector('.nav-controls');
 
   if (navContainer) {
     if (needsNav) {
