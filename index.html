@@ -616,14 +616,14 @@
 
   <script>
 
-            // Oculta a apresentação após 3 segundos (3000ms)
+            // Oculta a apresentação após 4 segundos (4000ms)
         window.addEventListener('DOMContentLoaded', () => {
           setTimeout(() => {
             const splash = document.getElementById('splash-screen');
             if (splash) {
               splash.classList.add('hidden');
             }
-          }, 3000);
+          }, 4000);
         });
 
     
@@ -641,21 +641,21 @@
     }
 
     function toggleFolder(element) {
-    const folder = element.parentElement;
-    folder.classList.toggle('active');
+  const folder = element.parentElement;
+  folder.classList.toggle('active');
 
-    // Verifica se a pasta clicada possui a permissão para mostrar os botões
-    const needsNav = element.getAttribute('data-has-nav') === 'true';
-    const navContainer = document.getElementById('counter') || document.getElementById('counter-container');
+  // Verifica se a pasta clicada possui a permissão para mostrar os botões
+  const needsNav = element.getAttribute('data-has-nav') === 'true';
+  const navContainer = document.getElementById('counter') || document.getElementById('counter-container');
 
-    if (navContainer) {
-      if (needsNav) {
-        navContainer.classList.add('visible');
-      } else {
-        navContainer.classList.remove('visible');
-      }
+  if (navContainer) {
+    if (needsNav) {
+      navContainer.classList.add('visible');
+    } else {
+      navContainer.classList.remove('visible');
     }
   }
+}
 
     function setupLinks() {
       const allLinks = document.querySelectorAll('.folder-content a');
