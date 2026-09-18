@@ -647,32 +647,33 @@
     
     
     // Alterna o estado da pasta, verifica permissão de navegação e atualiza o total de itens
+          
           function toggleFolder(element) {
-          const folder = element.parentElement;
-          folder.classList.toggle('active');
-        
-          const hasNav = element.getAttribute('data-has-nav') === 'true' || 
-                         folder.getAttribute('data-has-nav') === 'true';
-        
-          const navContainer = document.getElementById('counter-container') || document.querySelector('.nav-controls');
-        
-          if (navContainer) {
-            if (hasNav) {
-              navContainer.style.setProperty('display', 'flex', 'important');
-        
-              // Guarda os links da pasta na variável activeLinks
-              activeLinks = Array.from(folder.querySelectorAll('.folder-content a'));
-              currentIndex = 0;
-        
-              if (typeof updateView === 'function') {
-                updateView();
-              }
-            } else {
-              navContainer.style.setProperty('display', 'none', 'important');
-            }
-          }
-        }
+  const folder = element.parentElement;
+  folder.classList.toggle('active');
 
+  const hasNav = element.getAttribute('data-has-nav') === 'true' || 
+                 folder.getAttribute('data-has-nav') === 'true';
+
+  const navContainer = document.getElementById('counter-container') || document.querySelector('.nav-controls');
+
+  if (navContainer) {
+    if (hasNav) {
+      navContainer.style.setProperty('display', 'flex', 'important');
+
+      // Preenche as variáveis globais existentes sem usar "let" para não duplicar
+      activeLinks = Array.from(folder.querySelectorAll('.folder-content a'));
+      currentIndex = 0;
+
+      // Chama o updateView para desenhar o "1/62" no <span id="counter">
+      if (typeof updateView === 'function') {
+        updateView();
+      }
+    } else {
+      navContainer.style.setProperty('display', 'none', 'important');
+    }
+  }
+}
   /////////////////////////////////////////////////////////////////////
 
     function setupLinks() {
