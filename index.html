@@ -608,12 +608,14 @@
   </div>
 
   <!-- Controles Inferiores <0/0> -->
-  <div class="nav-controls" id="counter-container">
-    
-    <button class="nav-btn" id="btn-prev" onclick="navegar(-1)">&#9664;</button>
-    <span class="counter" id="counter">0/0</span>
-    <button class="nav-btn" id="btn-next" onclick="navegar(1)">&#9654;</button>
-  </div>
+  <!-- Controles Inferiores <0/0> -->
+      <div class="nav-controls" id="counter-container">
+        <button class="nav-btn" id="btn-prev" onclick="navegar(-1)">&#9664;</button>
+        <span class="counter" id="counter">
+          <span id="current-index">0</span>/<span id="total-count">0</span>
+        </span>
+        <button class="nav-btn" id="btn-next" onclick="navegar(1)">&#9654;</button>
+      </div>
 
   <script>
     
@@ -636,7 +638,6 @@
     let currentIndex = 0;
 
     const iframe = document.getElementById('content');
-    const counter = document.getElementById('counter');
     const btnPrev = document.getElementById('btn-prev');
     const btnNext = document.getElementById('btn-next');
     const sidebar = document.getElementById('sidebar');
@@ -645,36 +646,30 @@
       sidebar.classList.toggle('open');
     }
     
-    
     // Alterna o estado da pasta, verifica permissão de navegação e atualiza o total de itens
-          
-          function toggleFolder(element) {
-  const folder = element.parentElement;
-  folder.classList.toggle('active');
+    function toggleFolder(element) {
+      const folder = element.parentElement;
+      folder.classList.toggle('active');
 
-  const hasNav = element.getAttribute('data-has-nav') === 'true' || 
-                 folder.getAttribute('data-has-nav') === 'true';
+      const hasNav = element.getAttribute('data-has-nav') === 'true' || 
+                     folder.getAttribute('data-has-nav') === 'true';
 
-  const navContainer = document.getElementById('counter-container') || document.querySelector('.nav-controls');
+      const navContainer = document.getElementById('counter-container') || document.querySelector('.nav-controls');
 
-  if (navContainer) {
-    if (hasNav) {
-      navContainer.style.setProperty('display', 'flex', 'important');
+      if (navContainer) {
+        if (hasNav) {
+          navContainer.style.setProperty('display', 'flex', 'important');
 
-      // Preenche as variáveis globais existentes sem usar "let" para não duplicar
-      activeLinks = Array.from(folder.querySelectorAll('.folder-content a'));
-      currentIndex = 0;
+          // Captura AUTOMATICAMENTE todos os links de verbos presentes na pasta
+          activeLinks = Array.from(folder.querySelectorAll('.folder-content a'));
+          currentIndex = 0;
 
-      // Chama o updateView para desenhar o "1/62" no <span id="counter">
-      if (typeof updateView === 'function') {
-        updateView();
+          updateView();
+        } else {
+          navContainer.style.setProperty('display', 'none', 'important');
+        }
       }
-    } else {
-      navContainer.style.setProperty('display', 'none', 'important');
     }
-  }
-}
-  /////////////////////////////////////////////////////////////////////
 
     function setupLinks() {
       const allLinks = document.querySelectorAll('.folder-content a');
@@ -684,49 +679,70 @@
           e.preventDefault();
           
           const parentFolder = link.closest('.folder-content');
-          activeLinks = Array.from(parentFolder.querySelectorAll('a'));
-          currentIndex = activeLinks.indexOf(link);
+          if (parentFolder) {
+            // Recalcula dinamicamente a quantidade de verbos da pasta
+            activeLinks = Array.from(parentFolder.querySelectorAll('a'));
+            currentIndex = activeLinks.indexOf(link);
 
-          allLinks.forEach(l => l.classList.remove('active'));
-          link.classList.add('active');
+            allLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
 
-          updateView();
-          sidebar.classList.remove('open');
+            updateView();
+            sidebar.classList.remove('open');
+          }
         });
       });
     }
 
     function updateView() {
-  const counterElement = document.getElementById('counter');
-  const iframeElement = document.querySelector('iframe');
-  const btnPrevElement = document.getElementById('btn-prev');
-  const btnNextElement = document.getElementById('btn-next');
+      const currentIndexEl = document.getElementById('current-index');
+      const totalCountEl = document.getElementById('total-count');
+      const counterElement = document.getElementById('counter');
+      const iframeElement = document.querySelector('iframe') || iframe;
+      const btnPrevElement = document.getElementById('btn-prev') || btnPrev;
+      const btnNextElement = document.getElementById('btn-next') || btnNext;
 
-  if (!activeLinks || activeLinks.length === 0) {
-    if (counterElement) counterElement.textContent = "0/0";
-    if (btnPrevElement) btnPrevElement.disabled = true;
-    if (btnNextElement) btnNextElement.disabled = true;
-    return;
-  }
+      if (!activeLinks || activeLinks.length === 0) {
+        if (currentIndexEl) currentIndexEl.textContent = "0";
+        if (totalCountEl) totalCountEl.textContent = "0";
+        if (!currentIndexEl && counterElement) counterElement.textContent = "0/0";
+        
+        if (btnPrevElement) btnPrevElement.disabled = true;
+        if (btnNextElement) btnNextElement.disabled = true;
+        return;
+      }
 
-  if (iframeElement) iframeElement.src = activeLinks[currentIndex].getAttribute('href');
-  if (counterElement) counterElement.textContent = `${currentIndex + 1}/${activeLinks.length}`;
+      // Atualiza o iframe com o destino do link atual
+      if (iframeElement && activeLinks[currentIndex]) {
+        iframeElement.src = activeLinks[currentIndex].getAttribute('href');
+      }
 
-  if (btnPrevElement) btnPrevElement.disabled = currentIndex === 0;
-  if (btnNextElement) btnNextElement.disabled = currentIndex === activeLinks.length - 1;
-}
+      // Atualiza os elementos numéricos do contador
+      if (currentIndexEl && totalCountEl) {
+        currentIndexEl.textContent = currentIndex + 1;
+        totalCountEl.textContent = activeLinks.length;
+      } else if (counterElement) {
+        counterElement.textContent = `${currentIndex + 1}/${activeLinks.length}`;
+      }
 
-function navegar(direction) {
-  const newIndex = currentIndex + direction;
-  if (newIndex >= 0 && newIndex < activeLinks.length) {
-    currentIndex = newIndex;
+      // Atualiza o estado dos botões (anterior / próximo)
+      if (btnPrevElement) btnPrevElement.disabled = currentIndex === 0;
+      if (btnNextElement) btnNextElement.disabled = currentIndex === activeLinks.length - 1;
+    }
 
-    document.querySelectorAll('.folder-content a').forEach(link => link.classList.remove('active'));
-    if (activeLinks[currentIndex]) activeLinks[currentIndex].classList.add('active');
+    function navegar(direction) {
+      if (!activeLinks || activeLinks.length === 0) return;
 
-    updateView();
-  }
-}
+      const newIndex = currentIndex + direction;
+      if (newIndex >= 0 && newIndex < activeLinks.length) {
+        currentIndex = newIndex;
+
+        document.querySelectorAll('.folder-content a').forEach(link => link.classList.remove('active'));
+        if (activeLinks[currentIndex]) activeLinks[currentIndex].classList.add('active');
+
+        updateView();
+      }
+    }
 
     setupLinks();
     updateView();
