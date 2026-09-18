@@ -6,42 +6,52 @@
   <title>Vocabulário</title>
   <style>
 
-    /* Splash Screen Fullscreen */
-          #splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: #161b22;
-            z-index: 99999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+           /* Esconde o container de navegação por padrão */
+          .nav-controls, #counter-container { 
+            display: none; 
           }
           
-          #splash-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
+          /* Classe que torna o controle visível quando necessário */
+          .nav-controls.visible, #counter-container.visible { 
+            display: flex; 
           }
-          
-          .splash-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            text-align: center;
-          }
-          
-          .splash-logo {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #60a5fa;
-            box-shadow: 0 0 15px rgba(96, 165, 250, 0.4);
-          }
+    
+        /* Splash Screen Fullscreen */
+              #splash-screen {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background-color: #161b22;
+                z-index: 99999;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                transition: opacity 0.5s ease, visibility 0.5s ease;
+              }
+              
+              #splash-screen.hidden {
+                opacity: 0;
+                visibility: hidden;
+              }
+              
+              .splash-content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+                text-align: center;
+              }
+              
+              .splash-logo {
+                width: 90px;
+                height: 90px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 3px solid #60a5fa;
+                box-shadow: 0 0 15px rgba(96, 165, 250, 0.4);
+              }
           
           /* Relógio de Londres com Ponteiro Giratório */
           .london-clock {
@@ -384,7 +394,7 @@
   <div class="sidebar" id="sidebar">
 
      <div class="folder">
-      <button class="folder-title" onclick="toggleFolder(this)">
+      <button class="folder-title" onclick="toggleFolder(this)" data-has-nav="true">
         📁 🎙️👄 01 - IPA sounds <span class="folder-arrow">▶</span>
       </button>
       <div class="folder-content">
@@ -397,7 +407,7 @@
     </div>
     
     <div class="folder">
-      <button class="folder-title" onclick="toggleFolder(this)">
+      <button class="folder-title" onclick="toggleFolder(this)" data-has-nav="true" >
         📁 🇺🇸 03 - Verbos <span class="folder-arrow">▶</span>
       </button>
       <div class="folder-content">
@@ -473,7 +483,7 @@
     </div>
 
     <div class="folder">
-      <button class="folder-title" onclick="toggleFolder(this)">
+      <button class="folder-title" onclick="toggleFolder(this)" data-has-nav="true" >
         📁 🕹️ 04 - Games verbs 01 <span class="folder-arrow">▶</span>
       </button>
       <div class="folder-content">
@@ -550,7 +560,7 @@
 
 
     <div class="folder">
-      <button class="folder-title" onclick="toggleFolder(this)">
+      <button class="folder-title" onclick="toggleFolder(this)" data-has-nav="true" >
         📁 📜 05 - vocabulary/Unit <span class="folder-arrow">▶</span>
       </button>
       <div class="folder-content">
@@ -563,7 +573,7 @@
     </div>
 
     <div class="folder">
-      <button class="folder-title" onclick="toggleFolder(this)">
+      <button class="folder-title" onclick="toggleFolder(this)" data-has-nav="false">
         📁 🎮 05 - Games/Unit <span class="folder-arrow">▶</span>
       </button>
       <div class="folder-content">
@@ -576,7 +586,7 @@
     </div>
 
     <div class="folder">
-      <button class="folder-title" onclick="toggleFolder(this)">
+      <button class="folder-title" onclick="toggleFolder(this)" data-has-nav="false" >
         📁 🎮🕹️ 06 - Game Times <span class="folder-arrow">▶</span>
       </button>
       <div class="folder-content">
@@ -631,9 +641,21 @@
     }
 
     function toggleFolder(element) {
-      const folder = element.parentElement;
-      folder.classList.toggle('active');
+    const folder = element.parentElement;
+    folder.classList.toggle('active');
+
+    // Verifica se a pasta clicada possui a permissão para mostrar os botões
+    const needsNav = element.getAttribute('data-has-nav') === 'true';
+    const navContainer = document.getElementById('counter') || document.getElementById('counter-container');
+
+    if (navContainer) {
+      if (needsNav) {
+        navContainer.classList.add('visible');
+      } else {
+        navContainer.classList.remove('visible');
+      }
     }
+  }
 
     function setupLinks() {
       const allLinks = document.querySelectorAll('.folder-content a');
