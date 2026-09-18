@@ -648,47 +648,48 @@
     
     // Alterna o estado da pasta, verifica permissão de navegação e atualiza o total de itens
   function toggleFolder(element) {
-    const folder = element.parentElement;
-    folder.classList.toggle('active');
+  const folder = element.parentElement;
+  folder.classList.toggle('active');
 
-    const hasNav = element.getAttribute('data-has-nav') === 'true' || 
-                   folder.getAttribute('data-has-nav') === 'true';
+  const hasNav = element.getAttribute('data-has-nav') === 'true' || 
+                 folder.getAttribute('data-has-nav') === 'true';
 
-    const navContainer = document.getElementById('counter-container') || document.querySelector('.nav-controls');
+  const navContainer = document.getElementById('counter-container') || document.querySelector('.nav-controls');
 
-    if (navContainer) {
-      if (hasNav) {
-        navContainer.style.setProperty('display', 'flex', 'important');
+  if (navContainer) {
+    if (hasNav) {
+      navContainer.style.setProperty('display', 'flex', 'important');
 
-        // Conta automaticamente os itens existentes na pasta
-        const items = folder.querySelectorAll('.folder-content > *'); 
-        totalItems = items.length;
-        currentIndex = 1;
+      // Conta automaticamente os itens existentes na pasta
+      const items = folder.querySelectorAll('.folder-content > *'); 
+      totalItems = items.length;
+      currentIndex = 1;
 
-        atualizarVisor();
-      } else {
-        navContainer.style.setProperty('display', 'none', 'important');
-      }
+      atualizarVisor();
+    } else {
+      navContainer.style.setProperty('display', 'none', 'important');
     }
   }
-    // atualiza visor < 1/62 >
-    function atualizarVisor() {
-    const counterElement = document.getElementById('counter');
-    if (counterElement) {
-      counterElement.textContent = `${currentIndex}/${totalItems}`;
-    }
+}
+
+// PASSO 3: Atualiza o número exibido na tela (ex: 1/62) e gerencia os cliques nas setas de navegação
+function atualizarVisor() {
+  const counterElement = document.getElementById('counter');
+  if (counterElement) {
+    counterElement.textContent = `${currentIndex}/${totalItems}`;
   }
+}
 
-  function navegar(direcao) {
-    if (totalItems === 0) return;
+function navegar(direcao) {
+  if (totalItems === 0) return;
 
-    currentIndex += direcao;
+  currentIndex += direcao;
 
-    if (currentIndex < 1) currentIndex = 1;
-    if (currentIndex > totalItems) currentIndex = totalItems;
+  if (currentIndex < 1) currentIndex = 1;
+  if (currentIndex > totalItems) currentIndex = totalItems;
 
-    atualizarVisor();
-  }
+  atualizarVisor();
+}
 
     function setupLinks() {
       const allLinks = document.querySelectorAll('.folder-content a');
