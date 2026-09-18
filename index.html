@@ -664,11 +664,11 @@
   const folder = element.parentElement;
   folder.classList.toggle('active');
 
-  // Mantém apenas a pasta atual aberta (opcional)
+  // Mantém apenas a pasta atual aberta
   document.querySelectorAll('.folder').forEach(f => {
     if (f !== folder) f.classList.remove('active');
-    });
-  }
+   });
+ }
 
     // Função para acionar o Splash Screen com imagem e texto personalizados
     const DEFAULT_SPLASH_IMG = document.getElementById('splash-img')?.getAttribute('src') || '';
@@ -707,33 +707,41 @@
       }, 3000);
     }
     // apresentações de tela dinâmica para cada pasta individual //
-    function setupLinks() {
-      const allLinks = document.querySelectorAll('.folder-content a');
+  function setupLinks()  {
+  const allLinks = document.querySelectorAll('.folder-content a');
+  
+  allLinks.forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
       
-      allLinks.forEach((link) => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          
-          const parentFolder = link.closest('.folder-content');
-          if (parentFolder) {
-            activeLinks = Array.from(parentFolder.querySelectorAll('a'));
-            currentIndex = activeLinks.indexOf(link);
+      const parentFolder = link.closest('.folder-content');
+      if (parentFolder) {
+        // Atualiza a lista de links ativos e a contagem (ex: 1/62)
+        activeLinks = Array.from(parentFolder.querySelectorAll('a'));
+        currentIndex = activeLinks.indexOf(link);
 
-            allLinks.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
+        // Garante que o container da barra de navegação volte a ficar visível
+        const navContainer = document.getElementById('counter-container') || document.querySelector('.nav-controls');
+        if (navContainer) {
+          navContainer.style.setProperty('display', 'flex', 'important');
+          navContainer.classList.add('visible');
+        }
 
-            // Aciona o splash screen antes de atualizar o iframe
-            acionarSplashScreenDaPasta(link, () => {
-              updateView();
-            });
+        allLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
 
-            if (typeof sidebar !== 'undefined' && sidebar) {
-              sidebar.classList.remove('open');
-            }
-          }
+        // Dispara a animação e depois atualiza a visualização do iframe e contador
+        acionarSplashScreenDaPasta(link, () => {
+          updateView();
         });
-      });
-    }
+
+        if (typeof sidebar !== 'undefined' && sidebar) {
+          sidebar.classList.remove('open');
+        }
+      }
+    });
+  });
+}
 
     function updateView() {
       const currentIndexEl = document.getElementById('current-index');
