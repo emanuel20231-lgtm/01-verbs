@@ -387,7 +387,7 @@
   <!-- Banner: Nome no topo e Águia logo abaixo -->
   <!-- Banner: Nome no topo e Águia embutida -->
 <div class="brand-container">
-  <span class="brand-text"> 🕹️ 工 𝕃𝔼𝔸ℝℕ 🕹️ </span>
+  <span class="brand-text">  工 𝕃𝔼𝔸ℝℕ  </span>
 </div>
 
   <!-- Menu Lateral -->
@@ -618,6 +618,8 @@
   <script>
     
     //Controle do contador <0/0> e navegação dinâmica de itens da pasta
+    let activeLinks = [];
+    let currentIndex = 0;
     
 
             // Oculta a apresentação após 4 segundos (4000ms)
@@ -647,30 +649,30 @@
     
     // Alterna o estado da pasta, verifica permissão de navegação e atualiza o total de itens
           function toggleFolder(element) {
-  const folder = element.parentElement;
-  folder.classList.toggle('active');
-
-  const hasNav = element.getAttribute('data-has-nav') === 'true' || 
-                 folder.getAttribute('data-has-nav') === 'true';
-
-  const navContainer = document.getElementById('counter-container') || document.querySelector('.nav-controls');
-
-  if (navContainer) {
-    if (hasNav) {
-      navContainer.style.setProperty('display', 'flex', 'important');
-
-      // Captura todos os links de dentro da pasta clicada
-      activeLinks = Array.from(folder.querySelectorAll('.folder-content a'));
-      currentIndex = 0; // Começa no primeiro item (índice 0)
-
-      if (activeLinks.length > 0) {
-        updateView();
-      }
-    } else {
-      navContainer.style.setProperty('display', 'none', 'important');
-    }
-  }
-}
+          const folder = element.parentElement;
+          folder.classList.toggle('active');
+        
+          const hasNav = element.getAttribute('data-has-nav') === 'true' || 
+                         folder.getAttribute('data-has-nav') === 'true';
+        
+          const navContainer = document.getElementById('counter-container') || document.querySelector('.nav-controls');
+        
+          if (navContainer) {
+            if (hasNav) {
+              navContainer.style.setProperty('display', 'flex', 'important');
+        
+              // Guarda os links da pasta na variável activeLinks
+              activeLinks = Array.from(folder.querySelectorAll('.folder-content a'));
+              currentIndex = 0;
+        
+              if (typeof updateView === 'function') {
+                updateView();
+              }
+            } else {
+              navContainer.style.setProperty('display', 'none', 'important');
+            }
+          }
+        }
 
   /////////////////////////////////////////////////////////////////////
 
