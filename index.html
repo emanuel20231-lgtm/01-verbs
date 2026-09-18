@@ -646,18 +646,18 @@
   const folder = element.parentElement;
   folder.classList.toggle('active');
 
-  // Verifica se a pasta clicada possui a permissão para mostrar os botões
-  const needsNav = element.getAttribute('data-has-nav') === 'true';
-  const navContainer = document.getElementById('counter') || 
-                       document.getElementById('counter-container') || 
-                       document.querySelector('.counter-container') || 
-                       document.querySelector('.nav-controls');
+  // Procura se o botão clicado ou a pasta mãe tem o parâmetro data-has-nav
+  const hasNav = element.getAttribute('data-has-nav') === 'true' || 
+                 folder.getAttribute('data-has-nav') === 'true';
+
+  // Seleciona o elemento dos botões pelo ID ou pela classe
+  const navContainer = document.getElementById('counter-container') || document.querySelector('.nav-controls');
 
   if (navContainer) {
-    if (needsNav) {
-      navContainer.classList.add('visible');
+    if (hasNav) {
+      navContainer.style.setProperty('display', 'flex', 'important');
     } else {
-      navContainer.classList.remove('visible');
+      navContainer.style.setProperty('display', 'none', 'important');
     }
   }
 }
