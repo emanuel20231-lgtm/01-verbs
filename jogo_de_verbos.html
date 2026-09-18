@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Learn — Verb Audio Training (Reference Extraction)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: #f8fafc;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        /* Barra de Progresso */
+        .progress-container {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-bottom: 6px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background-color: #334155;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #38bdf8;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Controles de Velocidade e Medalhas */
+        .controls-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            background-color: #0f172a;
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .controls label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #cbd5e1;
+        }
+
+        .controls input[type="range"] {
+            cursor: pointer;
+            width: 90px;
+        }
+
+        .rate-value {
+            font-weight: 700;
+            color: #38bdf8;
+            min-width: 30px;
+            font-size: 0.8rem;
+        }
+
+        .medal-box {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 6px 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #f59e0b;
+        }
+
+        @keyframes vibrateMedal {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(-3px, 2px) rotate(-6deg); }
+            40% { transform: translate(3px, -2px) rotate(6deg); }
+            60% { transform: translate(-3px, -2px) rotate(-4deg); }
+            80% { transform: translate(3px, 2px) rotate(4deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        .medal-box.vibrating {
+            animation: vibrateMedal 0.4s ease-in-out;
+            background-color: #451a03;
+            border-color: #f59e0b;
+        }
+
+        /* Caixa de Áudio */
+        .audio-box {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .audio-box p {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 10px;
+        }
+
+        .audio-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-audio {
+            background-color: #1e293b;
+            color: #ffffff;
+            border: 1px solid #475569;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-audio:hover {
+            background-color: #334155;
+            border-color: #38bdf8;
+        }
+
+        .status-msg {
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #38bdf8;
+            margin-bottom: 20px;
+            min-height: 24px;
+        }
+
+        /* Opções (3 Palavras) */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background-color: #0f172a;
+            color: #f8fafc;
+            border: 1px solid #475569;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn.option-btn:hover:not(:disabled) {
+            background-color: #334155;
+            border-color: #38bdf8;
+        }
+
+        .option-btn.correct {
+            background-color: #064e3b !important;
+            border-color: #22c55e !important;
+            color: #22c55e !important;
+        }
+
+        .option-btn.wrong {
+            background-color: #7f1d1d !important;
+            border-color: #ef4444 !important;
+            color: #fca5a5 !important;
+        }
+
+        /* Caixa de Revelação (Verde) */
+        .reveal-box {
+            background-color: #0f172a;
+            border: 2px solid #22c55e;
+            border-radius: 8px;
+            padding: 15px 20px;
+            text-align: center;
+            display: none;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.15);
+        }
+
+        .reveal-box h3 {
+            color: #22c55e;
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+        }
+
+        .reveal-box p {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #f8fafc;
+            line-height: 1.5;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-action {
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-action:hover {
+            background-color: #0369a1;
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>I Learn — Verb Audio Training</h1>
+            <p class="subtitle">Ouça o áudio, identifique a forma verbal correta e treine seu vocabulário</p>
+
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span id="progressText">Formas percorridas: 0 / 0</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                </div>
+            </div>
+
+            <div class="controls-wrapper">
+                <div class="controls">
+                    <label for="rateRange">Velocidade:</label>
+                    <input type="range" id="rateRange" min="0.25" max="1.5" step="0.05" value="0.7" oninput="updateRateLabel(this.value)">
+                    <span id="rateVal" class="rate-value">0.7x</span>
+                </div>
+
+                <div class="medal-box" id="medalBox">
+                    <span>🏅</span> <span id="medalCount">+0</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="audio-box">
+            <p>Clique abaixo para ouvir a forma verbal selecionada ocultamente:</p>
+            <div class="audio-buttons">
+                <button class="btn-audio" onclick="playSecretAudio('en-GB')">🔊 UK Audio</button>
+                <button class="btn-audio" onclick="playSecretAudio('en-US')">🔊 US Audio</button>
+            </div>
+        </div>
+
+        <div class="status-msg" id="statusMsg">Ouça o áudio e escolha a opção correspondente abaixo.</div>
+
+        <div class="options-container" id="optionsContainer">
+            <!-- 3 Botões de Opção injetados via JavaScript -->
+        </div>
+
+        <div class="reveal-box" id="revealBox">
+            <h3>🎉 Resposta Correta!</h3>
+            <p id="revealedDetails"></p>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn-action" id="nextBtn" onclick="initGame()" style="display:none;">Próxima Forma ➔</button>
+        </div>
+
+        <footer>
+            <p>I Learn — Sistema Interativo de Vocabulário Baseado em Referências.</p>
+        </footer>
+    </div>
+
+    <script>
+        /* =========================================================================
+           EXTRAÇÃO DE DADOS DO ARQUIVO DE REFERÊNCIA HTML
+           ========================================================================= */
+        
+        // Faça referencia dos arquivos aqui
+        const referenceHtmlContent = `
+            <div class="card">
+                <div class="word-info">
+                    <span class="word">To catch <span class="gray-part">(v)</span></span>
+                    <span class="translation">pegar, capturar, apanhar</span>
+                    <span class="ipa">/UK tuː kætʃ/ /US tuː kætʃ/</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="word-info">
+                    <span class="word">Catch</span>
+                    <span class="ipa">/UK kætʃ/ /US kætʃ/</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="word-info">
+                    <span class="word">Catches <span class="gray-part">(3ª p. sing)</span></span>
+                    <span class="ipa">/UK ˈkætʃ.ɪz/ /US ˈkætʃ.ɪz/</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="word-info">
+                    <span class="word">Catching <span class="gray-part">(gerúndio)</span></span>
+                    <span class="ipa">/UK ˈkætʃ.ɪŋ/ /US ˈkætʃ.ɪŋ/</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="word-info">
+                    <span class="word">Caught <span class="gray-part">(passado / particípio)</span></span>
+                    <span class="ipa">/UK kɔːt/ /US kɑːt/</span>
+                </div>
+            </div>
+        `;
+
+        // Função para extrair automaticamente as informações estruturadas do HTML fornecido
+        function extractVocabularyFromHtml(htmlString) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlString, 'text/html');
+            const cards = doc.querySelectorAll('.card');
+            let extractedData = [];
+
+            cards.forEach(card => {
+                const wordEl = card.querySelector('.word');
+                const translationEl = card.querySelector('.translation');
+                const ipaEl = card.querySelector('.ipa');
+
+                if (wordEl) {
+                    // Limpa o texto da palavra para a fala e exibições limpas
+                    let fullHtmlText = wordEl.innerHTML;
+                    // Palavra pura sem tags internas para o speech synthesis (ex: "To catch")
+                    let cleanWord = wordEl.childNodes[0].nodeType === 3 ? wordEl.childNodes[0].nodeValue.trim() : wordEl.innerText.trim();
+                    
+                    let translation = translationEl ? translationEl.innerText.trim() : "";
+                    let ipa = ipaEl ? ipaEl.innerText.trim() : "";
+
+                    // Monta a string de detalhes completa estilo game_vocabulary
+                    let detailsParts = [wordEl.innerText.trim()];
+                    if (translation) detailsParts.push(`-> ${translation}`);
+                    if (ipa) detailsParts.push(ipa);
+
+                    extractedData.push({
+                        word: cleanWord,
+                        displayLabel: wordEl.innerHTML, // Mantém a formatação original com tags cinzas se houver
+                        details: detailsParts.join(" ")
+                    });
+                }
+            });
+
+            return extractedData;
+        }
+
+        const vocabularyDatabase = extractVocabularyFromHtml(referenceHtmlContent);
+
+        let secretUrn = [...vocabularyDatabase];
+        let completedCount = 0;
+        let medalsEarned = 0;
+        let currentSecretItem = null;
+        let isAnswered = false;
+
+        function updateRateLabel(val) {
+            document.getElementById('rateVal').innerText = val + 'x';
+        }
+
+        function playSuccessSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const playTone = (freq, startTime, duration) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime + startTime);
+                    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + startTime + duration);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(audioCtx.currentTime + startTime);
+                    osc.stop(audioCtx.currentTime + startTime + duration);
+                };
+                playTone(523.25, 0, 0.1);
+                playTone(659.25, 0.08, 0.15);
+                playTone(783.99, 0.16, 0.2);
+            } catch (e) {}
+        }
+
+        function playMedalSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const playTone = (freq, startTime, duration) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime + startTime);
+                    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + startTime + duration);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(audioCtx.currentTime + startTime);
+                    osc.stop(audioCtx.currentTime + startTime + duration);
+                };
+                playTone(440.00, 0.0, 0.08);
+                playTone(554.37, 0.08, 0.08);
+                playTone(659.25, 0.16, 0.08);
+                playTone(830.61, 0.24, 0.08);
+                playTone(1046.50, 0.32, 0.20);
+            } catch (e) {}
+        }
+
+        function playSecretAudio(lang) {
+            if (!currentSecretItem) return;
+            window.speechSynthesis.cancel();
+
+            const currentRate = parseFloat(document.getElementById('rateRange').value);
+            const utterance = new SpeechSynthesisUtterance(currentSecretItem.word);
+            utterance.lang = lang;
+            utterance.rate = currentRate;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function updateProgressUI() {
+            let total = vocabularyDatabase.length;
+            let percent = total > 0 ? Math.round((completedCount / total) * 100) : 0;
+            document.getElementById('progressText').innerText = `Formas percorridas: ${completedCount} / ${total}`;
+            document.getElementById('progressPercent').innerText = `${percent}%`;
+            document.getElementById('progressBarFill').style.width = `${percent}%`;
+
+            let newMedals = Math.floor(completedCount / 5); // Ajustado para bases menores de verbos
+            if (newMedals > medalsEarned) {
+                medalsEarned = newMedals;
+                playMedalSound();
+                
+                const medalBox = document.getElementById('medalBox');
+                medalBox.classList.add('vibrating');
+                setTimeout(() => medalBox.classList.remove('vibrating'), 400);
+            }
+            document.getElementById('medalCount').innerText = `+${medalsEarned}`;
+        }
+
+        function shuffle(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function initGame() {
+            if (vocabularyDatabase.length === 0) {
+                document.getElementById('statusMsg').innerText = "Nenhuma forma verbal encontrada na referência.";
+                return;
+            }
+
+            // Regra da Urna: se esvaziar, recarrega a urna e reinicia o progresso
+            if (secretUrn.length === 0) {
+                secretUrn = [...vocabularyDatabase];
+                completedCount = 0;
+            }
+
+            isAnswered = false;
+            document.getElementById('revealBox').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('statusMsg').style.color = "#38bdf8";
+            document.getElementById('statusMsg').innerText = "Ouça o áudio e escolha a opção correspondente abaixo.";
+
+            // Sorteio oculto da urna
+            let randomIndex = Math.floor(Math.random() * secretUrn.length);
+            currentSecretItem = secretUrn.splice(randomIndex, 1)[0];
+            completedCount++;
+            updateProgressUI();
+
+            // Selecionar distratores da base completa (garantindo 3 opções válidas)
+            let otherItems = vocabularyDatabase.filter(item => item.details !== currentSecretItem.details);
+            let shuffledOthers = shuffle(otherItems).slice(0, 2);
+
+            let optionsPool = [currentSecretItem, ...shuffledOthers];
+            let finalOptions = shuffle(optionsPool);
+
+            // Renderizar botões de opções
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            finalOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = opt.displayLabel; // Exibe formatado com o detalhe da forma verbal (ex: (v), (gerúndio))
+                btn.onclick = () => checkChoice(opt, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkChoice(selectedItem, btn) {
+            if (isAnswered) return;
+
+            const allButtons = document.querySelectorAll('.option-btn');
+
+            if (selectedItem.details === currentSecretItem.details) {
+                isAnswered = true;
+                playSuccessSound();
+                btn.classList.add('correct');
+
+                allButtons.forEach(b => b.disabled = true);
+
+                document.getElementById('statusMsg').style.color = "#22c55e";
+                document.getElementById('statusMsg').innerText = "✨ Excelente! Resposta correta.";
+                
+                document.getElementById('revealedDetails').innerText = currentSecretItem.details;
+                document.getElementById('revealBox').style.display = 'block';
+                document.getElementById('nextBtn').style.display = 'inline-block';
+
+                playSecretAudio('en-US');
+            } else {
+                btn.classList.add('wrong');
+                setTimeout(() => {
+                    btn.classList.remove('wrong');
+                }, 400);
+            }
+        }
+
+        window.onload = () => {
+            updateProgressUI();
+            initGame();
+        };
+    </script>
+</body>
+</html>
