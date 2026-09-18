@@ -695,30 +695,36 @@
     }
 
     function updateView() {
-      if (activeLinks.length === 0) {
-        counter.textContent = "0/0";
-        btnPrev.disabled = true;
-        btnNext.disabled = true;
-        return;
-      }
+  const counterElement = document.getElementById('counter');
+  const iframeElement = document.querySelector('iframe');
+  const btnPrevElement = document.getElementById('btn-prev');
+  const btnNextElement = document.getElementById('btn-next');
 
-      iframe.src = activeLinks[currentIndex].getAttribute('href');
-      counter.textContent = `${currentIndex + 1}/${activeLinks.length}`;
-      btnPrev.disabled = currentIndex === 0;
-      btnNext.disabled = currentIndex === activeLinks.length - 1;
-    }
+  if (!activeLinks || activeLinks.length === 0) {
+    if (counterElement) counterElement.textContent = "0/0";
+    if (btnPrevElement) btnPrevElement.disabled = true;
+    if (btnNextElement) btnNextElement.disabled = true;
+    return;
+  }
 
-    function navegar(direction) {
-      const newIndex = currentIndex + direction;
-      if (newIndex >= 0 && newIndex < activeLinks.length) {
-        currentIndex = newIndex;
-        
-        document.querySelectorAll('.folder-content a').forEach(l => l.classList.remove('active'));
-        activeLinks[currentIndex].classList.add('active');
-        
-        updateView();
-      }
-    }
+  if (iframeElement) iframeElement.src = activeLinks[currentIndex].getAttribute('href');
+  if (counterElement) counterElement.textContent = `${currentIndex + 1}/${activeLinks.length}`;
+
+  if (btnPrevElement) btnPrevElement.disabled = currentIndex === 0;
+  if (btnNextElement) btnNextElement.disabled = currentIndex === activeLinks.length - 1;
+}
+
+function navegar(direction) {
+  const newIndex = currentIndex + direction;
+  if (newIndex >= 0 && newIndex < activeLinks.length) {
+    currentIndex = newIndex;
+
+    document.querySelectorAll('.folder-content a').forEach(link => link.classList.remove('active'));
+    if (activeLinks[currentIndex]) activeLinks[currentIndex].classList.add('active');
+
+    updateView();
+  }
+}
 
     setupLinks();
     updateView();
