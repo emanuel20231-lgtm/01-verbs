@@ -660,29 +660,15 @@
     }
     
     // Alterna o estado da pasta, verifica permissão de navegação e atualiza o total de itens
-    function toggleFolder(element) {
-      const folder = element.parentElement;
-      folder.classList.toggle('active');
+  function toggleFolder(element) {
+  const folder = element.parentElement;
+  folder.classList.toggle('active');
 
-      const hasNav = element.getAttribute('data-has-nav') === 'true' || 
-                     folder.getAttribute('data-has-nav') === 'true';
-
-      const navContainer = document.getElementById('counter-container') || document.querySelector('.nav-controls');
-
-      if (navContainer) {
-        if (hasNav) {
-          navContainer.style.setProperty('display', 'flex', 'important');
-
-          // Captura AUTOMATICAMENTE todos os links de verbos presentes na pasta
-          activeLinks = Array.from(folder.querySelectorAll('.folder-content a'));
-          currentIndex = 0;
-
-          updateView();
-        } else {
-          navContainer.style.setProperty('display', 'none', 'important');
-        }
-      }
-    }
+  // Mantém apenas a pasta atual aberta (opcional)
+  document.querySelectorAll('.folder').forEach(f => {
+    if (f !== folder) f.classList.remove('active');
+    });
+  }
 
     // Função para acionar o Splash Screen com imagem e texto personalizados
     const DEFAULT_SPLASH_IMG = document.getElementById('splash-img')?.getAttribute('src') || '';
