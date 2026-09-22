@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Learn — Verb to be Training</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1350px;
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 1.3rem;
+            color: #f8fafc;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+
+        .progress-container {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-bottom: 5px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background-color: #334155;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #38bdf8;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .controls-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .controls {
+            background-color: #0f172a;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .controls label {
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #cbd5e1;
+        }
+
+        .controls input[type="range"] {
+            cursor: pointer;
+            width: 80px;
+        }
+
+        .rate-value {
+            font-weight: 700;
+            color: #38bdf8;
+            min-width: 25px;
+            font-size: 0.75rem;
+        }
+
+        .medal-box {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 4px 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: #f59e0b;
+        }
+
+        .audio-box {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .audio-box p {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+
+        .audio-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .btn-audio {
+            background-color: #1e293b;
+            color: #ffffff;
+            border: 1px solid #475569;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-audio:hover {
+            background-color: #334155;
+            border-color: #38bdf8;
+        }
+
+        .status-msg {
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #38bdf8;
+            margin-bottom: 12px;
+            min-height: 20px;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .game-grid {
+                grid-template-columns: 1fr;
+            }
+            .column-card {
+                max-height: 320px;
+            }
+        }
+
+        .column-card {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 480px;
+            overflow-y: auto;
+        }
+
+        .column-title {
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #94a3b8;
+            text-align: center;
+            margin-bottom: 2px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 4px;
+        }
+
+        .button-grid-pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
+
+        .choice-btn {
+            background-color: #1e293b;
+            color: #f8fafc;
+            border: 1px solid #475569;
+            padding: 8px 6px;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .choice-btn:hover:not(:disabled) {
+            background-color: #334155;
+            border-color: #38bdf8;
+        }
+
+        .choice-btn.selected-correct {
+            background-color: #064e3b;
+            border-color: #22c55e;
+            color: #22c55e;
+        }
+
+        .choice-btn.selected-wrong {
+            background-color: #7f1d1d;
+            border-color: #ef4444;
+            color: #fca5a5;
+        }
+
+        .btn-sem-forma {
+            grid-column: span 2;
+            background-color: #1e293b;
+            color: #94a3b8;
+            border: 1px dashed #475569;
+            padding: 6px;
+            border-radius: 5px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            margin-bottom: 4px;
+            transition: all 0.2s;
+        }
+
+        .btn-sem-forma:hover {
+            background-color: #334155;
+            color: #f8fafc;
+            border-color: #38bdf8;
+        }
+
+        .verb-submenu {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px;
+            padding: 4px;
+            border-left: 2px solid #38bdf8;
+            background: #111827;
+            border-radius: 4px;
+            margin: 3px 0;
+            grid-column: span 2;
+        }
+
+        .reveal-box {
+            background-color: #0f172a;
+            border: 2px solid #22c55e;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            display: none;
+            margin-bottom: 12px;
+            box-shadow: 0 0 12px rgba(34, 197, 94, 0.15);
+        }
+
+        .reveal-box h3 {
+            color: #22c55e;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .reveal-box p {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #f8fafc;
+            line-height: 1.4;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-action:hover {
+            background-color: #0369a1;
+        }
+
+        footer {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>I Learn — Verb to be Training</h1>
+            <p class="subtitle">Treinamento isolado e avançado do Verbo To Be nos 12 tempos verbais</p>
+
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span id="progressText">Meta diária: revisar o verbo to be 50x (0 / 50)</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                </div>
+            </div>
+
+            <div class="controls-wrapper">
+                <div class="controls">
+                    <label for="rateRange">Velocidade:</label>
+                    <input type="range" id="rateRange" min="0.25" max="1.5" step="0.05" value="0.5" oninput="updateRateLabel(this.value)">
+                    <span id="rateVal" class="rate-value">0.5x</span>
+                </div>
+
+                <div class="medal-box" id="medalBox">
+                    <span>🏅</span> <span id="medalCount">+0</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="audio-box">
+            <p>Ouça a frase gerada e monte os blocos abaixo:</p>
+            <div class="audio-buttons">
+                <button class="btn-audio" onclick="playGeneratedAudio('en-GB')">🔊 Ouvir UK</button>
+                <button class="btn-audio" onclick="playGeneratedAudio('en-US')">🔊 Ouvir US</button>
+            </div>
+        </div>
+
+        <div class="status-msg" id="statusMsg">Ouça o áudio e selecione os blocos...</div>
+
+        <div class="game-grid">
+            <div class="column-card" id="colTenses">
+                <div class="column-title">1. Tempo Verbal</div>
+            </div>
+            <div class="column-card" id="colPronouns">
+                <div class="column-title">2. Pronome / Sujeito</div>
+            </div>
+            <div class="column-card" id="colAux1">
+                <div class="column-title">3. Auxiliar 1</div>
+            </div>
+            <div class="column-card" id="colAux2">
+                <div class="column-title">4. Auxiliar 2</div>
+            </div>
+            <div class="column-card" id="colAux3">
+                <div class="column-title">5. Auxiliar 3</div>
+            </div>
+            <div class="column-card" id="colVerbs">
+                <div class="column-title">6. Verbo Principal</div>
+            </div>
+        </div>
+
+        <div class="reveal-box" id="revealBox">
+            <h3>🎉 Resposta Correta!</h3>
+            <p id="revealedDetails"></p>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn-action" id="nextBtn" onclick="initRound()">Próxima Rodada ➔</button>
+        </div>
+
+        <footer>
+            <p>I Learn — Ouvir, Montar e Aprender.</p>
+        </footer>
+    </div>
+
+    <script>
+        const rawTextDatabase = `
+To be (v) /UK tuː biː/ /US tuː biː/ -> ser, estar
+Be /UK biː/ /US biː/
+Am (1ª p. sing) /UK æm/ /US æm/
+Is (3ª p. sing) /UK ɪz/ /US ɪz/
+Are (plural / 2ª p.) /UK ɑː/ /US ɑːr/
+Being (gerúndio) /UK ˈbiː.ɪŋ/ /US ˈbiː.ɪŋ/
+Was (passado sing. 1ª/3ª p.) /UK wɒz/ /US wʌz/
+Were (passado plural / 2ª p.) /UK wɜː/ /US wɝː/
+Been (particípio) /UK biːn/ /US bɪn/
+        `;
+
+        const tensesList = [
+            "Simple Present", "Present Continuous", "Simple Past", "Past Continuous",
+            "Present Perfect", "Present Perfect Continuous", "Past Perfect", "Past Perfect Continuous",
+            "Future Simple", "Future Continuous", "Future Perfect", "Future Perfect Continuous"
+        ];
+
+        const basePronouns = ["I", "you", "she", "it", "he", "we", "they"];
+
+        const pronounsList = [
+            "I", "I'm", "I'd", "I've", "I'll",
+            "you", "you're", "you'd", "you've", "you'll",
+            "she", "she's", "she'd", "she'll",
+            "it", "it's", "it'd", "it'll",
+            "he", "he's", "he'd", "he'll",
+            "we", "we're", "we'd", "we've", "we'll",
+            "they", "they're", "they'd", "they've", "they'll"
+        ];
+
+        const aux1List = [
+            "not",
+            "am", "am not",
+            "is", "isn't",
+            "are", "aren't",
+            "ain't",
+            "was", "wasn't",
+            "were", "weren't",
+            "have", "haven't",
+            "has", "hasn't",
+            "had", "hadn't",
+            "will", "won't"
+        ];
+
+        let verbsParsed = [];
+        let completedCount = 0;
+        const totalTargetCount = 50;
+
+        let currentRound = {
+            tense: "",
+            isNegative: false,
+            pronoun: "",
+            aux1: "",
+            aux2: "",
+            aux3: "",
+            verbObj: null,
+            verbForm: "",
+            fullSentenceText: "",
+            verbOptions: []
+        };
+
+        let userSelection = {
+            tense: null,
+            pronoun: null,
+            aux1: null,
+            aux2: null,
+            aux3: null,
+            verbForm: null,
+            verbObj: null
+        };
+
+        function parseRawDatabase() {
+            const lines = rawTextDatabase.split('\n');
+            let currentVerb = null;
+
+            lines.forEach(line => {
+                let trimmed = line.trim();
+                if (!trimmed) return;
+
+                if (trimmed.startsWith('To ')) {
+                    let cleanInf = trimmed.split('/')[0].split('->')[0].split('(')[0].trim();
+                    currentVerb = { infinitive: cleanInf, rawForms: [] };
+                    verbsParsed.push(currentVerb);
+                } else if (currentVerb) {
+                    let cleanName = trimmed.split('/')[0].split('(')[0].trim();
+                    currentVerb.rawForms.push(cleanName);
+                    let lowerName = cleanName.toLowerCase();
+                    
+                    if (lowerName.includes('gerúndio') || lowerName.includes('being')) {
+                        currentVerb.forms = currentVerb.forms || {};
+                        currentVerb.forms.gerund = cleanName;
+                    } else if (lowerName.includes('3ª p') || lowerName.includes('is')) {
+                        currentVerb.forms = currentVerb.forms || {};
+                        currentVerb.forms.thirdSing = cleanName;
+                    } else if (lowerName.includes('am')) {
+                        currentVerb.forms = currentVerb.forms || {};
+                        currentVerb.forms.firstSing = cleanName;
+                    } else if (lowerName.includes('are')) {
+                        currentVerb.forms = currentVerb.forms || {};
+                        currentVerb.forms.plural = cleanName;
+                    } else if (lowerName.includes('was')) {
+                        currentVerb.forms = currentVerb.forms || {};
+                        currentVerb.forms.was = cleanName;
+                    } else if (lowerName.includes('were')) {
+                        currentVerb.forms = currentVerb.forms || {};
+                        currentVerb.forms.were = cleanName;
+                    } else if (lowerName.includes('particípio') || lowerName.includes('been')) {
+                        currentVerb.forms = currentVerb.forms || {};
+                        currentVerb.forms.participle = cleanName;
+                    } else {
+                        currentVerb.forms = currentVerb.forms || {};
+                        if (!currentVerb.forms.base && cleanName.toLowerCase() !== currentVerb.infinitive.toLowerCase()) {
+                            currentVerb.forms.base = cleanName;
+                        }
+                    }
+                }
+            });
+
+            verbsParsed.forEach(v => {
+                if (!v.forms) v.forms = {};
+                if (!v.forms.base) v.forms.base = "Be";
+                if (!v.forms.firstSing) v.forms.firstSing = "Am";
+                if (!v.forms.thirdSing) v.forms.thirdSing = "Is";
+                if (!v.forms.plural) v.forms.plural = "Are";
+                if (!v.forms.gerund) v.forms.gerund = "Being";
+                if (!v.forms.was) v.forms.was = "Was";
+                if (!v.forms.were) v.forms.were = "Were";
+                if (!v.forms.participle) v.forms.participle = "Been";
+            });
+        }
+
+        function updateRateLabel(val) {
+            document.getElementById('rateVal').innerText = val + 'x';
+        }
+
+        function playSuccessSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const playTone = (freq, startTime, duration) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime + startTime);
+                    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + startTime + duration);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(audioCtx.currentTime + startTime);
+                    osc.stop(audioCtx.currentTime + startTime + duration);
+                };
+                playTone(523.25, 0, 0.1);
+                playTone(659.25, 0.08, 0.15);
+                playTone(783.99, 0.16, 0.2);
+            } catch (e) {}
+        }
+
+        function playGeneratedAudio(lang = 'en-US') {
+            if (!currentRound.fullSentenceText) return;
+            window.speechSynthesis.cancel();
+            const currentRate = parseFloat(document.getElementById('rateRange').value);
+            const utterance = new SpeechSynthesisUtterance(currentRound.fullSentenceText);
+            utterance.lang = lang;
+            utterance.rate = currentRate;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function updateProgressUI() {
+            let percent = Math.min(100, Math.round((completedCount / totalTargetCount) * 100));
+            document.getElementById('progressText').innerText = `Meta diária: revisar o verbo to be 50x (${completedCount} / ${totalTargetCount})`;
+            document.getElementById('progressPercent').innerText = `${percent}%`;
+            document.getElementById('progressBarFill').style.width = `${percent}%`;
+        }
+
+        function getStrictPronounsForTense(tense) {
+            let list = [];
+            basePronouns.forEach(bp => {
+                if (tense.includes("Future")) {
+                    if (bp === "I") list.push("I'll");
+                    else if (bp === "you") list.push("you'll");
+                    else if (bp === "she") list.push("she'll");
+                    else if (bp === "it") list.push("it'll");
+                    else if (bp === "he") list.push("he'll");
+                    else if (bp === "we") list.push("we'll");
+                    else if (bp === "they") list.push("they'll");
+                } else if (tense.includes("Past Perfect")) {
+                    if (bp === "I") list.push("I'd");
+                    else if (bp === "you") list.push("you'd");
+                    else if (bp === "she") list.push("she'd");
+                    else if (bp === "it") list.push("it'd");
+                    else if (bp === "he") list.push("he'd");
+                    else if (bp === "we") list.push("we'd");
+                    else if (bp === "they") list.push("they'd");
+                } else if (tense.includes("Present Perfect")) {
+                    if (bp === "I") list.push("I've");
+                    else if (bp === "you") list.push("you've");
+                    else if (bp === "she") list.push("she's");
+                    else if (bp === "it") list.push("it's");
+                    else if (bp === "he") list.push("he's");
+                    else if (bp === "we") list.push("we've");
+                    else if (bp === "they") list.push("they've");
+                } else if (tense === "Present Continuous") {
+                    if (bp === "I") list.push("I'm");
+                    else if (bp === "you") list.push("you're");
+                    else if (bp === "she") list.push("she's");
+                    else if (bp === "it") list.push("it's");
+                    else if (bp === "he") list.push("he's");
+                    else if (bp === "we") list.push("we're");
+                    else if (bp === "they") list.push("they're");
+                } else {
+                    list.push(bp === "i" ? "I" : bp);
+                }
+            });
+            return list;
+        }
+
+        function generateValidRound() {
+            // Sorteia primeiro o tempo verbal de forma uniformemente equiprovável (1/12 cada)
+            let tense = tensesList[Math.floor(Math.random() * tensesList.length)];
+
+            for (let attempt = 0; attempt < 100; attempt++) {
+                let selectedVerb = verbsParsed[0]; 
+                let isNegative = Math.random() < 0.5;
+
+                let validPronouns = getStrictPronounsForTense(tense);
+                if (validPronouns.length === 0) continue;
+                let pronoun = validPronouns[Math.floor(Math.random() * validPronouns.length)];
+
+                let isContractedBe = pronoun.includes("'m") || pronoun.includes("'re") || (pronoun.includes("'s") && (tense === "Present Continuous"));
+                let isContractedHave = pronoun.includes("'ve") || (pronoun.includes("'s") && (tense === "Present Perfect" || tense === "Present Perfect Continuous"));
+                let isContractedWill = pronoun.includes("'ll");
+                let isContractedHad = pronoun.includes("'d");
+
+                if (isContractedHave && isNegative) isNegative = false;
+                if (isContractedBe && isNegative) isNegative = false;
+                if (isContractedWill && isNegative) isNegative = false;
+                if (isContractedHad && isNegative) isNegative = false;
+
+                let a1 = "", a2 = "", a3 = "", verbFormUsed = "", sentenceText = "";
+
+                if (tense === "Simple Present") {
+                    let baseP = pronoun.replace(/'s/g, "");
+                    a1 = ""; 
+                    if (!isNegative) {
+                        verbFormUsed = baseP === "I" ? selectedVerb.forms.firstSing : (["he", "she", "it"].includes(baseP) ? selectedVerb.forms.thirdSing : selectedVerb.forms.plural);
+                    } else {
+                        let negOptions = baseP === "I" ? ["am not", "ain't"] : (["he", "she", "it"].includes(baseP) ? ["isn't", "ain't"] : ["aren't", "ain't"]);
+                        verbFormUsed = negOptions[Math.floor(Math.random() * negOptions.length)];
+                    }
+                } else if (tense === "Present Continuous") {
+                    let baseP = pronoun.replace(/'s/g, "");
+                    if (!isContractedBe) {
+                        if (!isNegative) {
+                            a1 = baseP === "I" ? "am" : (["he", "she", "it"].includes(baseP) ? "is" : "are");
+                        } else {
+                            let negOptions = baseP === "I" ? ["am not", "ain't"] : (["he", "she", "it"].includes(baseP) ? ["isn't", "ain't"] : ["aren't", "ain't"]);
+                            a1 = negOptions[Math.floor(Math.random() * negOptions.length)];
+                        }
+                    } else {
+                        a1 = ""; 
+                        if (isNegative) a1 = "not";
+                    }
+                    verbFormUsed = selectedVerb.forms.gerund;
+                } else if (tense === "Simple Past") {
+                    a1 = "";
+                    let baseP = pronoun;
+                    if (!isNegative) {
+                        verbFormUsed = ["I", "he", "she", "it"].includes(baseP) ? selectedVerb.forms.was : selectedVerb.forms.were;
+                    } else {
+                        verbFormUsed = ["I", "he", "she", "it"].includes(baseP) ? "wasn't" : "weren't";
+                    }
+                } else if (tense === "Past Continuous") {
+                    let baseP = pronoun;
+                    a1 = (["I", "he", "she", "it"].includes(baseP)) ? (isNegative ? "wasn't" : "was") : (isNegative ? "weren't" : "were");
+                    verbFormUsed = selectedVerb.forms.gerund;
+                } else if (tense === "Present Perfect") {
+                    let baseP = pronoun.includes("'s") ? pronoun.replace("'s", "") : (pronoun.includes("'ve") ? pronoun.replace("'ve", "") : pronoun);
+                    if (!isContractedHave) {
+                        a1 = ["he", "she", "it"].includes(baseP) ? (isNegative ? "hasn't" : "has") : (isNegative ? "haven't" : "have");
+                    } else {
+                        a1 = "";
+                    }
+                    verbFormUsed = selectedVerb.forms.participle;
+                } else if (tense === "Present Perfect Continuous") {
+                    let baseP = pronoun.includes("'s") ? pronoun.replace("'s", "") : (pronoun.includes("'ve") ? pronoun.replace("'ve", "") : pronoun);
+                    if (!isContractedHave) {
+                        a1 = ["he", "she", "it"].includes(baseP) ? (isNegative ? "hasn't" : "has") : (isNegative ? "haven't" : "have");
+                    } else {
+                        a1 = "";
+                    }
+                    a2 = "been";
+                    verbFormUsed = selectedVerb.forms.gerund;
+                } else if (tense === "Past Perfect") {
+                    if (!isContractedHad) {
+                        a1 = isNegative ? "hadn't" : "had";
+                    } else {
+                        a1 = ""; 
+                    }
+                    verbFormUsed = selectedVerb.forms.participle;
+                } else if (tense === "Past Perfect Continuous") {
+                    if (!isContractedHad) {
+                        a1 = isNegative ? "hadn't" : "had";
+                    } else {
+                        a1 = "";
+                    }
+                    a2 = "been";
+                    verbFormUsed = selectedVerb.forms.gerund;
+                } else if (tense === "Future Simple") {
+                    if (!isContractedWill) {
+                        a1 = isNegative ? "won't" : "will";
+                    } else {
+                        a1 = ""; 
+                    }
+                    verbFormUsed = selectedVerb.forms.base;
+                } else if (tense === "Future Continuous") {
+                    if (!isContractedWill) {
+                        a1 = isNegative ? "won't" : "will";
+                    } else {
+                        a1 = "";
+                    }
+                    a2 = "be";
+                    verbFormUsed = selectedVerb.forms.gerund;
+                } else if (tense === "Future Perfect") {
+                    if (!isContractedWill) {
+                        a1 = isNegative ? "won't" : "will";
+                    } else {
+                        a1 = "";
+                    }
+                    a2 = "have";
+                    verbFormUsed = selectedVerb.forms.participle;
+                } else if (tense === "Future Perfect Continuous") {
+                    if (!isContractedWill) {
+                        a1 = isNegative ? "won't" : "will";
+                    } else {
+                        a1 = "";
+                    }
+                    a2 = "have";
+                    a3 = "been";
+                    verbFormUsed = selectedVerb.forms.gerund;
+                }
+
+                let isValid = true;
+                if ((tense !== "Simple Present" && tense !== "Simple Past") && !verbFormUsed) isValid = false;
+                if (verbFormUsed && verbFormUsed.includes("undefined")) isValid = false;
+
+                if (isValid) {
+                    sentenceText = [pronoun, a1, a2, a3, verbFormUsed].filter(Boolean).join(" ");
+                    return {
+                        tense, isNegative, pronoun, aux1: a1, aux2: a2, aux3: a3,
+                        verbObj: selectedVerb, verbForm: verbFormUsed, fullSentenceText: sentenceText,
+                        verbOptions: [selectedVerb]
+                    };
+                }
+            }
+            let fallbackVerb = verbsParsed[0];
+            return {
+                tense: "Simple Present", isNegative: false, pronoun: "I", aux1: "", aux2: "", aux3: "",
+                verbObj: fallbackVerb, verbForm: fallbackVerb.forms.firstSing, fullSentenceText: `I am`,
+                verbOptions: [fallbackVerb]
+            };
+        }
+
+        function initRound() {
+            if (verbsParsed.length === 0) return;
+
+            currentRound = generateValidRound();
+
+            userSelection = { tense: null, pronoun: null, aux1: null, aux2: null, aux3: null, verbForm: null, verbObj: null };
+            document.getElementById('revealBox').style.display = 'none';
+            document.getElementById('statusMsg').style.color = "#38bdf8";
+            document.getElementById('statusMsg').innerText = "Ouça o áudio e selecione os blocos...";
+
+            renderColumns();
+
+            setTimeout(() => {
+                playGeneratedAudio('en-US');
+            }, 300);
+        }
+
+        function isSelectionCorrect(type, val) {
+            let normalize = (str) => (str === null || str === undefined) ? "" : String(str).trim().toLowerCase();
+
+            if (type === 'tense') return normalize(val) === normalize(currentRound.tense);
+            if (type === 'pronoun') return normalize(val) === normalize(currentRound.pronoun);
+
+            let userVal = normalize(val);
+
+            if (type === 'aux1') return userVal === normalize(currentRound.aux1);
+            if (type === 'aux2') return userVal === normalize(currentRound.aux2);
+            if (type === 'aux3') return userVal === normalize(currentRound.aux3);
+
+            if (type === 'verbForm') {
+                if (currentRound.verbForm === "") {
+                    return userVal === "";
+                }
+                return userVal === normalize(currentRound.verbForm);
+            }
+            return false;
+        }
+
+        function createColumnContainer(items, type, getterFn, setterFn, hasSemForma = false) {
+            const container = document.createElement('div');
+
+            if (hasSemForma) {
+                const semFormaBtn = document.createElement('button');
+                semFormaBtn.className = 'btn-sem-forma';
+                semFormaBtn.innerText = "sem forma / auxiliar";
+                
+                let currentVal = getterFn();
+                if (currentVal === "" || currentVal === null) {
+                    semFormaBtn.style.borderColor = "#38bdf8";
+                    semFormaBtn.style.color = "#38bdf8";
+                }
+
+                semFormaBtn.onclick = () => {
+                    let correct = isSelectionCorrect(type, "");
+                    if (correct) {
+                        playSuccessSound();
+                    }
+                    setterFn("");
+                    renderColumns();
+                    checkValidation();
+                };
+                container.appendChild(semFormaBtn);
+            }
+
+            const gridDiv = document.createElement('div');
+            gridDiv.className = 'button-grid-pair';
+            
+            items.forEach(item => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.innerText = item;
+                
+                let currentVal = getterFn();
+                if (currentVal === item) {
+                    let correct = isSelectionCorrect(type, item);
+                    btn.classList.add(correct ? 'selected-correct' : 'selected-wrong');
+                }
+
+                btn.onclick = () => {
+                    let correct = isSelectionCorrect(type, item);
+                    if (correct) {
+                        playSuccessSound();
+                    }
+                    setterFn(item);
+                    renderColumns();
+                    checkValidation();
+                };
+                gridDiv.appendChild(btn);
+            });
+
+            container.appendChild(gridDiv);
+            return container;
+        }
+
+        function renderColumns() {
+            const colT = document.getElementById('colTenses');
+            colT.innerHTML = '<div class="column-title">1. Tempo Verbal</div>';
+            colT.appendChild(createColumnContainer(tensesList, 'tense', () => userSelection.tense, (v) => userSelection.tense = v, false));
+
+            const colP = document.getElementById('colPronouns');
+            colP.innerHTML = '<div class="column-title">2. Pronome / Sujeito</div>';
+            colP.appendChild(createColumnContainer(pronounsList, 'pronoun', () => userSelection.pronoun, (v) => userSelection.pronoun = v, false));
+
+            const colA1 = document.getElementById('colAux1');
+            colA1.innerHTML = '<div class="column-title">3. Auxiliar 1</div>';
+            colA1.appendChild(createColumnContainer(aux1List, 'aux1', () => userSelection.aux1, (v) => userSelection.aux1 = v, true));
+
+            const colA2 = document.getElementById('colAux2');
+            colA2.innerHTML = '<div class="column-title">4. Auxiliar 2</div>';
+            colA2.appendChild(createColumnContainer(["be", "been", "have"], 'aux2', () => userSelection.aux2, (v) => userSelection.aux2 = v, true));
+
+            const colA3 = document.getElementById('colAux3');
+            colA3.innerHTML = '<div class="column-title">5. Auxiliar 3</div>';
+            colA3.appendChild(createColumnContainer(["been"], 'aux3', () => userSelection.aux3, (v) => userSelection.aux3 = v, true));
+
+            const colV = document.getElementById('colVerbs');
+            colV.innerHTML = '<div class="column-title">6. Verbo Principal</div>';
+            const verbGrid = document.createElement('div');
+            verbGrid.className = 'button-grid-pair';
+
+            currentRound.verbOptions.forEach(verbObj => {
+                const verbBtn = document.createElement('button');
+                verbBtn.className = 'choice-btn';
+                if (userSelection.verbObj === verbObj && (userSelection.verbForm !== null)) {
+                    let correct = isSelectionCorrect('verbForm', userSelection.verbForm);
+                    verbBtn.classList.add(correct ? 'selected-correct' : 'selected-wrong');
+                }
+                verbBtn.innerText = verbObj.infinitive;
+                verbBtn.onclick = () => {
+                    userSelection.verbObj = verbObj;
+                    toggleVerbSubmenu(verbObj, verbBtn);
+                };
+                verbGrid.appendChild(verbBtn);
+            });
+            colV.appendChild(verbGrid);
+        }
+
+        let activeSubmenu = null;
+        let activeParentBtn = null;
+
+        function toggleVerbSubmenu(verbObj, parentBtn) {
+            if (activeSubmenu) {
+                activeSubmenu.remove();
+                if (activeParentBtn === parentBtn) {
+                    activeSubmenu = null;
+                    activeParentBtn = null;
+                    return;
+                }
+            }
+
+            const submenu = document.createElement('div');
+            submenu.className = 'verb-submenu';
+
+            let uniqueForms = [...new Set([
+                verbObj.forms.base, 
+                verbObj.forms.firstSing, 
+                verbObj.forms.thirdSing, 
+                verbObj.forms.plural, 
+                verbObj.forms.gerund, 
+                verbObj.forms.was, 
+                verbObj.forms.were,
+                "am not",
+                "isn't",
+                "aren't",
+                "ain't",
+                "wasn't",
+                "weren't",
+                verbObj.forms.participle
+            ])];
+
+            uniqueForms.forEach(fVal => {
+                const fBtn = document.createElement('button');
+                fBtn.className = 'choice-btn';
+                fBtn.innerText = fVal;
+                if (userSelection.verbForm === fVal && userSelection.verbObj === verbObj) {
+                    let correct = isSelectionCorrect('verbForm', fVal);
+                    fBtn.classList.add(correct ? 'selected-correct' : 'selected-wrong');
+                }
+                fBtn.onclick = () => {
+                    userSelection.verbForm = fVal;
+                    userSelection.verbObj = verbObj;
+                    let correct = isSelectionCorrect('verbForm', fVal);
+                    if (correct) {
+                        playSuccessSound();
+                    }
+                    renderColumns();
+                    checkValidation();
+                };
+                submenu.appendChild(fBtn);
+            });
+
+            parentBtn.after(submenu);
+            activeSubmenu = submenu;
+            activeParentBtn = parentBtn;
+        }
+
+        function checkValidation() {
+            if (!userSelection.tense || !userSelection.pronoun || userSelection.verbForm === null || !userSelection.verbObj) return;
+
+            let tCorrect = isSelectionCorrect('tense', userSelection.tense);
+            let pCorrect = isSelectionCorrect('pronoun', userSelection.pronoun);
+            let a1Correct = isSelectionCorrect('aux1', userSelection.aux1);
+            let a2Correct = isSelectionCorrect('aux2', userSelection.aux2);
+            let a3Correct = isSelectionCorrect('aux3', userSelection.aux3);
+            let vCorrect = isSelectionCorrect('verbForm', userSelection.verbForm);
+
+            if (tCorrect && pCorrect && a1Correct && a2Correct && a3Correct && vCorrect) {
+                if (completedCount < totalTargetCount) {
+                    completedCount++;
+                    updateProgressUI();
+                }
+
+                document.getElementById('statusMsg').style.color = "#22c55e";
+                
+                if (completedCount >= totalTargetCount) {
+                    document.getElementById('statusMsg').innerHTML = "🌟 Você cumpriu a missão de revisão, parabéns!";
+                } else {
+                    document.getElementById('statusMsg').innerText = "✨ Perfeito! Estrutura 100% correta.";
+                }
+                
+                document.getElementById('revealedDetails').innerHTML = `
+                    <strong>Frase Correta:</strong> ${currentRound.fullSentenceText}
+                `;
+                document.getElementById('revealBox').style.display = 'block';
+
+                setTimeout(() => {
+                    playGeneratedAudio('en-US');
+                }, 250);
+
+            } else {
+                document.getElementById('statusMsg').style.color = "#ef4444";
+                document.getElementById('statusMsg').innerText = "Alguma escolha está incorreta (veja os itens em vermelho).";
+            }
+        }
+
+        window.onload = () => {
+            parseRawDatabase();
+            completedCount = 0;
+            updateProgressUI();
+            initRound();
+        };
+    </script>
+</body>
+</html>
