@@ -185,16 +185,25 @@
                 Ouvir Som (/iː/)
             </button>
 
+             <!-- Controlador de Velocidade para os Botões das Palavras -->
+            <div class="controls-container">
+                <label for="speedSelect">Velocidade da Voz:</label>
+                <select id="speedSelect" class="speed-select">
+                    <option value="0.5" selected>0.5x (Lento)</option>
+                    <option value="1">1x (Normal)</option>
+                </select>
+            </div>
+
             <!-- Botões das palavras utilizando a síntese de voz do navegador -->
             <div class="word-buttons">
                 <button class="btn btn-secondary" onclick="speakWord('see')">
-                    🔊 Ouvir "see"
+                    🇺🇸🔊 Ouvir "see"
                 </button>
                 <button class="btn btn-secondary" onclick="speakWord('sheep')">
-                    🔊 Ouvir "sheep" (/ʃiːp/)
+                    🇺🇸🔊 Ouvir "sheep" (/ʃiːp/)
                 </button>
                 <button class="btn btn-secondary" onclick="speakWord('bean')">
-                    🔊 Ouvir "bean" (/biːn/)
+                    🇺🇸🔊 Ouvir "bean" (/biːn/)
                 </button>
             </div>
 
