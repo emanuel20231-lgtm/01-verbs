@@ -250,5 +250,24 @@
             }
         }
     </script>
+    <!-- Controle de velocidade dinâmico (PC=0.65/Celular=0.5x) para os arquivos ipa -->
+<script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Pega a velocidade que foi salva pelo index.html
+        const velocidadeSalva = localStorage.getItem('minhaVelocidadeVoz');
+        
+        // CORREÇÃO: O ID do seu select é "speedSelect"
+        const speedSelect = document.getElementById("speedSelect");
+    
+        if (velocidadeSalva && speedSelect) {
+          // Atualiza o dropdown visualmente para o valor correto (0.65 no PC, 0.5 no celular)
+          speedSelect.value = velocidadeSalva;
+        }
+      });
+</script>
+
+    <!-- Cole isso antes de </body> em TODOS os arquivos HTML para que as bandeiras apareçam -->
+	<script src="https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
+	<script src="emoji-fix.js"></script>
 </body>
 </html>
