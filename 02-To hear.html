@@ -304,5 +304,26 @@
         <!-- Cole isso antes de </body> em TODOS os arquivos HTML -->
             <script src="https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
             <script src="emoji-fix.js"></script>
+    <!-- novo código -->  
+        <script>
+              document.addEventListener("DOMContentLoaded", function() {
+                // Pega a velocidade que foi salva pelo index.html
+                const velocidadeSalva = localStorage.getItem('minhaVelocidadeVoz');
+                
+                const rateRange = document.getElementById("rateRange");
+                const rateVal = document.getElementById("rateVal");
+            
+                if (velocidadeSalva && rateRange && rateVal) {
+                  // Atualiza o controle deslizante visualmente
+                  rateRange.value = velocidadeSalva;
+                  rateVal.textContent = velocidadeSalva + 'x';
+                  
+                  // Se você tiver uma função chamada updateRateLabel no seu código, chame-a para atualizar a voz
+                  if (typeof updateRateLabel === 'function') {
+                    updateRateLabel(velocidadeSalva);
+                  }
+                }
+              });
+        </script>
 </body>
 </html>
