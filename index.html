@@ -140,7 +140,7 @@
       left: 15px;
       z-index: 9999;
       background-color: #161b22;
-      color: #ffffff;
+      color: #99f4d6;
       border: 2px solid #ffffff;
       padding: 8px 18px;
       border-radius: 20px;
@@ -174,7 +174,7 @@
     }
 
     .brand-text {
-      color: #ffffff;
+      color: #99f4d6;
       font-size: 13px;
       font-weight: bold;
       white-space: nowrap;
@@ -215,17 +215,17 @@
 
     /* Menu Lateral */
     .sidebar {
-      position: fixed;
-      top: 0;
-      left: -300px;
-      width: 300px;
-      height: 100%;
-      background-color: #161b22;
-      z-index: 9998;
-      transition: left 0.3s ease;
-      padding: 60px 15px 20px 15px;
-      overflow-y: auto;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+        position: fixed;
+        top: 0;
+        left: -380px; /* Deve ser o mesmo valor negativo da largura */
+        width: 380px; /* Aumente a largura aqui (era 300px) */
+        height: 100%;
+        background-color: #161b22;
+        z-index: 9998;
+        transition: left 0.3s ease;
+        padding: 60px 15px 20px 15px;
+        overflow-y: auto;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
     }
 
     .sidebar.open {
