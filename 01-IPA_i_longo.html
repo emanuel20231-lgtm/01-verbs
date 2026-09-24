@@ -189,9 +189,10 @@
             <div class="controls-container">
                 <label for="speedSelect">Velocidade da Voz:</label>
                 <select id="speedSelect" class="speed-select">
-                    <option value="0.5" selected>0.5x (Lento)</option>
-                    <option value="1">1x (Normal)</option>
-                </select>
+				    <option value="0.5">0.5x (Lento)</option>
+				    <option value="0.65">0.65x (Lento PC)</option>
+				    <option value="1">1x (Normal)</option>
+				</select>
             </div>
 
             <!-- Botões das palavras utilizando a síntese de voz do navegador -->
@@ -237,39 +238,64 @@
             };
         }
 
-        function speakWord(text) {
-            const statusDiv = document.getElementById('status');
-            
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'en-US';
-                utterance.rate = 0.8;
-                
-                utterance.onstart = () => {
-                    statusDiv.textContent = `Reproduzindo "${text}" via IA...`;
-                    statusDiv.style.color = '#90cdf4';
-                };
-                
-                utterance.onend = () => {
-                    statusDiv.textContent = '';
-                };
-
-                utterance.onerror = () => {
-                    statusDiv.textContent = 'Erro na síntese de voz do navegador.';
-                    statusDiv.style.color = '#f87171';
-                };
-                
-                window.speechSynthesis.speak(utterance);
-            } else {
-                statusDiv.textContent = 'Seu navegador não suporta a voz de IA.';
-                statusDiv.style.color = '#f87171';
-            }
-        }
+       function speakWord(text) {
+	    const statusDiv = document.getElementById('status');
+	    const selectElement = document.getElementById('speedSelect');
+	    
+	    // Pega o valor do dropdown. Se não achar, usa 0.8 como segurança.
+	    const velocidadeSelecionada = selectElement ? parseFloat(selectElement.value) : 0.8;
+	
+	    if ('speechSynthesis' in window) {
+	        window.speechSynthesis.cancel();
+	        
+	        const utterance = new SpeechSynthesisUtterance(text);
+	        utterance.lang = 'en-US';
+	        utterance.rate = velocidadeSelecionada; // <--- Agora ele usa a velocidade do dropdown
+	        
+	        utterance.onstart = () => {
+	            statusDiv.textContent = `Reproduzindo "${text}" via IA...`;
+	            statusDiv.style.color = '#90cdf4';
+	        };
+	        
+	        utterance.onend = () => {
+	            statusDiv.textContent = '';
+	        };
+	
+	        utterance.onerror = () => {
+	            statusDiv.textContent = 'Erro na síntese de voz do navegador.';
+	            statusDiv.style.color = '#f87171';
+	        };
+	        
+	        window.speechSynthesis.speak(utterance);
+	    } else {
+	        statusDiv.textContent = 'Seu navegador não suporta a voz de IA.';
+	        statusDiv.style.color = '#f87171';
+	    }
+	}
     </script>
     <!-- Cole isso antes de </body> em TODOS os arquivos HTML -->
 	<script src="https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
 	<script src="emoji-fix.js"></script>
+	<!-- novo código add em cada arquivo html antes de body -->  
+        <script>
+              document.addEventListener("DOMContentLoaded", function() {
+                // Pega a velocidade que foi salva pelo index.html
+                const velocidadeSalva = localStorage.getItem('minhaVelocidadeVoz');
+                
+                const rateRange = document.getElementById("rateRange");
+                const rateVal = document.getElementById("rateVal");
+            
+                if (velocidadeSalva && rateRange && rateVal) {
+                  // Atualiza o controle deslizante visualmente
+                  rateRange.value = velocidadeSalva;
+                  rateVal.textContent = velocidadeSalva + 'x';
+                  
+                  // Se você tiver uma função chamada updateRateLabel no seu código, chame-a para atualizar a voz
+                  if (typeof updateRateLabel === 'function') {
+                    updateRateLabel(velocidadeSalva);
+                  }
+                }
+              });
+        </script>
 </body>
 </html>
