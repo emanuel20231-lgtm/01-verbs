@@ -853,13 +853,43 @@ Done (particípio) /UK dʌn/ /US dʌn/
             "Future Simple", "Future Continuous", "Future Perfect", "Future Perfect Continuous"
         ];
 
-        const pronounsList = [
-            "I", "You", "He", "She", "It", "We", "They",
-            "I'm", "You're", "He's", "She's", "It's", "We're", "They're",
-            "I've", "You've", "We've", "They've",
-            "I'd", "You'd", "He'd", "She'd", "We'd", "It'd", "They'd",
-            "I'll", "You'll", "He'll", "She'll", "It'll", "We'll",
-            "They'll"
+         const pronounsList = [
+            "I", "I'll", 
+            "I've", "I'd", 
+            "I'm", "EMPTY",
+            "You", "You'll", 
+            "You've", "You'd", 
+            "You're", "EMPTY",
+            "He", "He'll", 
+            "He's", "He'd", 
+            "EMPTY", "EMPTY",
+            "She", "She'll", 
+            "She's", "She'd", 
+            "EMPTY", "EMPTY",
+            "It", "It'll", 
+            "It's", "It'd", 
+            "EMPTY", "EMPTY",
+            "We", "We'll", 
+            "We've", "We'd", 
+            "We're", "EMPTY",
+            "They", "They'll", 
+            "They've", "They'd", 
+            "They're", "EMPTY"
+        ];
+		        const aux1List = [
+            "don't", "doesn't", 
+            "am", "am not", 
+            "is", "isn't", 
+            "are", "aren't", 
+            "did", "didn't", 
+            "was", "wasn't", 
+            "were", "weren't", 
+            "have", "haven't", 
+            "has", "hasn't", 
+            "had", "hadn't", 
+            "will", "won't", 
+            "EMPTY", "not", 
+            "ain't", "EMPTY"
         ];
 
         let verbsParsed = [];
@@ -1282,6 +1312,16 @@ Done (particípio) /UK dʌn/ /US dʌn/
             items.forEach(item => {
                 const btn = document.createElement('button');
                 btn.className = 'choice-btn';
+                
+                // NOVO: Verifica se é um espaço vazio de enfeite
+                if (item === "EMPTY") {
+                    btn.innerText = "";
+                    btn.disabled = true;
+                    btn.style.pointerEvents = "none"; // Impede cliques
+                    gridDiv.appendChild(btn);
+                    return; // Pula o resto da lógica para este botão
+                }
+
                 btn.innerText = item === "" ? "(Vazio)" : item;
                 
                 let currentVal = getterFn();
