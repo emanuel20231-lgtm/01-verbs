@@ -355,8 +355,8 @@
         <div class="audio-box">
             <p>Ouça a frase gerada e monte os blocos abaixo:</p>
             <div class="audio-buttons">
-                <button class="btn-audio" onclick="playGeneratedAudio('en-GB')">🔊 Ouvir UK</button>
-                <button class="btn-audio" onclick="playGeneratedAudio('en-US')">🔊 Ouvir US</button>
+                <button class="btn-audio" onclick="playGeneratedAudio('en-GB')">🇬🇧🔊  UK</button>
+                <button class="btn-audio" onclick="playGeneratedAudio('en-US')">🇺🇸🔊  US</button>
             </div>
         </div>
 
@@ -1348,5 +1348,30 @@ Done (particípio) /UK dʌn/ /US dʌn/
             initRound();
         };
     </script>
+    <!-- Cole isso antes de </body> em TODOS os arquivos HTML para que as bandeiras apareçam -->
+	<script src="https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
+	<script src="emoji-fix.js"></script>
+
+    <!-- add em cada arquivo html antes de body (no final ) para controlar a velocidade no pc(0.65x)/celular(0.5x) -->  
+        <script>
+              document.addEventListener("DOMContentLoaded", function() {
+                // Pega a velocidade que foi salva pelo index.html
+                const velocidadeSalva = localStorage.getItem('minhaVelocidadeVoz');
+                
+                const rateRange = document.getElementById("rateRange");
+                const rateVal = document.getElementById("rateVal");
+            
+                if (velocidadeSalva && rateRange && rateVal) {
+                  // Atualiza o controle deslizante visualmente
+                  rateRange.value = velocidadeSalva;
+                  rateVal.textContent = velocidadeSalva + 'x';
+                  
+                  // Se você tiver uma função chamada updateRateLabel no seu código, chame-a para atualizar a voz
+                  if (typeof updateRateLabel === 'function') {
+                    updateRateLabel(velocidadeSalva);
+                  }
+                }
+              });
+        </script>
 </body>
 </html>
