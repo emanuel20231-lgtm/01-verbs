@@ -68,7 +68,7 @@
 
         .progress-bar-bg {
             width: 100%;
-            height: 6px;
+            height: 7px;
             background-color: #334155;
             border-radius: 3px;
             overflow: hidden;
@@ -209,7 +209,7 @@
         .column-title {
             font-size: 0.7rem;
             font-weight: bold;
-            color: #94a3b8;
+            color: #99f4d6;
             text-align: center;
             margin-bottom: 2px;
             border-bottom: 1px solid #334155;
@@ -285,8 +285,8 @@
         }
 
         .reveal-box p {
-            font-size: 0.85rem;
-            font-weight: 600;
+            font-size: 1.80rem;
+            font-weight: 700;
             color: #f8fafc;
             line-height: 1.4;
         }
@@ -346,9 +346,7 @@
                     <span id="rateVal" class="rate-value">0.5x</span>
                 </div>
 
-                <div class="medal-box" id="medalBox">
-                    <span>🏅</span> <span id="medalCount">+0</span>
-                </div>
+                
             </div>
         </header>
 
@@ -857,7 +855,7 @@ Done (particípio) /UK dʌn/ /US dʌn/
                     currentVerb = { infinitive: cleanInf, rawForms: [] };
                     verbsParsed.push(currentVerb);
                 } else if (currentVerb) {
-                    let cleanName = trimmed.split('/')[0].split('(')[0].trim();
+                    let cleanName = trimmed.split('/')[0].split('(')[0].trim().toLowerCase();
                     currentVerb.rawForms.push(cleanName);
                     let lowerName = cleanName.toLowerCase();
                     
@@ -1326,7 +1324,7 @@ Done (particípio) /UK dʌn/ /US dʌn/
                 document.getElementById('statusMsg').innerText = "✨ Perfeito! Estrutura 100% correta.";
                 
                 document.getElementById('revealedDetails').innerHTML = `
-                    <strong>Frase Correta:</strong> ${currentRound.fullSentenceText}
+                    <strong></strong> ${currentRound.fullSentenceText}
                 `;
                 document.getElementById('revealBox').style.display = 'block';
 
