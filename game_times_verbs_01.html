@@ -212,6 +212,24 @@
             max-height: 600px; /* Aumenta a altura máxima */
             overflow-y: auto;
         }
+		        /* Estilização da barra de rolagem (Scrollbar) */
+        .column-card::-webkit-scrollbar {
+            width: 8px; /* Largura da barra */
+        }
+        .column-card::-webkit-scrollbar-track {
+            background: #1e293b; /* Cor do fundo da barra (mesma do card) */
+            border-radius: 8px;
+        }
+        .column-card::-webkit-scrollbar-thumb {
+            background-color: #42967b; /* O verde desejado */
+            border-radius: 8px;
+        }
+        
+        /* Para o Firefox (navegador que usa outro comando para scrollbar) */
+        .column-card {
+            scrollbar-width: thin;
+            scrollbar-color: #42967b #1e293b;
+        }
         .column-title {
             font-size: 0.9rem; /* Título maior */
             font-weight: bold;
@@ -369,24 +387,24 @@
 
         <div class="status-msg" id="statusMsg">Ouça o áudio e selecione os blocos...</div>
 
-        <div class="game-grid">
-            <div class="column-card" id="colTenses">
-                <div class="column-title">1. Tempo Verbal</div>
-            </div>
+                <div class="game-grid">
             <div class="column-card" id="colPronouns">
-                <div class="column-title">2. Pronome / Sujeito</div>
+                <div class="column-title">1. Pronome / Sujeito</div>
             </div>
             <div class="column-card" id="colAux1">
-                <div class="column-title">3. Auxiliar 1</div>
+                <div class="column-title">2. Auxiliar 1</div>
             </div>
             <div class="column-card" id="colAux2">
-                <div class="column-title">4. Auxiliar 2</div>
+                <div class="column-title">3. Auxiliar 2</div>
             </div>
             <div class="column-card" id="colAux3">
-                <div class="column-title">5. Auxiliar 3</div>
+                <div class="column-title">4. Auxiliar 3</div>
             </div>
             <div class="column-card" id="colVerbs">
-                <div class="column-title">6. Verbo Principal</div>
+                <div class="column-title">5. Verbo Principal</div>
+            </div>
+            <div class="column-card" id="colTenses">
+                <div class="column-title">6. Tempo Verbal</div>
             </div>
         </div>
 
