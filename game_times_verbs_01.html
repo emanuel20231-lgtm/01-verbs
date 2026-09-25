@@ -809,7 +809,7 @@ Done (particípio) /UK dʌn/ /US dʌn/
             "I", "You", "He", "She", "It", "We", "They",
             "I'm", "You're", "He's", "She's", "It's", "We're", "They're",
             "I've", "You've", "We've", "They've",
-            "I'd", "He'd", "She'd", "We'd", "It'd", "They'd",
+            "I'd", "You'd", "He'd", "She'd", "We'd", "It'd", "They'd",
             "I'll", "You'll", "He'll", "She'll", "It'll", "We'll",
             "They'll"
         ];
@@ -967,7 +967,7 @@ Done (particípio) /UK dʌn/ /US dʌn/
                 return ["I", "You", "He", "She", "It", "We", "They", "I'll", "You'll", "He'll", "She'll", "It'll", "We'll", "They'll"];
             }
             if (tense.includes("Past Perfect")) {
-                return ["I", "You", "He", "She", "It", "We", "They", "I'd", "He'd", "She'd", "We'd", "It'd", "They'd"];
+                return ["I", "You", "He", "She", "It", "We", "They", "I'd", "You'd", "He'd", "She'd", "We'd", "It'd", "They'd"];
             }
             return ["I", "You", "He", "She", "It", "We", "They"];
         }
@@ -995,18 +995,23 @@ Done (particípio) /UK dʌn/ /US dʌn/
 
                 let a1 = "", a2 = "", a3 = "", verbFormUsed = "", sentenceText = "";
 
-                if (tense === "Simple Present") {
+                               if (tense === "Simple Present") {
                     if (!isNegative) {
                         a1 = "";
                         verbFormUsed = (["He", "She", "It"].includes(pronoun)) ? selectedVerb.forms.thirdSing : selectedVerb.forms.base;
                     } else {
-                        a1 = ["He", "She", "It"].includes(pronoun) ? "doesn't" : "don't";
+                        let stdNeg = ["He", "She", "It"].includes(pronoun) ? "doesn't" : "don't";
+                        a1 = Math.random() < 0.5 ? "ain't" : stdNeg;
                         verbFormUsed = selectedVerb.forms.base;
                     }
-                } else if (tense === "Present Continuous") {
+                }   else if (tense === "Present Continuous") {
                     if (!isContractedBe) {
-                        a1 = pronoun === "I" ? "am" : (["He", "She", "It"].includes(pronoun) ? "is" : "are");
-                        if (isNegative) a1 = pronoun === "I" ? "am not" : (["He", "She", "It"].includes(pronoun) ? "isn't" : "aren't");
+                        if (!isNegative) {
+                            a1 = pronoun === "I" ? "am" : (["He", "She", "It"].includes(pronoun) ? "is" : "are");
+                        } else {
+                            let stdNeg = pronoun === "I" ? "am not" : (["He", "She", "It"].includes(pronoun) ? "isn't" : "aren't");
+                            a1 = Math.random() < 0.5 ? "ain't" : stdNeg;
+                        }
                     } else {
                         a1 = ""; 
                         if (isNegative) a1 = "not";
@@ -1023,9 +1028,14 @@ Done (particípio) /UK dʌn/ /US dʌn/
                 } else if (tense === "Past Continuous") {
                     a1 = (["I", "He", "She", "It"].includes(pronoun)) ? (isNegative ? "wasn't" : "was") : (isNegative ? "weren't" : "were");
                     verbFormUsed = selectedVerb.forms.gerund;
-                } else if (tense === "Present Perfect") {
+                }   else if (tense === "Present Perfect") {
                     if (!isContractedHave) {
-                        a1 = ["He", "She", "It"].includes(pronoun) ? (isNegative ? "hasn't" : "has") : (isNegative ? "haven't" : "have");
+                        if (!isNegative) {
+                            a1 = ["He", "She", "It"].includes(pronoun) ? "has" : "have";
+                        } else {
+                            let stdNeg = ["He", "She", "It"].includes(pronoun) ? "hasn't" : "haven't";
+                            a1 = Math.random() < 0.5 ? "ain't" : stdNeg;
+                        }
                     } else {
                         a1 = "";
                     }
@@ -1149,14 +1159,35 @@ Done (particípio) /UK dʌn/ /US dʌn/
                 let isContractedWill = p.includes("'ll");
                 let isContractedHad = p.includes("'d");
 
-                if (expTense === "Simple Present") return userVal === (!expNeg ? "" : (["He", "She", "It"].includes(p) ? "doesn't" : "don't"));
+                    if (expTense === "Simple Present") {
+                    if (!expNeg) return userVal === "";
+                    let stdNeg = ["He", "She", "It"].includes(p) ? "doesn't" : "don't";
+                    return userVal === stdNeg || userVal === "ain't";
+                }
+				
                 if (expTense === "Present Continuous") {
                     if (isContractedBe) return userVal === (expNeg ? "not" : "");
-                    return userVal === (p === "I" ? (expNeg ? "am not" : "am") : (["He", "She", "It"].includes(p) ? (expNeg ? "isn't" : "is") : (expNeg ? "aren't" : "are")));
+                    if (expNeg) {
+                        let stdNeg = p === "I" ? "am not" : (["He", "She", "It"].includes(p) ? "isn't" : "aren't");
+                        return userVal === stdNeg || userVal === "ain't";
+                    } else {
+                        return userVal === (p === "I" ? "am" : (["He", "She", "It"].includes(p) ? "is" : "are"));
+                    }
                 }
+				
                 if (expTense === "Simple Past") return userVal === (!expNeg ? "" : "didn't");
                 if (expTense === "Past Continuous") return userVal === (["I", "He", "She", "It"].includes(p) ? (expNeg ? "wasn't" : "was") : (expNeg ? "weren't" : "were"));
-                if (expTense === "Present Perfect" || expTense === "Present Perfect Continuous") {
+                    if (expTense === "Present Perfect") {
+                    if (isContractedHave) return userVal === "";
+                    if (!expNeg) {
+                        return userVal === ((["He", "She", "It"].includes(p)) ? "has" : "have");
+                    } else {
+                        let stdNeg = ["He", "She", "It"].includes(p) ? "hasn't" : "haven't";
+                        return userVal === stdNeg || userVal === "ain't";
+                    }
+                }
+                
+                if (expTense === "Present Perfect Continuous") {
                     if (isContractedHave) return userVal === "";
                     return userVal === ((["He", "She", "It"].includes(p)) ? (expNeg ? "hasn't" : "has") : (expNeg ? "haven't" : "have"));
                 }
@@ -1233,7 +1264,7 @@ Done (particípio) /UK dʌn/ /US dʌn/
 
             const colA1 = document.getElementById('colAux1');
             colA1.innerHTML = '<div class="column-title">3. Auxiliar 1</div>';
-            colA1.appendChild(createPairedContainer(["", "don't", "doesn't", "am", "is", "are", "isn't", "aren't", "am not", "not", "did", "didn't", "was", "were", "wasn't", "weren't", "have", "has", "haven't", "hasn't", "had", "hadn't", "will", "won't"], 'aux1', () => userSelection.aux1, (v) => userSelection.aux1 = v));
+            colA1.appendChild(createPairedContainer(["", "don't", "doesn't", "am", "is", "are", "isn't", "aren't", "am not", "ain't", "not", "did", "didn't", "was", "were", "wasn't", "weren't", "have", "has", "haven't", "hasn't", "had", "hadn't", "will", "won't"], 'aux1', () => userSelection.aux1, (v) => userSelection.aux1 = v));
 
             const colA2 = document.getElementById('colAux2');
             colA2.innerHTML = '<div class="column-title">4. Auxiliar 2</div>';
