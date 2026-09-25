@@ -178,10 +178,12 @@
             min-height: 20px;
         }
 
-        .game-grid {
+            .game-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 12px; /* Aumenta o espaço entre as colunas */
+            /* Ajuste de proporções: 
+               1. Pronome (1fr), 2. Aux1 (1fr), 3. Aux2 (0.6fr), 4. Aux3 (0.6fr), 5. Verbo (1.8fr), 6. Tempo (1fr) */
+            grid-template-columns: 1fr 1fr 0.6fr 0.6fr 1.8fr 1fr;
+            gap: 10px;
             margin-bottom: 20px;
         }
 		
@@ -247,13 +249,20 @@
             scrollbar-width: thin;
             scrollbar-color: #42967b #0f172a;
         }
-        .column-title {
-            font-size: 0.9rem; /* Título maior */
+            .column-title {
+            font-size: 0.9rem;
             font-weight: bold;
             color: #99f4d6;
             text-align: center;
-            margin-bottom: 6px;
             border-bottom: 1px solid #334155;
+            
+            /* NOVO: Fixar no topo e esconder o que passa por baixo */
+            position: sticky;
+            top: -13px; /* Puxa o título para cima, alinhando com a borda do card */
+            background-color: #0f172a; /* Mesma cor do fundo do card */
+            z-index: 10; /* Garante que o título fique na frente dos botões */
+            padding-top: 13px; /* Restaura o espaçamento superior */
+            margin-top: -13px; /* Compensa o padding acima */
             padding-bottom: 6px;
         }
 
@@ -264,6 +273,12 @@
         }
 		    #colTenses .button-grid-pair {
             grid-template-columns: 1fr; /* Força a coluna 1 a ter apenas 1 botão por linha */
+        }
+		
+		/* Força as colunas Auxiliar 2 e Auxiliar 3 a terem apenas 1 botão por linha */
+        #colAux2 .button-grid-pair,
+        #colAux3 .button-grid-pair {
+            grid-template-columns: 1fr;
         }
 
         .choice-btn {
