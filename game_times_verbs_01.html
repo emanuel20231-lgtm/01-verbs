@@ -408,24 +408,24 @@
 
         <div class="status-msg" id="statusMsg">Ouça o áudio e selecione os blocos...</div>
 
-                <div class="game-grid">
+        <div class="game-grid">
             <div class="column-card" id="colPronouns">
-                <div class="column-title">1. Pronome / Sujeito</div>
+                <div class="column-title">Pronome / Sujeito</div>
             </div>
             <div class="column-card" id="colAux1">
-                <div class="column-title">2. Auxiliar 1</div>
+                <div class="column-title">Auxiliar 1</div>
             </div>
             <div class="column-card" id="colAux2">
-                <div class="column-title">3. Auxiliar 2</div>
+                <div class="column-title">Auxiliar 2</div>
             </div>
             <div class="column-card" id="colAux3">
-                <div class="column-title">4. Auxiliar 3</div>
+                <div class="column-title">Auxiliar 3</div>
             </div>
             <div class="column-card" id="colVerbs">
-                <div class="column-title">5. Verbo Principal</div>
+                <div class="column-title">Verbo Principal</div>
             </div>
             <div class="column-card" id="colTenses">
-                <div class="column-title">6. Tempo Verbal</div>
+                <div class="column-title">Tempo Verbal</div>
             </div>
         </div>
 
@@ -876,7 +876,7 @@ Done (particípio) /UK dʌn/ /US dʌn/
             "They've", "They'd", 
             "They're", "EMPTY"
         ];
-		        const aux1List = [
+		const aux1List = [
             "don't", "doesn't", 
             "am", "am not", 
             "is", "isn't", 
@@ -888,7 +888,7 @@ Done (particípio) /UK dʌn/ /US dʌn/
             "has", "hasn't", 
             "had", "hadn't", 
             "will", "won't", 
-            "", "not", 
+            "EMPTY", "not", 
             "ain't", "EMPTY"
         ];
 
@@ -1345,28 +1345,24 @@ Done (particípio) /UK dʌn/ /US dʌn/
         }
 
         function renderColumns() {
-            const colT = document.getElementById('colTenses');
-            colT.innerHTML = '<div class="column-title">1. Tempo Verbal</div>';
-            colT.appendChild(createPairedContainer(tensesList, 'tense', () => userSelection.tense, (v) => userSelection.tense = v));
-
             const colP = document.getElementById('colPronouns');
-            colP.innerHTML = '<div class="column-title">2. Pronome / Sujeito</div>';
+            colP.innerHTML = '<div class="column-title">Pronome / Sujeito</div>';
             colP.appendChild(createPairedContainer(pronounsList, 'pronoun', () => userSelection.pronoun, (v) => userSelection.pronoun = v));
 
             const colA1 = document.getElementById('colAux1');
-            colA1.innerHTML = '<div class="column-title">3. Auxiliar 1</div>';
-            colA1.appendChild(createPairedContainer(["", "don't", "doesn't", "am", "is", "are", "isn't", "aren't", "am not", "ain't", "not", "did", "didn't", "was", "were", "wasn't", "weren't", "have", "has", "haven't", "hasn't", "had", "hadn't", "will", "won't"], 'aux1', () => userSelection.aux1, (v) => userSelection.aux1 = v));
+            colA1.innerHTML = '<div class="column-title">Auxiliar 1</div>';
+            colA1.appendChild(createPairedContainer(aux1List, 'aux1', () => userSelection.aux1, (v) => userSelection.aux1 = v));
 
             const colA2 = document.getElementById('colAux2');
-            colA2.innerHTML = '<div class="column-title">4. Auxiliar 2</div>';
+            colA2.innerHTML = '<div class="column-title">Auxiliar 2</div>';
             colA2.appendChild(createPairedContainer(["", "be", "been", "have"], 'aux2', () => userSelection.aux2, (v) => userSelection.aux2 = v));
 
             const colA3 = document.getElementById('colAux3');
-            colA3.innerHTML = '<div class="column-title">5. Auxiliar 3</div>';
+            colA3.innerHTML = '<div class="column-title">Auxiliar 3</div>';
             colA3.appendChild(createPairedContainer(["", "been"], 'aux3', () => userSelection.aux3, (v) => userSelection.aux3 = v));
 
             const colV = document.getElementById('colVerbs');
-            colV.innerHTML = '<div class="column-title">6. Verbo Principal</div>';
+            colV.innerHTML = '<div class="column-title">Verbo Principal</div>';
             const verbGrid = document.createElement('div');
             verbGrid.className = 'button-grid-pair';
 
@@ -1385,6 +1381,10 @@ Done (particípio) /UK dʌn/ /US dʌn/
                 verbGrid.appendChild(verbBtn);
             });
             colV.appendChild(verbGrid);
+
+            const colT = document.getElementById('colTenses');
+            colT.innerHTML = '<div class="column-title">Tempo Verbal</div>';
+            colT.appendChild(createPairedContainer(tensesList, 'tense', () => userSelection.tense, (v) => userSelection.tense = v));
         }
 
         let activeSubmenu = null;
