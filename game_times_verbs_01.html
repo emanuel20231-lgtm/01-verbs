@@ -230,6 +230,23 @@
             scrollbar-width: thin;
             scrollbar-color: #42967b #1e293b;
         }
+		        /* Barra de rolagem principal da página (Chrome, Edge, Safari) */
+        body::-webkit-scrollbar {
+            width: 10px; /* Largura da barra principal */
+        }
+        body::-webkit-scrollbar-track {
+            background: #0f172a; /* Fundo escuro para combinar com o site */
+        }
+        body::-webkit-scrollbar-thumb {
+            background-color: #42967b; /* O mesmo verde das colunas */
+            border-radius: 8px;
+        }
+
+        /* Barra de rolagem principal da página (Firefox) */
+        html {
+            scrollbar-width: thin;
+            scrollbar-color: #42967b #0f172a;
+        }
         .column-title {
             font-size: 0.9rem; /* Título maior */
             font-weight: bold;
