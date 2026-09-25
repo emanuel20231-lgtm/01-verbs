@@ -200,27 +200,35 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            max-height: 600px; /* Aumenta a altura máxima */
-            overflow-y: auto;
+             /* max-height: 600px; retire o comentário para voltar o scroll de cada coluna */
+            /* overflow-y: auto; retire o comentário para voltar o scroll de cada coluna */
         }
+
+		
 		        /* Estilização da barra de rolagem (Scrollbar) */
+                /* 
         .column-card::-webkit-scrollbar {
-            width: 8px; /* Largura da barra */
+            width: 8px;
         }
         .column-card::-webkit-scrollbar-track {
-            background: #1e293b; /* Cor do fundo da barra (mesma do card) */
+            background: #1e293b;
             border-radius: 8px;
         }
         .column-card::-webkit-scrollbar-thumb {
-            background-color: #42967b; /* O verde desejado */
+            background-color: #42967b;
             border-radius: 8px;
         }
+        */
         
         /* Para o Firefox (navegador que usa outro comando para scrollbar) */
+                /*
         .column-card {
             scrollbar-width: thin;
             scrollbar-color: #42967b #1e293b;
         }
+        */
+
+		
 		        /* Barra de rolagem principal da página (Chrome, Edge, Safari) */
         body::-webkit-scrollbar {
             width: 10px; /* Largura da barra principal */
