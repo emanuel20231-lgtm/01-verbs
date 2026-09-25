@@ -181,61 +181,70 @@
         .game-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: 8px;
-            margin-bottom: 15px;
+            gap: 12px; /* Aumenta o espaço entre as colunas */
+            margin-bottom: 20px;
         }
-
-        @media (max-width: 768px) {
+		
+            @media (max-width: 768px) {
             .game-grid {
                 grid-template-columns: 1fr;
+                gap: 15px;
             }
             .column-card {
-                max-height: 320px;
+                max-height: 400px; /* Mais espaço para rolar no celular */
+                padding: 15px;
+            }
+            .choice-btn {
+                font-size: 0.95rem; /* Letra ligeiramente maior no celular */
+                padding: 14px 10px;
             }
         }
+		
 
         .column-card {
             background-color: #0f172a;
             border: 1px solid #334155;
             border-radius: 8px;
-            padding: 8px;
+            padding: 12px; /* Mais respiro interno */
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            max-height: 480px;
+            gap: 8px;
+            max-height: 600px; /* Aumenta a altura máxima */
             overflow-y: auto;
         }
-
         .column-title {
-            font-size: 0.7rem;
+            font-size: 0.9rem; /* Título maior */
             font-weight: bold;
             color: #99f4d6;
             text-align: center;
-            margin-bottom: 2px;
+            margin-bottom: 6px;
             border-bottom: 1px solid #334155;
-            padding-bottom: 4px;
+            padding-bottom: 6px;
         }
 
-        .button-grid-pair {
+       .button-grid-pair {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 4px;
+            gap: 6px; /* Mais espaço entre os botões */
+        }
+		    #colTenses .button-grid-pair {
+            grid-template-columns: 1fr; /* Força a coluna 1 a ter apenas 1 botão por linha */
         }
 
         .choice-btn {
             background-color: #1e293b;
             color: #f8fafc;
             border: 1px solid #475569;
-            padding: 8px 6px;
-            border-radius: 5px;
-            font-size: 0.75rem;
+            padding: 12px 8px; /* Botões mais altos e largos */
+            border-radius: 6px;
+            font-size: 0.9rem; /* Letra maior para leitura confortável */
             font-weight: 600;
             cursor: pointer;
             text-align: center;
             transition: all 0.2s ease;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            word-break: break-word; /* Permite que o texto quebre linha se for muito longo */
+            white-space: normal; /* Permite múltiplas linhas */
+            line-height: 1.2;
         }
 
         .choice-btn:hover:not(:disabled) {
