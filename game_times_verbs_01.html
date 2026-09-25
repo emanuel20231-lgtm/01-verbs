@@ -1171,7 +1171,10 @@ Done (particípio) /UK dʌn/ /US dʌn/
 
         function initRound() {
             if (verbsParsed.length === 0) return;
-
+			
+			// NOVO: Rolar a página para o topo automaticamente ao iniciar nova rodada
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+			
             currentRound = generateValidRound();
             updateProgressUI();
 
@@ -1402,6 +1405,9 @@ Done (particípio) /UK dʌn/ /US dʌn/
                     <strong></strong> ${currentRound.fullSentenceText}
                 `;
                 document.getElementById('revealBox').style.display = 'block';
+
+                // NOVO: Rolar a página para baixo automaticamente para mostrar a resposta
+                document.getElementById('revealBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
                 setTimeout(() => {
                     playGeneratedAudio('en-US');
