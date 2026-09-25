@@ -503,7 +503,7 @@ Been (particípio) /UK biːn/ /US bɪn/
                     currentVerb = { infinitive: cleanInf, rawForms: [] };
                     verbsParsed.push(currentVerb);
                 } else if (currentVerb) {
-                    let cleanName = trimmed.split('/')[0].split('(')[0].trim();
+                    let cleanName = trimmed.split('/')[0].split('(')[0].trim().toLowerCase();
                     currentVerb.rawForms.push(cleanName);
                     let lowerName = cleanName.toLowerCase();
                     
@@ -539,14 +539,14 @@ Been (particípio) /UK biːn/ /US bɪn/
 
             verbsParsed.forEach(v => {
                 if (!v.forms) v.forms = {};
-                if (!v.forms.base) v.forms.base = "Be";
-                if (!v.forms.firstSing) v.forms.firstSing = "Am";
-                if (!v.forms.thirdSing) v.forms.thirdSing = "Is";
-                if (!v.forms.plural) v.forms.plural = "Are";
-                if (!v.forms.gerund) v.forms.gerund = "Being";
-                if (!v.forms.was) v.forms.was = "Was";
-                if (!v.forms.were) v.forms.were = "Were";
-                if (!v.forms.participle) v.forms.participle = "Been";
+                if (!v.forms.base) v.forms.base = "be";
+                if (!v.forms.firstSing) v.forms.firstSing = "am";
+                if (!v.forms.thirdSing) v.forms.thirdSing = "is";
+                if (!v.forms.plural) v.forms.plural = "are";
+                if (!v.forms.gerund) v.forms.gerund = "being";
+                if (!v.forms.was) v.forms.was = "was";
+                if (!v.forms.were) v.forms.were = "were";
+                if (!v.forms.participle) v.forms.participle = "been";
             });
         }
 
