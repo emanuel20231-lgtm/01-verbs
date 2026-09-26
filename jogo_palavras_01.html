@@ -120,8 +120,6 @@
             font-size: 0.8rem;
         }
 
-        
-
         @keyframes vibrateMedal {
             0% { transform: translate(0, 0) rotate(0deg); }
             20% { transform: translate(-3px, 2px) rotate(-6deg); }
@@ -312,8 +310,6 @@
                     <input type="range" id="rateRange" min="0.25" max="1.5" step="0.05" value="0.7" oninput="updateRateLabel(this.value)">
                     <span id="rateVal" class="rate-value">0.7x</span>
                 </div>
-
-               
             </div>
         </header>
 
@@ -462,10 +458,9 @@
                 let trimmed = line.trim();
                 if (!trimmed) return;
 
-                // Extrai a palavra em inglês (entre **)
-                let wordMatch = trimmed.match(/\*\*(.*?)\*\*/);
-                if (!wordMatch) return;
-                let word = wordMatch[1];
+                // Extrai a palavra em inglês (antes do primeiro parêntese ou barra)
+                let word = trimmed.split('(')[0].split('/')[0].trim();
+                if (!word) return;
 
                 // Extrai a tradução (após ->)
                 let transMatch = trimmed.split('->');
@@ -567,11 +562,18 @@
                 medalsEarned = newMedals;
                 playMedalSound();
                 
+                // Verificação de segurança: só anima se o elemento medalBox existir no HTML
                 const medalBox = document.getElementById('medalBox');
-                medalBox.classList.add('vibrating');
-                setTimeout(() => medalBox.classList.remove('vibrating'), 400);
+                if (medalBox) {
+                    medalBox.classList.add('vibrating');
+                    setTimeout(() => medalBox.classList.remove('vibrating'), 400);
+                }
             }
-            document.getElementById('medalCount').innerText = `+${medalsEarned}`;
+            // Verificação de segurança: só atualiza o texto se o elemento medalCount existir no HTML
+            const medalCountEl = document.getElementById('medalCount');
+            if (medalCountEl) {
+                medalCountEl.innerText = `+${medalsEarned}`;
+            }
         }
 
         function shuffle(array) {
@@ -588,6 +590,9 @@
                 document.getElementById('statusMsg').innerText = "Nenhuma palavra encontrada na área de texto.";
                 return;
             }
+
+            // NOVO: Rolar a página para o topo automaticamente ao iniciar nova rodada
+            window.scrollTo({ top: 0, behavior: 'auto' });
 
             if (secretUrn.length === 0) {
                 secretUrn = [...vocabularyDatabase];
@@ -652,6 +657,9 @@
                 document.getElementById('revealBox').style.display = 'block';
                 document.getElementById('nextBtn').style.display = 'inline-block';
 
+                // NOVO: Rolar a página para baixo automaticamente para mostrar a resposta
+                document.getElementById('revealBox').scrollIntoView({ behavior: 'auto', block: 'center' });
+
                 // Reproduz o áudio US automaticamente
                 playSecretAudio('en-US');
             } else {
@@ -669,7 +677,30 @@
             initGame();
         };
     </script>
-   
+    <!-- add em cada arquivo html antes de body (no final ) para controlar a velocidade no pc(0.65x)/celular(0.5x) -->  
+        <script>
+              document.addEventListener("DOMContentLoaded", function() {
+                // Pega a velocidade que foi salva pelo index.html
+                const velocidadeSalva = localStorage.getItem('minhaVelocidadeVoz');
+                
+                const rateRange = document.getElementById("rateRange");
+                const rateVal = document.getElementById("rateVal");
+            
+                if (velocidadeSalva && rateRange && rateVal) {
+                  // Atualiza o controle deslizante visualmente
+                  rateRange.value = velocidadeSalva;
+                  rateVal.textContent = velocidadeSalva + 'x';
+                  
+                  // Se você tiver uma função chamada updateRateLabel no seu código, chame-a para atualizar a voz
+                  if (typeof updateRateLabel === 'function') {
+                    updateRateLabel(velocidadeSalva);
+                  }
+                }
+              });
+        </script>
+  
+  <!-- Cole isso antes de </body> em TODOS os arquivos HTML para que as bandeiras apareçam -->
+	<script src="https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
   
 </body>
 </html>
