@@ -711,10 +711,10 @@
             if (isInterrogative) {
                 if (lang === 'en-GB') {
                     // UK: sempre aplicar pitch sutil (funciona no PC e celular)
-                    utterance.pitch = 1.12;
+                    utterance.pitch = 1.15;
                 } else if (lang === 'en-US' && isMobile) {
                     // US: só aplicar no celular (no PC o motor nativo já entona)
-                    utterance.pitch = 1.12;
+                    utterance.pitch = 1.25; // era 1.12
                 }
                 // US no PC: deixa o motor nativo do Chrome aplicar a entonação
             }
