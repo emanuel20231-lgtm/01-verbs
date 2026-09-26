@@ -167,27 +167,51 @@
             min-height: 20px;
         }
 
-            .game-grid {
+        .game-grid {
             display: grid;
-            /* Ajuste de proporções: 
-               1. Pronome (1fr), 2. Aux1 (1fr), 3. Aux2 (0.6fr), 4. Aux3 (0.6fr), 5. Verbo (1.8fr), 6. Tempo (1fr) */
-            grid-template-columns: 1fr 1fr 0.6fr 0.6fr 1.8fr 1fr;
+            /* Ajuste das proporções: Pronome (1fr), Aux1 (1fr), Aux2/3 (0.8fr), Verbos/Tempos (2.2fr) */
+            grid-template-columns: 1fr 1fr 0.8fr 2.2fr;
             gap: 10px;
             margin-bottom: 20px;
         }
+
+        /* Novo: Classe para empilhar as colunas verticalmente */
+        .column-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+		        /* Faz os 4 verbos ficarem lado a lado na nova coluna larga */
+        #colVerbs .button-grid-pair {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        /* Aumenta a altura dos botões de Tempo Verbal e centraliza o texto */
+        #colTenses .choice-btn {
+            min-height: 70px; /* Altura mínima para caber "Present Perfect Continuous" em 2 linhas */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: normal; /* Permite a quebra de linha natural */
+            padding: 10px 5px;
+        }
 		
-            @media (max-width: 768px) {
+        @media (max-width: 768px) {
             .game-grid {
                 grid-template-columns: 1fr;
                 gap: 15px;
             }
             .column-card {
-               /* max-height: 400px; */ /* Mais espaço para rolar no celular */
+                /* max-height: 400px; */ /* Mantenha comentado se quiser rolagem contínua */
                 padding: 15px;
             }
             .choice-btn {
-                font-size: 0.99rem; /* Letra ligeiramente maior no celular */
+                font-size: 0.99rem;
                 padding: 14px 10px;
+            }
+            /* No celular, os 4 verbos ficam em 2x2 para não espremer */
+            #colVerbs .button-grid-pair {
+                grid-template-columns: 1fr 1fr;
             }
         }
 		
@@ -416,24 +440,32 @@
 
         <div class="status-msg" id="statusMsg">Ouça o áudio e selecione os blocos...</div>
 
-        <div class="game-grid">
+            <div class="game-grid">
             <div class="column-card" id="colPronouns">
-                <div class="column-title">Pronome / Sujeito</div>
+            <div class="column-title">Pronome / Sujeito</div>
             </div>
             <div class="column-card" id="colAux1">
                 <div class="column-title">Auxiliar 1</div>
             </div>
-            <div class="column-card" id="colAux2">
-                <div class="column-title">Auxiliar 2</div>
+            
+            <!-- NOVO: Grupo do Auxiliar 2 e 3 -->
+            <div class="column-stack">
+                <div class="column-card" id="colAux2">
+                    <div class="column-title">Auxiliar 2</div>
+                </div>
+                <div class="column-card" id="colAux3">
+                    <div class="column-title">Auxiliar 3</div>
+                </div>
             </div>
-            <div class="column-card" id="colAux3">
-                <div class="column-title">Auxiliar 3</div>
-            </div>
-            <div class="column-card" id="colVerbs">
-                <div class="column-title">Verbo Principal</div>
-            </div>
-            <div class="column-card" id="colTenses">
-                <div class="column-title">Tempo Verbal</div>
+
+            <!-- NOVO: Grupo do Verbo Principal e Tempo Verbal -->
+            <div class="column-stack">
+                <div class="column-card" id="colVerbs">
+                    <div class="column-title">Verbo Principal</div>
+                </div>
+                <div class="column-card" id="colTenses">
+                    <div class="column-title">Tempo Verbal</div>
+                </div>
             </div>
         </div>
 
