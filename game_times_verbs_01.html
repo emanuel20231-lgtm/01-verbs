@@ -60,17 +60,17 @@
         .progress-info {
             display: flex;
             justify-content: space-between;
-            font-size: 1rem;        /* Aumentado (era 0.75rem) */
-            font-weight: 700;       /* Mais grossa (era 600) */
-            color: #99f4d6;         /* Nova cor verde-água */
+            font-size: 1rem;
+            font-weight: 700;
+            color: #99f4d6;
             margin-bottom: 5px;
         }
 
         .progress-bar-bg {
             width: 100%;
-            height: 20px; /* Aumentado de 7px para 14px (o dobro da espessura) */
+            height: 20px;
             background-color: #334155;
-            border-radius: 7px; /* Ajustado de 3px para 7px para manter o formato arredondado */
+            border-radius: 7px;
             overflow: hidden;
         }
 
@@ -118,8 +118,6 @@
             font-size: 0.75rem;
         }
 
-        
-
         .audio-box {
             background-color: #0f172a;
             border: 1px solid #334155;
@@ -130,8 +128,8 @@
         }
 
             .audio-box p {
-            font-size: 0.99rem; /* Aumentei um pouco (era 0.8rem) */
-            color: #99f4d6;    /* Nova cor verde-água */
+            font-size: 0.99rem;
+            color: #99f4d6;
             margin-bottom: 8px;
         }
 
@@ -161,41 +159,36 @@
         .status-msg {
             text-align: center;
             font-weight: 600;
-            font-size: 0.99rem; /* Aumentei um pouco (era 0.85rem) */
-            color: #99f4d6;     /* Nova cor verde-água */
+            font-size: 0.99rem;
+            color: #99f4d6;
             margin-bottom: 12px;
             min-height: 20px;
         }
 
         .game-grid {
             display: grid;
-            /* Pronome (1fr), Aux1 (1fr), Aux2/3 (0.5fr), Verbos/Tempos (2.5fr) */
             grid-template-columns: 1fr 1fr 0.5fr 2.5fr;
             gap: 10px;
             margin-bottom: 20px;
         }
-        /* Novo: Classe para empilhar as colunas verticalmente */
         .column-stack {
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
-		        /* Faz os 4 verbos ficarem lado a lado na nova coluna larga */
         #colVerbs .button-grid-pair {
             grid-template-columns: repeat(4, 1fr);
         }
-		        /* Coloca os Tempos Verbais em 2 colunas */
         #colTenses .button-grid-pair {
             grid-template-columns: 1fr 1fr;
         }
 
-        /* Aumenta a altura dos botões de Tempo Verbal e centraliza o texto */
         #colTenses .choice-btn {
-            min-height: 75px; /* Altura mínima para caber "Present Perfect Continuous" em 2 linhas */
+            min-height: 75px;
             display: flex;
             align-items: center;
             justify-content: center;
-            white-space: normal; /* Permite a quebra de linha natural */
+            white-space: normal;
             padding: 10px 5px;
         }
 		
@@ -205,14 +198,12 @@
                 gap: 15px;
             }
             .column-card {
-                /* max-height: 400px; */ /* Mantenha comentado se quiser rolagem contínua */
                 padding: 15px;
             }
             .choice-btn {
                 font-size: 1.00rem;
                 padding: 14px 10px;
             }
-            /* No celular, os 4 verbos ficam em 2x2 para não espremer */
             #colVerbs .button-grid-pair {
                 grid-template-columns: 1fr 1fr;
             }
@@ -223,52 +214,23 @@
             background-color: #0f172a;
             border: 1px solid #334155;
             border-radius: 8px;
-            padding: 13px; /* Mais respiro interno */
+            padding: 13px;
             display: flex;
             flex-direction: column;
             gap: 8px;
-             /* max-height: 600px; retire o comentário para voltar o scroll de cada coluna */
-            /* overflow-y: auto; retire o comentário para voltar o scroll de cada coluna */
         }
 
-		
-		        /* Estilização da barra de rolagem (Scrollbar) */
-                /* 
-        .column-card::-webkit-scrollbar {
-            width: 8px;
+        body::-webkit-scrollbar {
+            width: 10px;
         }
-        .column-card::-webkit-scrollbar-track {
-            background: #1e293b;
-            border-radius: 8px;
+        body::-webkit-scrollbar-track {
+            background: #0f172a;
         }
-        .column-card::-webkit-scrollbar-thumb {
+        body::-webkit-scrollbar-thumb {
             background-color: #42967b;
             border-radius: 8px;
         }
-        */
-        
-        /* Para o Firefox (navegador que usa outro comando para scrollbar) */
-                /*
-        .column-card {
-            scrollbar-width: thin;
-            scrollbar-color: #42967b #1e293b;
-        }
-        */
 
-		
-		        /* Barra de rolagem principal da página (Chrome, Edge, Safari) */
-        body::-webkit-scrollbar {
-            width: 10px; /* Largura da barra principal */
-        }
-        body::-webkit-scrollbar-track {
-            background: #0f172a; /* Fundo escuro para combinar com o site */
-        }
-        body::-webkit-scrollbar-thumb {
-            background-color: #42967b; /* O mesmo verde das colunas */
-            border-radius: 8px;
-        }
-
-        /* Barra de rolagem principal da página (Firefox) */
         html {
             scrollbar-width: thin;
             scrollbar-color: #42967b #0f172a;
@@ -280,48 +242,44 @@
             text-align: center;
             border-bottom: 1px solid #334155;
             
-            /* NOVO: Fixar no topo e esconder o que passa por baixo */
             position: sticky;
-            top: -13px; /* Puxa o título para cima, alinhando com a borda do card */
-            background-color: #0f172a; /* Mesma cor do fundo do card */
-            z-index: 10; /* Garante que o título fique na frente dos botões */
-            padding-top: 13px; /* Restaura o espaçamento superior */
-            margin-top: -13px; /* Compensa o padding acima */
+            top: -13px;
+            background-color: #0f172a;
+            z-index: 10;
+            padding-top: 13px;
+            margin-top: -13px;
             padding-bottom: 6px;
         }
 
        .button-grid-pair {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 6px; /* Mais espaço entre os botões */
+            gap: 6px;
         }
-		    
-		
-		/* Força as colunas Auxiliar 2 e Auxiliar 3 a terem apenas 1 botão por linha */
+
         #colAux2 .button-grid-pair,
         #colAux3 .button-grid-pair {
             grid-template-columns: 1fr;
         }
-		/* Ajusta os botões de Aux2 e Aux3 para a coluna fina */
         #colAux2 .choice-btn,
         #colAux3 .choice-btn {
-            padding: 10px 2px; /* Reduz o espaço nas laterais */
-            font-size: 1.00rem; /* Fonte levemente menor para caber bem */
+            padding: 10px 2px;
+            font-size: 1.00rem;
         }
 
         .choice-btn {
             background-color: #1e293b;
             color: #f8fafc;
             border: 1px solid #475569;
-            padding: 13px 9px; /* Botões mais altos e largos */
+            padding: 13px 9px;
             border-radius: 6px;
-            font-size: 1.00rem; /* Letra maior para leitura confortável */
+            font-size: 1.00rem;
             font-weight: 600;
             cursor: pointer;
             text-align: center;
             transition: all 0.2s ease;
-            word-break: break-word; /* Permite que o texto quebre linha se for muito longo */
-            white-space: normal; /* Permite múltiplas linhas */
+            word-break: break-word;
+            white-space: normal;
             line-height: 1.2;
         }
 
@@ -386,12 +344,12 @@
         }
 		.action-warning {
             text-align: center;
-            color: #ef4444; /* Vermelho, igual aos botões errados */
+            color: #ef4444;
             font-weight: 600;
             font-size: 0.95rem;
-            margin-bottom: 10px; /* Espaço entre o aviso e o botão */
+            margin-bottom: 10px;
             min-height: 20px;
-            display: none; /* Começa escondido */
+            display: none;
         }
 
         .btn-action {
@@ -410,22 +368,21 @@
             background-color: #0369a1;
         }
 		
-		/* Tela de Parabéns */
         #congratsScreen {
             position: fixed;
             top: 0; 
             left: 0; 
             width: 100%; 
             height: 100%;
-            background-color: rgba(15, 23, 42, 0.95); /* Fundo escuro ofuscado */
+            background-color: rgba(15, 23, 42, 0.95);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 99999; /* Fica acima de tudo */
+            z-index: 99999;
             text-align: center;
             padding: 20px;
-            display: none; /* Começa escondido */
+            display: none;
         }
         #congratsScreen .emoji {
             font-size: 5rem;
@@ -474,8 +431,6 @@
                     <input type="range" id="rateRange" min="0.25" max="1.5" step="0.05" value="0.5" oninput="updateRateLabel(this.value)">
                     <span id="rateVal" class="rate-value">0.5x</span>
                 </div>
-
-                
             </div>
         </header>
 
@@ -497,7 +452,6 @@
                 <div class="column-title">Auxiliar 1</div>
             </div>
             
-            <!-- NOVO: Grupo do Auxiliar 2 e 3 -->
             <div class="column-stack">
                 <div class="column-card" id="colAux2">
                     <div class="column-title">Auxiliar 2</div>
@@ -505,13 +459,11 @@
                 <div class="column-card" id="colAux3">
                     <div class="column-title">Auxiliar 3</div>
                 </div>
-				<!-- NOVO: Coluna do botão de interrogação -->
-			    <div class="column-card" id="colInterrogative">
+				<div class="column-card" id="colInterrogative">
 			        <div class="column-title">Pergunta ?</div>
 			    </div>
             </div>
 
-            <!-- NOVO: Grupo do Verbo Principal e Tempo Verbal -->
             <div class="column-stack">
                 <div class="column-card" id="colVerbs">
                     <div class="column-title">Verbo Principal</div>
@@ -606,6 +558,7 @@
             "They're", "EMPTY"
         ];
 		const aux1List = [
+            "do", "does", 
             "don't", "doesn't", 
             "am", "am not", 
             "is", "isn't", 
@@ -629,7 +582,7 @@
         let currentRound = {
             tense: "",
             isNegative: false,
-			sentenceType: "affirmative",  // NOVO
+			sentenceType: "affirmative",
             pronoun: "",
             aux1: "",
             aux2: "",
@@ -643,7 +596,7 @@
         let userSelection = {
             tense: null,
             pronoun: null,
-			sentenceType: null,  // NOVO - null = afirmativa, "interrogative" = clicou no "?"
+			sentenceType: null,
             aux1: null,
             aux2: null,
             aux3: null,
@@ -659,7 +612,6 @@
 		        let trimmed = line.trim();
 		        if (!trimmed) return;
 		
-		        // Início de um novo verbo
 		        if (trimmed.startsWith('To ')) {
 		            let cleanInf = trimmed.split('/')[0].split('->')[0].split('(')[0].trim();
 		            currentVerb = { infinitive: cleanInf, rawForms: [], forms: {} };
@@ -672,11 +624,9 @@
 		        let cleanName = trimmed.split('/')[0].split('(')[0].trim().toLowerCase();
 		        currentVerb.rawForms.push(cleanName);
 		
-		        // NOVO: Extrai o label entre parênteses
 		        const labelMatch = trimmed.match(/\(([^)]+)\)/);
 		        const label = labelMatch ? labelMatch[1].trim().toLowerCase() : '';
 		
-		        // PRIORIDADE 1: Labels explícitos (novo formato)
 		        if (label === 'base') {
 		            currentVerb.forms.base = cleanName;
 		        } else if (label === 'third' || label === '3ª p. sing' || label === '3a p. sing') {
@@ -691,7 +641,6 @@
 		            if (!currentVerb.forms.past) currentVerb.forms.past = cleanName;
 		            if (!currentVerb.forms.participle) currentVerb.forms.participle = cleanName;
 		        } else {
-		            // PRIORIDADE 2: Fallback para o formato antigo (compatibilidade)
 		            if (trimmed.includes('gerúndio')) {
 		                currentVerb.forms.gerund = cleanName;
 		            } else if (trimmed.includes('3ª p')) {
@@ -706,7 +655,6 @@
 		        }
 		    });
 		
-		    // Validação: preenche o que faltar com fallback simples
 		    verbsParsed.forEach(v => {
 		        if (!v.forms) v.forms = {};
 		        const inf = v.infinitive.replace('To ', '').trim().toLowerCase();
@@ -756,7 +704,6 @@
             utterance.lang = lang;
             utterance.rate = currentRate;
             
-            // NOVO: Se o áudio terminar, executa a função de callback
             if (onComplete) {
                 utterance.onend = onComplete;
             }
@@ -795,8 +742,6 @@
                 let vIndex = Math.floor(Math.random() * verbUrn.length);
                 let selectedVerb = verbUrn[vIndex];
                 let tense = tensesList[Math.floor(Math.random() * tensesList.length)];
-				// NOVO: sorteia o tipo de sentença
-				// Por enquanto: 33% afirmativa, 33% negativa, 33% interrogativa afirmativa
 				let rand = Math.random();
 				let sentenceType = "affirmative";
 				let isNegative = false;
@@ -808,11 +753,10 @@
 				    isNegative = true;
 				} else {
 				    sentenceType = "interrogative";
-				    isNegative = false; // interrogativa afirmativa por enquanto
+				    isNegative = false;
 				}
                 
 
-                // NOVO: para interrogativas, só usar pronomes não-contraídos
 				let validPronouns;
 				if (sentenceType === "interrogative") {
 				    validPronouns = ["I", "You", "He", "She", "It", "We", "They"];
@@ -932,7 +876,6 @@
                     verbFormUsed = selectedVerb.forms.gerund;
                 }
 				
-				// NOVO: ajuste para frases interrogativas
 				if (sentenceType === "interrogative") {
 				    if (tense === "Simple Present") {
 				        a1 = ["He", "She", "It"].includes(pronoun) ? "does" : "do";
@@ -941,8 +884,6 @@
 				        a1 = "did";
 				        verbFormUsed = selectedVerb.forms.base;
 				    }
-				    // Para os outros tempos, o a1 já é o correto (is/are, was/were, has/have, had, will)
-				    // e o verbo principal mantém a mesma forma. Só precisamos reordenar.
 				}
 
                 let isValid = true;
@@ -951,7 +892,6 @@
                 if (isValid) {
                     verbUrn.splice(vIndex, 1);
                     completedCount++;
-                    // DEPOIS:
 					if (sentenceType === "interrogative") {
 					    let lowerPronoun = pronoun === "I" ? "I" : pronoun.toLowerCase();
 					    sentenceText = [a1, lowerPronoun, a2, a3, verbFormUsed].filter(Boolean).join(" ") + "?";
@@ -982,12 +922,10 @@
         function initRound() {
             if (verbsParsed.length === 0) return;
 			
-			// NOVO: Rolar a página para o topo automaticamente ao iniciar nova rodada
             window.scrollTo({ top: 0, behavior: 'auto' });
 			
-			// NOVO: Esconder o aviso ao iniciar nova rodada / Esconder o aviso e a tela de parabéns ao iniciar nova rodada
             document.getElementById('actionWarning').style.display = 'none';
-			document.getElementById('congratsScreen').style.display = 'none'; // <-- Adicione esta linha
+			document.getElementById('congratsScreen').style.display = 'none';
 			
             currentRound = generateValidRound();
             updateProgressUI();
@@ -1028,7 +966,11 @@
                 let isContractedWill = p.includes("'ll");
                 let isContractedHad = p.includes("'d");
 
-                    if (expTense === "Simple Present") {
+                if (expTense === "Simple Present") {
+                    if (currentRound.sentenceType === "interrogative") {
+                        let stdInt = ["He", "She", "It"].includes(p) ? "does" : "do";
+                        return userVal === stdInt;
+                    }
                     if (!expNeg) return userVal === "";
                     let stdNeg = ["He", "She", "It"].includes(p) ? "doesn't" : "don't";
                     return userVal === stdNeg || userVal === "ain't";
@@ -1044,9 +986,12 @@
                     }
                 }
 				
-                if (expTense === "Simple Past") return userVal === (!expNeg ? "" : "didn't");
+                if (expTense === "Simple Past") {
+                    if (currentRound.sentenceType === "interrogative") return userVal === "did";
+                    return userVal === (!expNeg ? "" : "didn't");
+                }
                 if (expTense === "Past Continuous") return userVal === (["I", "He", "She", "It"].includes(p) ? (expNeg ? "wasn't" : "was") : (expNeg ? "weren't" : "were"));
-                    if (expTense === "Present Perfect") {
+                if (expTense === "Present Perfect") {
                     if (isContractedHave) return userVal === "";
                     if (!expNeg) {
                         return userVal === ((["He", "She", "It"].includes(p)) ? "has" : "have");
@@ -1101,13 +1046,12 @@
                 const btn = document.createElement('button');
                 btn.className = 'choice-btn';
                 
-                // NOVO: Verifica se é um espaço vazio de enfeite
                 if (item === "EMPTY") {
                     btn.innerText = "";
                     btn.disabled = true;
-                    btn.style.pointerEvents = "none"; // Impede cliques
+                    btn.style.pointerEvents = "none";
                     gridDiv.appendChild(btn);
-                    return; // Pula o resto da lógica para este botão
+                    return;
                 }
 
                 btn.innerText = item === "" ? "(Vazio)" : item;
@@ -1174,7 +1118,6 @@
             colT.innerHTML = '<div class="column-title">Tempo Verbal</div>';
             colT.appendChild(createPairedContainer(tensesList, 'tense', () => userSelection.tense, (v) => userSelection.tense = v));
 
-			// NOVO: Coluna do botão de interrogação
 			const colI = document.getElementById('colInterrogative');
 			colI.innerHTML = '<div class="column-title">Pergunta?</div>';
 			const interrogBtn = document.createElement('button');
@@ -1190,7 +1133,6 @@
 			}
 			
 			interrogBtn.onclick = () => {
-			    // Toggle: se já está interrogativa, volta para null (afirmativa)
 			    userSelection.sentenceType = (userSelection.sentenceType === "interrogative") ? null : "interrogative";
 			    if (userSelection.sentenceType === "interrogative" && currentRound.sentenceType === "interrogative") {
 			        playSuccessSound();
@@ -1265,17 +1207,13 @@
                 `;
                 document.getElementById('revealBox').style.display = 'block';
 
-                // NOVO: Esconder o aviso quando acertar
                 document.getElementById('actionWarning').style.display = 'none';
 
-                // NOVO: Rolar a página para baixo automaticamente para mostrar a resposta
                 document.getElementById('revealBox').scrollIntoView({ behavior: 'auto', block: 'center' });
 
                 setTimeout(() => {
-                    // NOVO: Verifica se completou todos os verbos para mostrar a tela de parabéns
                     if (completedCount >= totalVerbsCount) {
                         playGeneratedAudio('en-US', () => {
-                            // Espera 2 segundos APÓS o áudio terminar para mostrar a tela
                             setTimeout(() => {
                                 document.getElementById('congratsScreen').style.display = 'flex';
                             }, 100);
@@ -1309,18 +1247,15 @@
     <!-- add em cada arquivo html antes de body (no final ) para controlar a velocidade no pc(0.65x)/celular(0.5x) -->  
         <script>
               document.addEventListener("DOMContentLoaded", function() {
-                // Pega a velocidade que foi salva pelo index.html
                 const velocidadeSalva = localStorage.getItem('minhaVelocidadeVoz');
                 
                 const rateRange = document.getElementById("rateRange");
                 const rateVal = document.getElementById("rateVal");
             
                 if (velocidadeSalva && rateRange && rateVal) {
-                  // Atualiza o controle deslizante visualmente
                   rateRange.value = velocidadeSalva;
                   rateVal.textContent = velocidadeSalva + 'x';
                   
-                  // Se você tiver uma função chamada updateRateLabel no seu código, chame-a para atualizar a voz
                   if (typeof updateRateLabel === 'function') {
                     updateRateLabel(velocidadeSalva);
                   }
