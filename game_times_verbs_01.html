@@ -1586,15 +1586,7 @@ Done (particípio) /UK dʌn/ /US dʌn/
                 document.getElementById('actionWarning').innerText = "Alguma escolha está incorreta (veja os itens em vermelho) e corrija para que a frase seja revelada";
                 document.getElementById('actionWarning').style.display = 'block';
             }
-        } else {
-                document.getElementById('statusMsg').style.color = "#ef4444";
-                document.getElementById('statusMsg').innerText = "Alguma escolha está incorreta (veja os itens em vermelho).";
-                
-                // NOVO: Mostrar a mensagem de aviso acima do botão
-                document.getElementById('actionWarning').innerText = "Alguma escolha está incorreta (veja os itens em vermelho) e corrija para que a frase seja revelada";
-                document.getElementById('actionWarning').style.display = 'block';
-            }
-			}
+        } 
 
         window.onload = () => {
             parseRawDatabase();
