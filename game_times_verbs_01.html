@@ -505,6 +505,10 @@
                 <div class="column-card" id="colAux3">
                     <div class="column-title">Auxiliar 3</div>
                 </div>
+				<!-- NOVO: Coluna do botão de interrogação -->
+			    <div class="column-card" id="colInterrogative">
+			        <div class="column-title">Pergunta ?</div>
+			    </div>
             </div>
 
             <!-- NOVO: Grupo do Verbo Principal e Tempo Verbal -->
@@ -625,6 +629,7 @@
         let currentRound = {
             tense: "",
             isNegative: false,
+			sentenceType: "affirmative",  // NOVO
             pronoun: "",
             aux1: "",
             aux2: "",
@@ -638,6 +643,7 @@
         let userSelection = {
             tense: null,
             pronoun: null,
+			sentenceType: null,  // NOVO - null = afirmativa, "interrogative" = clicou no "?"
             aux1: null,
             aux2: null,
             aux3: null,
@@ -789,10 +795,31 @@
                 let vIndex = Math.floor(Math.random() * verbUrn.length);
                 let selectedVerb = verbUrn[vIndex];
                 let tense = tensesList[Math.floor(Math.random() * tensesList.length)];
-                let isNegative = Math.random() < 0.5;
+				// NOVO: sorteia o tipo de sentença
+				// Por enquanto: 33% afirmativa, 33% negativa, 33% interrogativa afirmativa
+				let rand = Math.random();
+				let sentenceType = "affirmative";
+				let isNegative = false;
+				if (rand < 0.33) {
+				    sentenceType = "affirmative";
+				    isNegative = false;
+				} else if (rand < 0.66) {
+				    sentenceType = "affirmative";
+				    isNegative = true;
+				} else {
+				    sentenceType = "interrogative";
+				    isNegative = false; // interrogativa afirmativa por enquanto
+				}
+                
 
-                let validPronouns = getCompatiblePronounsForTense(tense);
-                let pronoun = validPronouns[Math.floor(Math.random() * validPronouns.length)];
+                // NOVO: para interrogativas, só usar pronomes não-contraídos
+				let validPronouns;
+				if (sentenceType === "interrogative") {
+				    validPronouns = ["I", "You", "He", "She", "It", "We", "They"];
+				} else {
+				    validPronouns = getCompatiblePronounsForTense(tense);
+				}
+				let pronoun = validPronouns[Math.floor(Math.random() * validPronouns.length)];
 
                 let isContractedBe = pronoun.includes("'m") || pronoun.includes("'re") || (pronoun.includes("'s") && tense === "Present Continuous");
                 let isContractedHave = pronoun.includes("'ve") || (pronoun.includes("'s") && (tense === "Present Perfect" || tense === "Present Perfect Continuous"));
@@ -904,6 +931,19 @@
                     a3 = "been";
                     verbFormUsed = selectedVerb.forms.gerund;
                 }
+				
+				// NOVO: ajuste para frases interrogativas
+				if (sentenceType === "interrogative") {
+				    if (tense === "Simple Present") {
+				        a1 = ["He", "She", "It"].includes(pronoun) ? "does" : "do";
+				        verbFormUsed = selectedVerb.forms.base;
+				    } else if (tense === "Simple Past") {
+				        a1 = "did";
+				        verbFormUsed = selectedVerb.forms.base;
+				    }
+				    // Para os outros tempos, o a1 já é o correto (is/are, was/were, has/have, had, will)
+				    // e o verbo principal mantém a mesma forma. Só precisamos reordenar.
+				}
 
                 let isValid = true;
                 if (!verbFormUsed || verbFormUsed.includes("undefined")) isValid = false;
@@ -911,7 +951,13 @@
                 if (isValid) {
                     verbUrn.splice(vIndex, 1);
                     completedCount++;
-                    sentenceText = [pronoun, a1, a2, a3, verbFormUsed].filter(Boolean).join(" ");
+                    // DEPOIS:
+					if (sentenceType === "interrogative") {
+					    let lowerPronoun = pronoun === "I" ? "I" : pronoun.toLowerCase();
+					    sentenceText = [a1, lowerPronoun, a2, a3, verbFormUsed].filter(Boolean).join(" ") + "?";
+					} else {
+					    sentenceText = [pronoun, a1, a2, a3, verbFormUsed].filter(Boolean).join(" ");
+					}
                     
                     let distractors = verbsParsed.filter(v => v.infinitive !== selectedVerb.infinitive);
                     distractors.sort(() => Math.random() - 0.5);
@@ -919,10 +965,10 @@
                     options.sort(() => Math.random() - 0.5);
 
                     return {
-                        tense, isNegative, pronoun, aux1: a1, aux2: a2, aux3: a3,
-                        verbObj: selectedVerb, verbForm: verbFormUsed, fullSentenceText: sentenceText,
-                        verbOptions: options
-                    };
+					    tense, isNegative, sentenceType, pronoun, aux1: a1, aux2: a2, aux3: a3,
+					    verbObj: selectedVerb, verbForm: verbFormUsed, fullSentenceText: sentenceText,
+					    verbOptions: options
+					};
                 }
             }
             let fallbackVerb = verbsParsed[0];
@@ -946,7 +992,7 @@
             currentRound = generateValidRound();
             updateProgressUI();
 
-            userSelection = { tense: null, pronoun: null, aux1: null, aux2: null, aux3: null, verbForm: null, verbObj: null };
+            userSelection = { tense: null, pronoun: null, sentenceType: null, aux1: null, aux2: null, aux3: null, verbForm: null, verbObj: null };
             document.getElementById('revealBox').style.display = 'none';
             document.getElementById('statusMsg').style.color = "#38bdf8";
             document.getElementById('statusMsg').innerText = "Ouça o áudio e selecione os blocos...";
@@ -962,6 +1008,14 @@
             let p = userSelection.pronoun || "";
             let expTense = currentRound.tense;
             let expNeg = currentRound.isNegative;
+
+			if (type === 'sentenceType') {
+			    if (currentRound.sentenceType === "interrogative") {
+			        return val === "interrogative";
+			    } else {
+			        return val === null;
+			    }
+			}
 
             if (type === 'tense') return val === expTense;
             if (type === 'pronoun') return val === currentRound.pronoun;
@@ -1119,6 +1173,32 @@
             const colT = document.getElementById('colTenses');
             colT.innerHTML = '<div class="column-title">Tempo Verbal</div>';
             colT.appendChild(createPairedContainer(tensesList, 'tense', () => userSelection.tense, (v) => userSelection.tense = v));
+
+			// NOVO: Coluna do botão de interrogação
+			const colI = document.getElementById('colInterrogative');
+			colI.innerHTML = '<div class="column-title">Pergunta?</div>';
+			const interrogBtn = document.createElement('button');
+			interrogBtn.className = 'choice-btn';
+			interrogBtn.innerText = '?';
+			interrogBtn.style.fontSize = '2rem';
+			interrogBtn.style.fontWeight = 'bold';
+			interrogBtn.style.minHeight = '70px';
+			
+			if (userSelection.sentenceType === "interrogative") {
+			    let correct = currentRound.sentenceType === "interrogative";
+			    interrogBtn.classList.add(correct ? 'selected-correct' : 'selected-wrong');
+			}
+			
+			interrogBtn.onclick = () => {
+			    // Toggle: se já está interrogativa, volta para null (afirmativa)
+			    userSelection.sentenceType = (userSelection.sentenceType === "interrogative") ? null : "interrogative";
+			    if (userSelection.sentenceType === "interrogative" && currentRound.sentenceType === "interrogative") {
+			        playSuccessSound();
+			    }
+			    renderColumns();
+			    checkValidation();
+			};
+			colI.appendChild(interrogBtn);
         }
 
         let activeSubmenu = null;
@@ -1174,8 +1254,9 @@
             let a2Correct = isSelectionCorrect('aux2', userSelection.aux2);
             let a3Correct = isSelectionCorrect('aux3', userSelection.aux3);
             let vCorrect = isSelectionCorrect('verbForm', userSelection.verbForm);
+			let sCorrect = isSelectionCorrect('sentenceType', userSelection.sentenceType);
 
-            if (tCorrect && pCorrect && a1Correct && a2Correct && a3Correct && vCorrect) {
+            if (tCorrect && pCorrect && sCorrect && a1Correct && a2Correct && a3Correct && vCorrect) {
                 document.getElementById('statusMsg').style.color = "#22c55e";
                 document.getElementById('statusMsg').innerText = "✨ Perfeito! Estrutura 100% correta.";
                 
