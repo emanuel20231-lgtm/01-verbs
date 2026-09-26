@@ -703,11 +703,27 @@
             const utterance = new SpeechSynthesisUtterance(currentRound.fullSentenceText);
             utterance.lang = lang;
             utterance.rate = currentRate;
-            
+
+            // ===== AJUSTE DE ENTONAÇÃO PARA INTERROGATIVAS =====
+            const isInterrogative = currentRound.sentenceType === "interrogative";
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            if (isInterrogative) {
+                if (lang === 'en-GB') {
+                    // UK: sempre aplicar pitch sutil (funciona no PC e celular)
+                    utterance.pitch = 1.12;
+                } else if (lang === 'en-US' && isMobile) {
+                    // US: só aplicar no celular (no PC o motor nativo já entona)
+                    utterance.pitch = 1.12;
+                }
+                // US no PC: deixa o motor nativo do Chrome aplicar a entonação
+            }
+            // ====================================================
+
             if (onComplete) {
                 utterance.onend = onComplete;
             }
-            
+
             window.speechSynthesis.speak(utterance);
         }
         function updateProgressUI() {
