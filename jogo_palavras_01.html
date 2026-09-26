@@ -279,6 +279,39 @@
             background-color: #0369a1;
         }
 
+        /* Tela de Parabéns */
+        #congratsScreen {
+            position: fixed;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+        #congratsScreen .emoji {
+            font-size: 5rem;
+            margin-bottom: 15px;
+            animation: bounce 1s infinite alternate;
+        }
+        #congratsScreen h2 {
+            color: #99f4d6;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            max-width: 600px;
+        }
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-15px); }
+        }
+
         footer {
             margin-top: 20px;
             text-align: center;
@@ -335,6 +368,12 @@
 
         <div class="action-bar">
             <button class="btn-action" id="nextBtn" onclick="initGame()" style="display:none;">Próxima Palavra ➔</button>
+        </div>
+
+        <div id="congratsScreen">
+            <div class="emoji">🎉</div>
+            <h2>Parabéns, você revisou todas as palavras.</h2>
+            <button class="btn-action" onclick="initGame()">Próxima Rodada ➔</button>
         </div>
 
         <footer>
@@ -516,30 +555,8 @@
             } catch (e) {}
         }
 
-        function playMedalSound() {
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const playTone = (freq, startTime, duration) => {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
-                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime + startTime);
-                    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + startTime + duration);
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.start(audioCtx.currentTime + startTime);
-                    osc.stop(audioCtx.currentTime + startTime + duration);
-                };
-                playTone(440.00, 0.0, 0.08);
-                playTone(554.37, 0.08, 0.08);
-                playTone(659.25, 0.16, 0.08);
-                playTone(830.61, 0.24, 0.08);
-                playTone(1046.50, 0.32, 0.20);
-            } catch (e) {}
-        }
-
-        function playSecretAudio(lang) {
+        // MODIFICADO: Agora aceita callback para saber quando o áudio termina
+        function playSecretAudio(lang, onComplete = null) {
             if (!currentSecretItem) return;
             window.speechSynthesis.cancel();
 
@@ -547,6 +564,12 @@
             const utterance = new SpeechSynthesisUtterance(currentSecretItem.word);
             utterance.lang = lang;
             utterance.rate = currentRate;
+
+            // NOVO: Se o áudio terminar, executa a função de callback
+            if (onComplete) {
+                utterance.onend = onComplete;
+            }
+
             window.speechSynthesis.speak(utterance);
         }
 
@@ -557,22 +580,11 @@
             document.getElementById('progressPercent').innerText = `${percent}%`;
             document.getElementById('progressBarFill').style.width = `${percent}%`;
 
+            // A lógica de medalhas foi removida, então não há mais som de medalha.
+            // O contador de medalhas ainda é atualizado internamente, mas sem efeitos visuais ou sonoros.
             let newMedals = Math.floor(completedCount / 5);
             if (newMedals > medalsEarned) {
                 medalsEarned = newMedals;
-                playMedalSound();
-                
-                // Verificação de segurança: só anima se o elemento medalBox existir no HTML
-                const medalBox = document.getElementById('medalBox');
-                if (medalBox) {
-                    medalBox.classList.add('vibrating');
-                    setTimeout(() => medalBox.classList.remove('vibrating'), 400);
-                }
-            }
-            // Verificação de segurança: só atualiza o texto se o elemento medalCount existir no HTML
-            const medalCountEl = document.getElementById('medalCount');
-            if (medalCountEl) {
-                medalCountEl.innerText = `+${medalsEarned}`;
             }
         }
 
@@ -593,6 +605,9 @@
 
             // NOVO: Rolar a página para o topo automaticamente ao iniciar nova rodada
             window.scrollTo({ top: 0, behavior: 'auto' });
+
+            // NOVO: Esconder a tela de parabéns ao iniciar nova rodada
+            document.getElementById('congratsScreen').style.display = 'none';
 
             if (secretUrn.length === 0) {
                 secretUrn = [...vocabularyDatabase];
@@ -660,8 +675,20 @@
                 // NOVO: Rolar a página para baixo automaticamente para mostrar a resposta
                 document.getElementById('revealBox').scrollIntoView({ behavior: 'auto', block: 'center' });
 
-                // Reproduz o áudio US automaticamente
-                playSecretAudio('en-US');
+                // NOVO: Reproduz o áudio US automaticamente e verifica se completou todas as palavras
+                setTimeout(() => {
+                    if (completedCount >= vocabularyDatabase.length) {
+                        playSecretAudio('en-US', () => {
+                            // Espera 10ms APÓS o áudio terminar para mostrar a tela de parabéns
+                            setTimeout(() => {
+                                document.getElementById('congratsScreen').style.display = 'flex';
+                            }, 10);
+                        });
+                    } else {
+                        playSecretAudio('en-US');
+                    }
+                }, 250);
+
             } else {
                 btn.classList.add('wrong');
                 setTimeout(() => {
@@ -699,7 +726,7 @@
               });
         </script>
   
- <!-- Cole isso antes de </body> em TODOS os arquivos HTML para que as bandeiras apareçam -->
+  <!-- Cole isso antes de </body> em TODOS os arquivos HTML para que as bandeiras apareçam -->
 	<script src="https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
 	<script src="emoji-fix.js"></script>
   
