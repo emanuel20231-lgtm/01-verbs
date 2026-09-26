@@ -384,6 +384,15 @@
             gap: 10px;
             flex-wrap: wrap;
         }
+		.action-warning {
+            text-align: center;
+            color: #ef4444; /* Vermelho, igual aos botões errados */
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 10px; /* Espaço entre o aviso e o botão */
+            min-height: 20px;
+            display: none; /* Começa escondido */
+        }
 
         .btn-action {
             background-color: #0284c7;
@@ -481,6 +490,7 @@
             <p id="revealedDetails"></p>
         </div>
 
+        <div id="actionWarning" class="action-warning"></div>
         <div class="action-bar">
             <button class="btn-action" id="nextBtn" onclick="initRound()">Próxima Rodada ➔</button>
         </div>
@@ -1256,6 +1266,9 @@ Done (particípio) /UK dʌn/ /US dʌn/
 			// NOVO: Rolar a página para o topo automaticamente ao iniciar nova rodada
             window.scrollTo({ top: 0, behavior: 'auto' });
 			
+			// NOVO: Esconder o aviso ao iniciar nova rodada
+            document.getElementById('actionWarning').style.display = 'none';
+			
             currentRound = generateValidRound();
             updateProgressUI();
 
@@ -1488,7 +1501,7 @@ Done (particípio) /UK dʌn/ /US dʌn/
             let a3Correct = isSelectionCorrect('aux3', userSelection.aux3);
             let vCorrect = isSelectionCorrect('verbForm', userSelection.verbForm);
 
-            if (tCorrect && pCorrect && a1Correct && a2Correct && a3Correct && vCorrect) {
+                        if (tCorrect && pCorrect && a1Correct && a2Correct && a3Correct && vCorrect) {
                 document.getElementById('statusMsg').style.color = "#22c55e";
                 document.getElementById('statusMsg').innerText = "✨ Perfeito! Estrutura 100% correta.";
                 
@@ -1496,6 +1509,9 @@ Done (particípio) /UK dʌn/ /US dʌn/
                     <strong></strong> ${currentRound.fullSentenceText}
                 `;
                 document.getElementById('revealBox').style.display = 'block';
+
+                // NOVO: Esconder o aviso quando acertar
+                document.getElementById('actionWarning').style.display = 'none';
 
                 // NOVO: Rolar a página para baixo automaticamente para mostrar a resposta
                 document.getElementById('revealBox').scrollIntoView({ behavior: 'auto', block: 'center' });
@@ -1507,8 +1523,11 @@ Done (particípio) /UK dʌn/ /US dʌn/
             } else {
                 document.getElementById('statusMsg').style.color = "#ef4444";
                 document.getElementById('statusMsg').innerText = "Alguma escolha está incorreta (veja os itens em vermelho).";
+                
+                // NOVO: Mostrar a mensagem de aviso acima do botão
+                document.getElementById('actionWarning').innerText = "Alguma escolha está incorreta (veja os itens em vermelho) e corrija para que a frase seja revelada";
+                document.getElementById('actionWarning').style.display = 'block';
             }
-        }
 
         window.onload = () => {
             parseRawDatabase();
