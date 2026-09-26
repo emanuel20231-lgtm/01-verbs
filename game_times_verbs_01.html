@@ -700,25 +700,46 @@
             }
             window.speechSynthesis.cancel();
             const currentRate = parseFloat(document.getElementById('rateRange').value);
-            const utterance = new SpeechSynthesisUtterance(currentRound.fullSentenceText);
+            
+            const isInterrogative = currentRound.sentenceType === "interrogative";
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            let text = currentRound.fullSentenceText;
+            
+            // ===== MOBILE: prolongar a última palavra para simular entonação de pergunta =====
+            // No PC mantemos o comportamento atual (pitch 1.12 no UK / nativo no US)
+            if (isInterrogative && isMobile) {
+                let textNoQ = text.replace(/\?$/, '');
+                let words = textNoQ.split(' ');
+                let lastWord = words[words.length - 1].toLowerCase();
+                
+                // Detecta 'e' silencioso no final (write, make, ride...)
+                let silentE = '';
+                let baseWord = lastWord;
+                if (lastWord.length > 3 && lastWord.endsWith('e') && !lastWord.endsWith('ee') && !lastWord.endsWith('ie')) {
+                    silentE = 'e';
+                    baseWord = lastWord.slice(0, -1);
+                }
+                
+                // Prolonga a última vogal (duplicando-a 2x)
+                let match = baseWord.match(/^(.*?)([aeiouy]+)([^aeiouy]*)$/);
+                if (match) {
+                    let lastVowel = match[2];
+                    let prolonged = match[1] + lastVowel + lastVowel[lastVowel.length - 1] + lastVowel[lastVowel.length - 1] + match[3] + silentE;
+                    words[words.length - 1] = prolonged;
+                    text = words.join(' ') + '?';
+                }
+            }
+            // =================================================================================
+            
+            const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = lang;
             utterance.rate = currentRate;
 
-            // ===== AJUSTE DE ENTONAÇÃO PARA INTERROGATIVAS =====
-            const isInterrogative = currentRound.sentenceType === "interrogative";
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-            if (isInterrogative) {
-                if (lang === 'en-GB') {
-                    // UK: sempre aplicar pitch sutil (funciona no PC e celular)
-                    utterance.pitch = 1.12;
-                } else if (lang === 'en-US' && isMobile) {
-                    // US: só aplicar no celular (no PC o motor nativo já entona)
-                    utterance.pitch = 1.12;
-                }
-                // US no PC: deixa o motor nativo do Chrome aplicar a entonação
+            // Ajuste de pitch apenas para UK no PC (onde o motor nativo não entoa)
+            if (isInterrogative && lang === 'en-GB' && !isMobile) {
+                utterance.pitch = 1.12;
             }
-            // ====================================================
 
             if (onComplete) {
                 utterance.onend = onComplete;
