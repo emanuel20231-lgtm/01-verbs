@@ -1082,8 +1082,8 @@ Done (particípio) /UK dʌn/ /US dʌn/
                 }
 
                 if (!v.forms.participle) {
-                    let foundPart = v.rawForms.find(f => f.toLowerCase().endsWith('en') || f.toLowerCase().endsWith('ne') || f === 'Written');
-                    v.forms.participle = foundPart || v.forms.past;
+					let foundPart = v.rawForms.find(f => (f.toLowerCase().endsWith('en') || f.toLowerCase().endsWith('ne')) && f.toLowerCase() !== v.forms.base.toLowerCase() && f.toLowerCase() !== v.infinitive.toLowerCase());                    
+					v.forms.participle = foundPart || v.forms.past;
                 }
             });
             totalVerbsCount = verbsParsed.length;
