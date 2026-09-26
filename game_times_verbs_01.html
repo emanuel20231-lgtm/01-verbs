@@ -409,6 +409,39 @@
         .btn-action:hover {
             background-color: #0369a1;
         }
+		
+		/* Tela de Parabéns */
+        #congratsScreen {
+            position: fixed;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.95); /* Fundo escuro ofuscado */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999; /* Fica acima de tudo */
+            text-align: center;
+            padding: 20px;
+            display: none; /* Começa escondido */
+        }
+        #congratsScreen .emoji {
+            font-size: 5rem;
+            margin-bottom: 15px;
+            animation: bounce 1s infinite alternate;
+        }
+        #congratsScreen h2 {
+            color: #99f4d6;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            max-width: 600px;
+        }
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-15px); }
+        }
 
         footer {
             margin-top: 15px;
@@ -494,6 +527,13 @@
         <div class="action-bar">
             <button class="btn-action" id="nextBtn" onclick="initRound()">Próxima Rodada ➔</button>
         </div>
+      
+		<div id="congratsScreen">
+            <div class="emoji">🎉</div>
+            <h2>Parabéns, você revisou todos os verbos !</h2>
+            <button class="btn-action" onclick="initRound()">Próxima Rodada ➔</button>
+        </div>
+		
 
         <footer>
             <p>I Learn — Ouvir, Montar e Aprender.</p>
@@ -1074,16 +1114,24 @@ Done (particípio) /UK dʌn/ /US dʌn/
             } catch (e) {}
         }
 
-        function playGeneratedAudio(lang = 'en-US') {
-            if (!currentRound.fullSentenceText) return;
+        function playGeneratedAudio(lang = 'en-US', onComplete = null) {
+            if (!currentRound.fullSentenceText) {
+                if (onComplete) onComplete();
+                return;
+            }
             window.speechSynthesis.cancel();
             const currentRate = parseFloat(document.getElementById('rateRange').value);
             const utterance = new SpeechSynthesisUtterance(currentRound.fullSentenceText);
             utterance.lang = lang;
             utterance.rate = currentRate;
+            
+            // NOVO: Se o áudio terminar, executa a função de callback
+            if (onComplete) {
+                utterance.onend = onComplete;
+            }
+            
             window.speechSynthesis.speak(utterance);
         }
-
         function updateProgressUI() {
             let percent = totalVerbsCount > 0 ? Math.round((completedCount / totalVerbsCount) * 100) : 0;
             document.getElementById('progressText').innerText = `Ciclo de Verbos: ${completedCount} / ${totalVerbsCount}`;
@@ -1266,8 +1314,9 @@ Done (particípio) /UK dʌn/ /US dʌn/
 			// NOVO: Rolar a página para o topo automaticamente ao iniciar nova rodada
             window.scrollTo({ top: 0, behavior: 'auto' });
 			
-			// NOVO: Esconder o aviso ao iniciar nova rodada
+			// NOVO: Esconder o aviso ao iniciar nova rodada / Esconder o aviso e a tela de parabéns ao iniciar nova rodada
             document.getElementById('actionWarning').style.display = 'none';
+			document.getElementById('congratsScreen').style.display = 'none'; // <-- Adicione esta linha
 			
             currentRound = generateValidRound();
             updateProgressUI();
@@ -1501,7 +1550,7 @@ Done (particípio) /UK dʌn/ /US dʌn/
             let a3Correct = isSelectionCorrect('aux3', userSelection.aux3);
             let vCorrect = isSelectionCorrect('verbForm', userSelection.verbForm);
 
-                        if (tCorrect && pCorrect && a1Correct && a2Correct && a3Correct && vCorrect) {
+            if (tCorrect && pCorrect && a1Correct && a2Correct && a3Correct && vCorrect) {
                 document.getElementById('statusMsg').style.color = "#22c55e";
                 document.getElementById('statusMsg').innerText = "✨ Perfeito! Estrutura 100% correta.";
                 
@@ -1517,10 +1566,27 @@ Done (particípio) /UK dʌn/ /US dʌn/
                 document.getElementById('revealBox').scrollIntoView({ behavior: 'auto', block: 'center' });
 
                 setTimeout(() => {
-                    playGeneratedAudio('en-US');
+                    // NOVO: Verifica se completou todos os verbos para mostrar a tela de parabéns
+                    if (completedCount >= totalVerbsCount) {
+                        playGeneratedAudio('en-US', () => {
+                            // Espera 2 segundos APÓS o áudio terminar para mostrar a tela
+                            setTimeout(() => {
+                                document.getElementById('congratsScreen').style.display = 'flex';
+                            }, 2000);
+                        });
+                    } else {
+                        playGeneratedAudio('en-US');
+                    }
                 }, 250);
 
             } else {
+                document.getElementById('statusMsg').style.color = "#ef4444";
+                document.getElementById('statusMsg').innerText = "Alguma escolha está incorreta (veja os itens em vermelho).";
+                
+                document.getElementById('actionWarning').innerText = "Alguma escolha está incorreta (veja os itens em vermelho) e corrija para que a frase seja revelada";
+                document.getElementById('actionWarning').style.display = 'block';
+            }
+        } else {
                 document.getElementById('statusMsg').style.color = "#ef4444";
                 document.getElementById('statusMsg').innerText = "Alguma escolha está incorreta (veja os itens em vermelho).";
                 
