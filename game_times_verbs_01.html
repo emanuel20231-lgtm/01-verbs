@@ -169,12 +169,11 @@
 
         .game-grid {
             display: grid;
-            /* Ajuste das proporções: Pronome (1fr), Aux1 (1fr), Aux2/3 (0.8fr), Verbos/Tempos (2.2fr) */
-            grid-template-columns: 1fr 1fr 0.8fr 2.2fr;
+            /* Pronome (1fr), Aux1 (1fr), Aux2/3 (0.5fr), Verbos/Tempos (2.5fr) */
+            grid-template-columns: 1fr 1fr 0.5fr 2.5fr;
             gap: 10px;
             margin-bottom: 20px;
         }
-
         /* Novo: Classe para empilhar as colunas verticalmente */
         .column-stack {
             display: flex;
@@ -184,6 +183,10 @@
 		        /* Faz os 4 verbos ficarem lado a lado na nova coluna larga */
         #colVerbs .button-grid-pair {
             grid-template-columns: repeat(4, 1fr);
+        }
+		        /* Coloca os Tempos Verbais em 2 colunas */
+        #colTenses .button-grid-pair {
+            grid-template-columns: 1fr 1fr;
         }
 
         /* Aumenta a altura dos botões de Tempo Verbal e centraliza o texto */
@@ -300,6 +303,12 @@
         #colAux2 .button-grid-pair,
         #colAux3 .button-grid-pair {
             grid-template-columns: 1fr;
+        }
+		/* Ajusta os botões de Aux2 e Aux3 para a coluna fina */
+        #colAux2 .choice-btn,
+        #colAux3 .choice-btn {
+            padding: 10px 2px; /* Reduz o espaço nas laterais */
+            font-size: 0.85rem; /* Fonte levemente menor para caber bem */
         }
 
         .choice-btn {
