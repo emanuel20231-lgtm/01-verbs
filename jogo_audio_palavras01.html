@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Learn — Verb Audio Training</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: #99f4d6;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        /* Barra de Progresso */
+        .progress-container {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #99f4d6;
+            margin-bottom: 6px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 20px;
+            background-color: #334155;
+            border-radius: 7px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #38bdf8;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Controles de Velocidade */
+        .controls-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            background-color: #0f172a;
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .controls label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #cbd5e1;
+        }
+
+        .controls input[type="range"] {
+            cursor: pointer;
+            width: 90px;
+        }
+
+        .rate-value {
+            font-weight: 700;
+            color: #38bdf8;
+            min-width: 30px;
+            font-size: 0.8rem;
+        }
+
+        /* Caixa de Áudio (Pergunta) */
+        .audio-box {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .audio-box p {
+            font-size: 1.1rem;
+            color: #99f4d6;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .audio-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-audio {
+            background-color: #1e293b;
+            color: #ffffff;
+            border: 1px solid #475569;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-audio:hover {
+            background-color: #334155;
+            border-color: #38bdf8;
+        }
+
+        .status-msg {
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #38bdf8;
+            margin-bottom: 20px;
+            min-height: 24px;
+        }
+
+        /* Opções (3 Palavras) */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background-color: #0f172a;
+            color: #f8fafc;
+            border: 1px solid #475569;
+            padding: 14px 16px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #334155;
+            border-color: #38bdf8;
+        }
+
+        .option-btn.correct {
+            background-color: #064e3b !important;
+            border-color: #22c55e !important;
+            color: #22c55e !important;
+        }
+
+        .option-btn.wrong {
+            background-color: #7f1d1d !important;
+            border-color: #ef4444 !important;
+            color: #fca5a5 !important;
+        }
+
+        /* Caixa de Revelação (Verde) */
+        .reveal-box {
+            background-color: #0f172a;
+            border: 2px solid #22c55e;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            display: none;
+            margin-bottom: 0px;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.15);
+        }
+
+        .reveal-box h3 {
+            color: #22c55e;
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+        }
+
+        .reveal-box p {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #f8fafc;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .audio-buttons-reveal {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-action {
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-action:hover {
+            background-color: #0369a1;
+        }
+
+        /* Tela de Parabéns */
+        #congratsScreen {
+            position: fixed;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+        #congratsScreen .emoji {
+            font-size: 5rem;
+            margin-bottom: 15px;
+            animation: bounce 1s infinite alternate;
+        }
+        #congratsScreen h2 {
+            color: #99f4d6;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            max-width: 600px;
+        }
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-15px); }
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>I Learn — Verb Audio Training</h1>
+            <p class="subtitle">Ouça o áudio, identifique a forma verbal correta e treine seu vocabulário</p>
+
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span id="progressText">Formas percorridas: 0 / 0</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                </div>
+            </div>
+
+            <div class="controls-wrapper">
+                <div class="controls">
+                    <label for="rateRange">Velocidade:</label>
+                    <input type="range" id="rateRange" min="0.25" max="1.5" step="0.05" value="0.7" oninput="updateRateLabel(this.value)">
+                    <span id="rateVal" class="rate-value">0.7x</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="audio-box">
+            <p>Clique abaixo para ouvir a forma verbal selecionada ocultamente:</p>
+            <div class="audio-buttons">
+                <button class="btn-audio" onclick="playSecretAudio('en-GB')">🔊 UK Audio</button>
+                <button class="btn-audio" onclick="playSecretAudio('en-US')">🔊 US Audio</button>
+            </div>
+        </div>
+
+        <div class="status-msg" id="statusMsg">Pronto para iniciar!</div>
+
+        <div class="options-container" id="optionsContainer">
+            <!-- 3 Botões de Opção injetados via JavaScript -->
+        </div>
+
+        <div class="reveal-box" id="revealBox">
+            <h3>🎉 Resposta Correta!</h3>
+            <p id="revealedDetails"></p>
+            <div class="audio-buttons-reveal">
+                <button class="btn-audio" onclick="playSecretAudio('en-GB')">🔊 UK Audio</button>
+                <button class="btn-audio" onclick="playSecretAudio('en-US')">🔊 US Audio</button>
+            </div>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn-action" id="nextBtn" onclick="initGame()" style="display:none;">Próxima Forma ➔</button>
+        </div>
+
+        <div id="congratsScreen">
+            <div class="emoji">🎉</div>
+            <h2>Parabéns, você revisou todas as palavras.</h2>
+            <button class="btn-action" onclick="initGame()">Próxima Rodada ➔</button>
+        </div>
+
+        <footer>
+            <p>I Learn — Sistema Integrado de Vocabulário Automático.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Cole suas linhas de palavras brutas aqui embaixo:
+        const rawTextDatabase = `
+Book (noun) /UK bʊk/ /US bʊk/ -> livro
+Books (noun plur) /US bʊks/ -> livros
+
+Chair (noun) /UK tʃeər/ /US tʃer/ -> cadeira
+Chairs (noun plur) /US tʃerz/ -> cadeiras
+
+Desk (noun) /UK desk/ /US desk/ -> escrivaninha
+Desks (noun plur) /US desks/ -> escrivaninhas
+
+Good (adj) /UK ɡʊd/ /US ɡʊd/ -> bom
+Well (adv) /US wel/ -> bem
+Better (comp) /US ˈbet.ɚ/ -> melhor
+Best (super) /US best/ -> o melhor
+
+He (pronoun) /UK hiː/ /US hiː/ -> ele
+
+It (pronoun) /UK ɪt/ /US ɪt/ -> isto, isso
+
+Magazine (noun) /UK ˌmæɡ.əˈziːn/ /US ˈmæɡ.ə.ziːn/ -> revista
+Magazines (noun plur) /US ˈmæɡ.ə.ziːnz/ -> revistas
+
+Morning (noun) /UK ˈmɔː.nɪŋ/ /US ˈmɔːr.nɪŋ/ -> manhã
+Mornings (noun plur) /US ˈmɔːr.nɪŋz/ -> manhãs
+
+New (adj) /UK njuː/ /US nuː/ -> novo
+Newly (adv) /US ˈnuː.li/ -> recentemente, novamente
+Newer (comp) /US ˈnuː.ɚ/ -> mais novo
+Newest (super) /US ˈnuː.ɪst/ -> o mais novo
+
+Newspaper (noun) /UK ˈnjuːzˌpeɪ.pər/ /US ˈnuːzˌpeɪ.pɚ/ -> jornal
+Newspapers (noun plur) /US ˈnuːzˌpeɪ.pɚz/ -> jornais
+
+Notebook (noun) /UK ˈnəʊt.bʊk/ /US ˈnoʊt.bʊk/ -> caderno
+Notebooks (noun plur) /US ˈnoʊt.bʊks/ -> cadernos
+
+On (prep) /UK ɒn/ /US ɑːn/ -> sobre
+
+Pen (noun) /UK pen/ /US pen/ -> caneta
+Pens (noun plur) /US penz/ -> canetas
+
+Pencil (noun) /UK ˈpen.səl/ /US ˈpen.səl/ -> lápis
+Pencils (noun plur) /US ˈpen.səlz/ -> lápis (plural)
+
+Table (noun) /UK ˈteɪ.bəl/ /US ˈteɪ.bəl/ -> mesa
+Tables (noun plur) /US ˈteɪ.bəlz/ -> mesas
+
+Teacher (noun) /UK ˈtiː.tʃər/ /US ˈtiː.tʃɚ/ -> professor (a)
+Teachers (noun plur) /US ˈtiː.tʃɚz/ -> professores (as)
+
+That (pronoun) /UK ðæt/ /US ðæt/ -> aquele, aquela
+
+This (pronoun) /UK ðɪs/ /US ðɪs/ -> este, esse, esta, essa
+
+What? (pronoun) /UK wɒt/ /US wɑːt/ -> o quê?
+
+Where? (adv) /UK weər/ /US wer/ -> onde?
+
+Who? (pronoun) /UK huː/ /US huː/ -> quem?
+
+Around (adv) /UK əˈraʊnd/ /US əˈraʊnd/ -> em torno, em volta
+Around (prep) /UK əˈraʊnd/ /US əˈraʊnd/ -> ao redor de
+
+Asleep (adj) /UK əˈsliːp/ /US əˈsliːp/ -> adormecido, dormindo
+
+Bicycle (noun) /UK ˈbaɪ.sɪ.kəl/ /US ˈbaɪ.sə.kəl/ -> bicicleta
+Bicycles (noun plur) /US ˈbaɪ.sə.kəlz/ -> bicicletas
+Bike (noun) /UK baɪk/ /US baɪk/ -> bicicleta (abrev.)
+Bikes (noun plur) /US baɪks/ -> bicicletas
+
+Fish (noun) /UK fɪʃ/ /US fɪʃ/ -> peixe
+Fish (noun plur) /US fɪʃ/ -> peixes (forma mais comum)
+Fishes (noun plur) /US ˈfɪʃ.ɪz/ -> peixes (usado para indicar diferentes espécies)
+
+For (prep) /UK fɔːr/ /US fɔːr/ -> para, por
+
+Fruit (noun) /UK fruːt/ /US fruːt/ -> fruto, fruta
+Fruits (noun plur) /US fruːts/ -> frutas (usado especialmente para diferentes tipos de frutas)
+
+Kind (noun) /UK kaɪnd/ /US kaɪnd/ -> tipo, gênero
+Kinds (noun plur) /US kaɪndz/ -> tipos, gêneros
+Kind (adj) /UK kaɪnd/ /US kaɪnd/ -> bondoso, gentil
+Kindly (adv) /US ˈkaɪnd.li/ -> gentilmente
+Kinder (comp) /US ˈkaɪn.dɚ/ -> mais bondoso
+Kindest (super) /US ˈkaɪn.dɪst/ -> o mais bondoso
+
+Pleasant (adj) /UK ˈplez.ənt/ /US ˈplez.ənt/ -> agradável
+Pleasantly (adv) /US ˈplez.ənt.li/ -> agradavelmente
+More pleasant (comp) /US mɔːr ˈplez.ənt/ -> mais agradável
+Most pleasant (super) /US moʊst ˈplez.ənt/ -> o mais agradável
+
+River (noun) /UK ˈrɪv.ər/ /US ˈrɪv.ɚ/ -> rio
+Rivers (noun plur) /US ˈrɪv.ɚz/ -> rios
+
+Sleepy (adj) /UK ˈsliː.pi/ /US ˈsliː.pi/ -> com sono
+Sleepily (adv) /US ˈsliː.pə.li/ -> com sono, preguiçosamente
+Sleepier (comp) /US ˈsliː.pi.ɚ/ -> com mais sono
+Sleepiest (super) /US ˈsliː.pi.ɪst/ -> o com mais sono
+
+Staff (noun) /UK stɑːf/ /US stæf/ -> pessoal, equipe, funcionários
+Staffs (noun plur) /US stæfs/ -> equipes, quadros de pessoal
+
+Together (adv) /UK təˈɡeð.ər/ /US təˈɡeð.ɚ/ -> junto, juntamente
+Together (with) (adj) /UK təˈɡeð.ər/ /US təˈɡeð.ɚ/ -> junto (com, a)
+
+Town (noun) /UK taʊn/ /US taʊn/ -> cidade, povoado
+Towns (noun plur) /US taʊnz/ -> cidades, povoados
+
+Us (pronoun) /UK ʌs/ /US ʌs/ -> nós, nos (objeto)
+
+Biscuit (noun) /UK ˈbɪs.kɪt/ /US ˈbɪs.kɪt/ -> biscoito
+Biscuits (noun plur) /US ˈbɪs.kɪts/ -> biscoitos
+
+Button (noun) /UK ˈbʌt.ən/ /US ˈbʌt.ən/ -> botão
+Buttons (noun plur) /US ˈbʌt.ənz/ -> botões
+
+Child (noun) /UK tʃaɪld/ /US tʃaɪld/ -> criança, filho
+Children (noun plur) /US ˈtʃɪl.drən/ -> crianças, filhos
+
+Dish (noun) /UK dɪʃ/ /US dɪʃ/ -> prato, travessa
+Dishes (noun plur) /US ˈdɪʃ.ɪz/ -> pratos, travessas
+
+Fork (noun) /UK fɔːk/ /US fɔːrk/ -> garfo
+Forks (noun plur) /US fɔːrks/ -> garfos
+
+Husband (noun) /UK ˈhʌz.bənd/ /US ˈhʌz.bənd/ -> marido
+Husbands (noun plur) /US ˈhʌz.bəndz/ -> maridos
+
+Knife (noun) /UK naɪf/ /US naɪf/ -> faca
+Knives (noun plur) /US naɪvz/ -> facas
+
+Plate (noun) /UK pleɪt/ /US pleɪt/ -> travessa, baixela, prato
+Plates (noun plur) /US pleɪts/ -> travessas, baixelas, pratos
+
+Please (excl) /UK pliːz/ /US pliːz/ -> por favor
+
+Ready (adj) /UK ˈred.i/ /US ˈred.i/ -> pronto, a postos
+Readier (comp) /US ˈred.i.ɚ/ -> mais pronto
+Readiest (super) /US ˈred.i.ɪst/ -> o mais pronto
+
+Same (adj) /UK seɪm/ /US seɪm/ -> mesmo, igual
+
+Shirt (noun) /UK ʃɜːt/ /US ʃɝːt/ -> camisa
+Shirts (noun plur) /US ʃɝːts/ -> camisas
+
+Welcome (adj) /UK ˈwel.kəm/ /US ˈwel.kəm/ -> bem-vindo, bem-aceito
+
+While (conj) /UK waɪl/ /US waɪl/ -> enquanto
+
+Wife (noun) /UK waɪf/ /US waɪf/ -> esposa, mulher
+Wives (noun plur) /US waɪvz/ -> esposas, mulheres
+
+Work (noun) /UK wɜːk/ /US wɝːk/ -> trabalho
+Works (noun plur) /US wɝːks/ -> trabalhos, obras
+
+Clever (adj) /UK ˈklev.ər/ /US ˈklev.ɚ/ -> esperto, inteligente
+Cleverly (adv) /US ˈklev.ɚ.li/ -> espertamente, inteligentemente
+Cleverer (comp) /US ˈklev.ɚ.ɚ/ -> mais esperto
+Cleverest (super) /US ˈklev.ɚ.ɪst/ -> o mais esperto
+
+Classroom (noun) /UK ˈklɑːs.ruːm/ /US ˈklæs.ruːm/ -> sala de aula
+Classrooms (noun plur) /UK ˈklɑːs.ruːmz/ /US ˈklæs.ruːmz/ -> salas de aula
+
+Closed (adj) /UK kləʊzd/ /US kloʊzd/ -> fechado
+
+Door (noun) /UK dɔːr/ /US dɔːr/ -> porta
+Doors (noun plur) /UK dɔːz/ /US dɔːrz/ -> portas
+
+Floor (noun) /UK flɔːr/ /US flɔːr/ -> chão, andar (de um prédio)
+Floors (noun plur) /UK flɔːz/ /US flɔːrz/ -> chãos, andares (de um prédio)
+
+In (prep) /UK ɪn/ /US ɪn/ -> em, no, na
+
+Letter (noun) /UK ˈlet.ər/ /US ˈlet.ɚ/ -> carta
+Letters (noun plur) /UK ˈlet.əz/ /US ˈlet.ɚz/ -> cartas
+
+Now (adv) /UK naʊ/ /US naʊ/ -> agora
+
+Open (adj) /UK ˈəʊ.pən/ /US ˈoʊ.pən/ -> aberto
+
+Or (conj) /UK ɔːr/ /US ɔːr/ -> ou
+
+Window (noun) /UK ˈwɪn.dəʊ/ /US ˈwɪn.doʊ/ -> janela
+Windows (noun plur) /UK ˈwɪn.dəʊz/ /US ˈwɪn.doʊz/ -> janelas
+
+Young (adj) /UK jʌŋ/ /US jʌŋ/ -> jovem
+Younger (comp) /UK ˈjʌŋ.ɡər/ /US ˈjʌŋ.ɡɚ/ -> mais jovem
+Youngest (super) /UK ˈjʌŋ.ɡɪst/ /US ˈjʌŋ.ɡɪst/ -> o mais jovem
+Young (noun plur) /UK jʌŋ/ /US jʌŋ/ -> os jovens, crias
+
+Afternoon (noun) /UK ˌɑːf.təˈnuːn/ /US ˌæf.tɚˈnuːn/ -> tarde
+Afternoons (noun plur) /UK ˌɑːf.təˈnuːnz/ /US ˌæf.tɚˈnuːnz/ -> tardes
+
+Ball (noun) /UK bɔːl/ /US bɑːl/ -> bola, balão
+Balls (noun plur) /UK bɔːlz/ /US bɑːlz/ -> bolas, balões
+
+Blackboard (noun) /UK ˈblæk.bɔːd/ /US ˈblæk.bɔːrd/ -> lousa
+Blackboards (noun plur) /UK ˈblæk.bɔːdz/ /US ˈblæk.bɔːrdz/ -> lousas
+
+Fat (adj) /UK fæt/ /US fæt/ -> gordo
+Fatter (comp) /UK ˈfæt.ər/ /US ˈfæt.ɚ/ -> mais gordo
+Fattest (super) /UK ˈfæt.ɪst/ /US ˈfæt.ɪst/ -> o mais gordo
+
+Football (noun) /UK ˈfʊt.bɔːl/ /US ˈfʊt.bɑːl/ -> futebol
+Footballs (noun plur) /UK ˈfʊt.bɔːlz/ /US ˈfʊt.bɑːlz/ -> meias-bolas, bolas de futebol
+
+Happy (adj) /UK ˈhæp.i/ /US ˈhæp.i/ -> feliz
+Happily (adv) /UK ˈhæp.əl.i/ /US ˈhæp.əl.i/ -> felizmente, alegremente
+Happier (comp) /UK ˈhæp.i.ər/ /US ˈhæp.i.ɚ/ -> mais feliz
+Happiest (super) /UK ˈhæp.i.ɪst/ /US ˈhæp.i.ɪst/ -> o mais feliz
+
+Old (adj) /UK əʊld/ /US oʊld/ -> velho
+Older (comp) /UK ˈəʊl.dər/ /US ˈoʊl.dɚ/ -> mais velho
+Oldest (super) /UK ˈəʊl.dɪst/ /US ˈoʊl.dɪst/ -> o mais velho
+
+On (prep) /UK ɒn/ /US ɑːn/ -> sobre, em cima de
+
+Sad (adj) /UK sæd/ /US sæd/ -> triste
+Sadly (adv) /UK ˈsæd.li/ /US ˈsæd.li/ -> tristemente
+Sadder (comp) /UK ˈsæd.ər/ /US ˈsæd.ɚ/ -> mais triste
+Saddest (super) /UK ˈsæd.ɪst/ /US ˈsæd.ɪst/ -> o mais triste
+
+School (noun) /UK skuːl/ /US skuːl/ -> escola
+Schools (noun plur) /UK skuːlz/ /US skuːlz/ -> escolas
+
+She (pronoun) /UK ʃiː/ /US ʃiː/ -> ela
+
+Short (adj) /UK ʃɔːt/ /US ʃɔːrt/ -> baixo, curto, breve
+Shortly (adv) /UK ˈʃɔːt.li/ /US ˈʃɔːrt.li/ -> em breve, logo
+Shorter (comp) /UK ˈʃɔː.tər/ /US ˈʃɔːr.tɚ/ -> mais curto, mais baixo
+Shortest (super) /UK ˈʃɔː.tɪst/ /US ˈʃɔːr.tɪst/ -> o mais curto, o mais baixo
+
+Tall (adj) /UK tɔːl/ /US tɑːl/ -> alto
+Taller (comp) /UK ˈtɔː.lər/ /US ˈtɑː.lɚ/ -> mais alto
+Tallest (super) /UK ˈtɔː.lɪst/ /US ˈtɑː.lɪst/ -> o mais alto
+
+Thin (adj) /UK θɪn/ /US θɪn/ -> magro, fino
+Thinly (adv) /UK ˈθɪn.li/ /US ˈθɪn.li/ -> finamente
+Thinner (comp) /UK ˈθɪn.ər/ /US ˈθɪn.ɚ/ -> mais magro, mais fino
+Thinnest (super) /UK ˈθɪn.ɪst/ /US ˈθɪn.ɪst/ -> o mais magro, o mais fino
+
+To (prep) /UK tuː/ /US tuː/ -> para, em direção a
+
+At (prep) /UK æt/ /US æt/ -> em, no, na, junto a
+
+Her (pronoun) /UK hɜːr/ /US hɝː/ -> sua, dela
+
+His (pronoun) /UK hɪz/ /US hɪz/ -> seu, dele
+
+In (prep) /UK ɪn/ /US ɪn/ -> em, dentro
+
+Lunchbox (noun) /UK ˈlʌntʃ.bɒks/ /US ˈlʌntʃ.bɑːks/ -> lancheira
+Lunchboxes (noun plur) /UK ˈlʌntʃ.bɒk.sɪz/ /US ˈlʌntʃ.bɑːk.sɪz/ -> lancheiras
+
+Purse (noun) /UK pɜːs/ /US pɝːs/ -> bolsa, bolsinha
+Purses (noun plur) /UK ˈpɜː.sɪz/ /US ˈpɝː.sɪz/ -> bolsas, bolsinhas
+
+Umbrella (noun) /UK ʌmˈbrel.ə/ /US ʌmˈbrel.ə/ -> guarda-chuva
+Umbrellas (noun plur) /UK ʌmˈbrel.əz/ /US ʌmˈbrel.əz/ -> guarda-chuvas
+
+Whose? (pronoun) /UK huːz/ /US huːz/ -> de quem?
+
+With (prep) /UK wɪð/ /US wɪð/ -> com
+
+
+
+
+
+
+
+        `;
+
+        let vocabularyDatabase = [];
+        let secretUrn = [];
+        let completedCount = 0;
+        let currentSecretItem = null;
+        let isAnswered = false;
+
+        // Limpeza inteligente: remove parênteses, barras de fonética e setas para o áudio e botões ficarem puros
+        function parseRawDatabase() {
+            const lines = rawTextDatabase.split('\n');
+            let parsedList = [];
+
+            lines.forEach(line => {
+                let trimmed = line.trim();
+                if (!trimmed) return;
+
+                // Extrai apenas o termo puro antes de barras, parênteses ou setas
+                let cleanWord = trimmed.split('/')[0].split('->')[0].split('(')[0].trim();
+
+                parsedList.push({
+                    wordToSpeak: cleanWord, // Apenas a palavra limpa para a voz da IA falar perfeitamente
+                    shortLabel: cleanWord,  // Apenas a palavra limpa estampada no botão de opção
+                    details: trimmed        // Guarda o texto completo original para exibir na caixa verde ao acertar
+                });
+            });
+
+            vocabularyDatabase = parsedList;
+        }
+
+        function updateRateLabel(val) {
+            document.getElementById('rateVal').innerText = val + 'x';
+        }
+
+        function playSuccessSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const playTone = (freq, startTime, duration) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime + startTime);
+                    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + startTime + duration);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(audioCtx.currentTime + startTime);
+                    osc.stop(audioCtx.currentTime + startTime + duration);
+                };
+                playTone(523.25, 0, 0.1);
+                playTone(659.25, 0.08, 0.15);
+                playTone(783.99, 0.16, 0.2);
+            } catch (e) {}
+        }
+
+        // MODIFICADO: Agora aceita callback para saber quando o áudio termina
+        function playSecretAudio(lang, onComplete = null) {
+            if (!currentSecretItem) return;
+            window.speechSynthesis.cancel();
+
+            const currentRate = parseFloat(document.getElementById('rateRange').value);
+            const utterance = new SpeechSynthesisUtterance(currentSecretItem.wordToSpeak);
+            utterance.lang = lang;
+            utterance.rate = currentRate;
+
+            // NOVO: Se o áudio terminar, executa a função de callback
+            if (onComplete) {
+                utterance.onend = onComplete;
+            }
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function updateProgressUI() {
+            let total = vocabularyDatabase.length;
+            let percent = total > 0 ? Math.round((completedCount / total) * 100) : 0;
+            document.getElementById('progressText').innerText = `Formas percorridas: ${completedCount} / ${total}`;
+            document.getElementById('progressPercent').innerText = `${percent}%`;
+            document.getElementById('progressBarFill').style.width = `${percent}%`;
+        }
+
+        function shuffle(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function initGame() {
+            if (vocabularyDatabase.length === 0) {
+                document.getElementById('statusMsg').innerText = "Nenhuma palavra encontrada na área de texto.";
+                return;
+            }
+
+            // NOVO: Rolar a página para o topo automaticamente ao iniciar nova rodada
+            window.scrollTo({ top: 0, behavior: 'auto' });
+
+            // NOVO: Esconder a tela de parabéns ao iniciar nova rodada
+            document.getElementById('congratsScreen').style.display = 'none';
+
+            if (secretUrn.length === 0) {
+                secretUrn = [...vocabularyDatabase];
+                completedCount = 0;
+            }
+
+            isAnswered = false;
+            document.getElementById('revealBox').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('statusMsg').style.color = "#38bdf8";
+            document.getElementById('statusMsg').innerText = "Ouça o áudio e escolha a opção correspondente abaixo.";
+
+            let randomIndex = Math.floor(Math.random() * secretUrn.length);
+            currentSecretItem = secretUrn.splice(randomIndex, 1)[0];
+            completedCount++;
+            updateProgressUI();
+
+            let otherItems = vocabularyDatabase.filter(item => item.details !== currentSecretItem.details);
+            let shuffledOthers = shuffle(otherItems).slice(0, 2);
+
+            let optionsPool = [currentSecretItem, ...shuffledOthers];
+            let finalOptions = shuffle(optionsPool);
+
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            finalOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt.shortLabel; // Exibe apenas a palavra limpa no botão
+                btn.onclick = () => checkChoice(opt, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            // NOVO: Reproduzir o áudio US automaticamente no início da rodada
+            setTimeout(() => {
+                playSecretAudio('en-US');
+            }, 300);
+        }
+
+        function checkChoice(selectedItem, btn) {
+            if (isAnswered) return;
+
+            const allButtons = document.querySelectorAll('.option-btn');
+
+            if (selectedItem.details === currentSecretItem.details) {
+                isAnswered = true;
+                playSuccessSound();
+                btn.classList.add('correct');
+
+                allButtons.forEach(b => b.disabled = true);
+
+                document.getElementById('statusMsg').style.color = "#22c55e";
+                document.getElementById('statusMsg').innerText = "✨ Excelente! Resposta correta.";
+                
+                // Exibe os detalhes completos (com parênteses e traduções) apenas após o acerto na caixa verde
+                document.getElementById('revealedDetails').innerText = currentSecretItem.details;
+                document.getElementById('revealBox').style.display = 'block';
+                document.getElementById('nextBtn').style.display = 'inline-block';
+
+                // NOVO: Rolar a página para baixo automaticamente para mostrar a resposta
+                document.getElementById('revealBox').scrollIntoView({ behavior: 'auto', block: 'center' });
+
+                // NOVO: Reproduz o áudio US automaticamente e verifica se completou todas as palavras
+                setTimeout(() => {
+                    if (completedCount >= vocabularyDatabase.length) {
+                        playSecretAudio('en-US', () => {
+                            // Espera 10ms APÓS o áudio terminar para mostrar a tela de parabéns
+                            setTimeout(() => {
+                                document.getElementById('congratsScreen').style.display = 'flex';
+                            }, 10);
+                        });
+                    } else {
+                        playSecretAudio('en-US');
+                    }
+                }, 250);
+
+            } else {
+                btn.classList.add('wrong');
+                setTimeout(() => {
+                    btn.classList.remove('wrong');
+                }, 400);
+            }
+        }
+
+        window.onload = () => {
+            parseRawDatabase();
+            secretUrn = [...vocabularyDatabase];
+            updateProgressUI();
+            initGame();
+        };
+    </script>
+    <!-- add em cada arquivo html antes de body (no final ) para controlar a velocidade no pc(0.65x)/celular(0.5x) -->  
+        <script>
+              document.addEventListener("DOMContentLoaded", function() {
+                // Pega a velocidade que foi salva pelo index.html
+                const velocidadeSalva = localStorage.getItem('minhaVelocidadeVoz');
+                
+                const rateRange = document.getElementById("rateRange");
+                const rateVal = document.getElementById("rateVal");
+            
+                if (velocidadeSalva && rateRange && rateVal) {
+                  // Atualiza o controle deslizante visualmente
+                  rateRange.value = velocidadeSalva;
+                  rateVal.textContent = velocidadeSalva + 'x';
+                  
+                  // Se você tiver uma função chamada updateRateLabel no seu código, chame-a para atualizar a voz
+                  if (typeof updateRateLabel === 'function') {
+                    updateRateLabel(velocidadeSalva);
+                  }
+                }
+              });
+        </script>
+  
+  <!-- Cole isso antes de </body> em TODOS os arquivos HTML para que as bandeiras apareçam -->
+	<script src="https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
+	<script src="emoji-fix.js"></script>
+  
+</body>
+</html>
