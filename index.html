@@ -315,7 +315,7 @@ const appData = [
     hasNav: true, splashTitle: 'IPA Sounds',
     subfolders: [
       {
-        id: 'ipa-vogais', name: 'Vogais', icon: '🔤',
+        id: 'ipa-vogais', name: 'IPA sounds', icon: '🔤',
         color: 'linear-gradient(135deg, #ff5722, #ff8a65)',
         hasNav: true,
         links: [
@@ -328,19 +328,20 @@ const appData = [
           { name: '08 - /ə/ schwa', href: '08_ipa_schwa.html' },
           { name: '10 - /uː/', href: '10_ipa_u_longo.html' },
           { name: '11 - /ʊ/', href: '11_ipa_u_curto.html' },
-          { name: '12 - /ɔː/', href: '12_ipa_ɔ.html' }
-        ]
-      },
-      {
-        id: 'ipa-ditongos', name: 'Ditongos', icon: '🔠',
-        color: 'linear-gradient(135deg, #9c27b0, #ba68c8)',
-        hasNav: false,
-        links: [
+          { name: '12 - /ɔː/', href: '12_ipa_ɔ.html' },
           { name: '02 - /ɪə/', href: '02-ipa_ɪə.html' },
           { name: '13 - /eɪ/', href: '13_ipa_eɪ.html' },
           { name: '14 - /aʊ/', href: '14_ipa_au.html' },
           { name: '16 - /ɔɪ/', href: '16_ipa_ɔɪ.html' },
           { name: '17 - /aɪ/', href: '17_ipa_aɪ.html' }
+        ]
+      },
+      {
+        id: 'ipa-ditongos', name: 'nada aqui', icon: '🔠',
+        color: 'linear-gradient(135deg, #9c27b0, #ba68c8)',
+        hasNav: false,
+        links: [
+          
         ]
       },
       {
@@ -362,9 +363,9 @@ const appData = [
     hasNav: true, splashTitle: 'Welcome to verbs',
     subfolders: [
       {
-        id: 'verbos-essenciais', name: 'Essenciais', icon: '⭐',
+        id: 'verbos-essenciais', name: 'Lista 01', icon: '📚',
         color: 'linear-gradient(135deg, #0284c7, #38bdf8)',
-        hasNav: false,
+        hasNav: true,
         links: [
           { name: '20 - To be',        href: '20-To be.html' },
           { name: '21 - To have',      href: '21-To have.html' },
@@ -391,47 +392,7 @@ const appData = [
           { name: '68 - To open',      href: '68-To_open.html' },
           { name: '69 - To close',     href: '69-To_close.html' },
           { name: '71 - To read',      href: '71-To_read.html' },
-          { name: '60 - To buy',       href: '60-To buy.html' }
-        ]
-      },
-      {
-        id: 'verbos-movimento', name: 'Movimento', icon: '🏃',
-        color: 'linear-gradient(135deg, #16a34a, #4ade80)',
-        hasNav: false,
-        links: [
-          { name: '06 - To travel',     href: '06-To travel.html' },
-          { name: '07 - To leave',      href: '07-To leave.html' },
-          { name: '16 - To land',       href: '16-To land.html' },
-          { name: '17 - To pilot',      href: '17-To pilot.html' },
-          { name: '18 - To ride',       href: '18-To ride.html' },
-          { name: '39 - To swim',       href: '39-To swim.html' },
-          { name: '40 - To drown',      href: '40-To drown.html' },
-          { name: '41 - To die',        href: '41-To die.html' },
-          { name: '42 - To fly',        href: '42-To fly.html' },
-          { name: '43 - To fall',       href: '43-To fall.html' },
-          { name: '44 - To grow',       href: '44-To grow.html' },
-          { name: '45 - To increase',   href: '45-To increase.html' },
-          { name: '78 - To turn',       href: '78-To turn.html' },
-          { name: '79 - To rise',       href: '79-To_rise.html' },
-          { name: '80 - To ring',       href: '80-To_ring.html' },
-          { name: '01 - To knock',      href: '01-To knock.html' },
-          { name: '05 - To throw',      href: '05-To throw.html' },
-          { name: '09 - To brush',      href: '09-To brush.html' },
-          { name: '10 - To comb',       href: '10-To comb.html' },
-          { name: '12 - To sleep',      href: '12-To sleep.html' },
-          { name: '13 - To wake up',    href: '13-To wake up.html' },
-          { name: '23 - To sit',        href: '23-To sit.html' },
-          { name: '26 - To stand',      href: '26-To stand.html' },
-          { name: '36 - To catch',      href: '36-To catch.html' },
-          { name: '48 - To strike',     href: '48-To strike.html' },
-          { name: '49 - To hit',        href: '49-To hit.html' }
-        ]
-      },
-      {
-        id: 'verbos-acoes', name: 'Ações', icon: '✋',
-        color: 'linear-gradient(135deg, #ea580c, #fb923c)',
-        hasNav: false,
-        links: [
+          { name: '60 - To buy',       href: '60-To buy.html' },
           { name: '50 - To touch',      href: '50-To touch.html' },
           { name: '51 - To kick',       href: '51-To kick.html' },
           { name: '52 - To pull',       href: '52-To pull.html' },
@@ -458,7 +419,49 @@ const appData = [
           { name: '29 - To upgrade',    href: '29-To upgrade.html' },
           { name: '46 - To add',        href: '46-To add.html' },
           { name: '47 - To hate',       href: '47-To hate.html' },
-          { name: '37 - To insert',     href: '37-To insert.html' }
+          { name: '37 - To insert',     href: '37-To insert.html' },
+          { name: '06 - To travel',     href: '06-To travel.html' },
+          { name: '07 - To leave',      href: '07-To leave.html' },
+          { name: '16 - To land',       href: '16-To land.html' },
+          { name: '17 - To pilot',      href: '17-To pilot.html' },
+          { name: '18 - To ride',       href: '18-To ride.html' },
+          { name: '39 - To swim',       href: '39-To swim.html' },
+          { name: '40 - To drown',      href: '40-To drown.html' },
+          { name: '41 - To die',        href: '41-To die.html' },
+          { name: '42 - To fly',        href: '42-To fly.html' },
+          { name: '43 - To fall',       href: '43-To fall.html' },
+          { name: '44 - To grow',       href: '44-To grow.html' },
+          { name: '45 - To increase',   href: '45-To increase.html' },
+          { name: '78 - To turn',       href: '78-To turn.html' },
+          { name: '79 - To rise',       href: '79-To_rise.html' },
+          { name: '80 - To ring',       href: '80-To_ring.html' },
+          { name: '01 - To knock',      href: '01-To knock.html' },
+          { name: '05 - To throw',      href: '05-To throw.html' },
+          { name: '09 - To brush',      href: '09-To brush.html' },
+          { name: '10 - To comb',       href: '10-To comb.html' },
+          { name: '12 - To sleep',      href: '12-To sleep.html' },
+          { name: '13 - To wake up',    href: '13-To wake up.html' },
+          { name: '23 - To sit',        href: '23-To sit.html' },
+          { name: '26 - To stand',      href: '26-To stand.html' },
+          { name: '36 - To catch',      href: '36-To catch.html' },
+          { name: '48 - To strike',     href: '48-To strike.html' },
+          { name: '49 - To hit',        href: '49-To hit.html' },
+        ]
+      },
+      {
+        id: 'verbos-movimento', name: 'Movimento', icon: '🏃',
+        color: 'linear-gradient(135deg, #16a34a, #4ade80)',
+        hasNav: false,
+        links: [
+          
+        ]
+      },
+      {
+        id: 'verbos-acoes', name: 'Ações', icon: '✋',
+        color: 'linear-gradient(135deg, #ea580c, #fb923c)',
+        hasNav: false,
+        links: [
+          
         ]
       }
     ]
