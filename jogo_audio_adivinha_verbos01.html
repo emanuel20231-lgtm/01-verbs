@@ -870,7 +870,7 @@ function playSuccessSound() {
             const o = ctx.createOscillator(); const g = ctx.createGain();
             o.type = 'triangle';
             o.frequency.setValueAtTime(f, ctx.currentTime + s);
-            g.gain.setValueAtTime(0.10, ctx.currentTime + s);
+            g.gain.setValueAtTime(0.03, ctx.currentTime + s);
             g.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + s + d);
             o.connect(g); g.connect(ctx.destination);
             o.start(ctx.currentTime + s); o.stop(ctx.currentTime + s + d);
