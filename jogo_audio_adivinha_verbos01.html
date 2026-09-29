@@ -239,7 +239,7 @@ const rawTextDatabase = `
 			Gets (third) /UK ɡets/ /US ɡets/
 			Getting (gerund) /UK ˈɡet.ɪŋ/ /US ˈɡet̬.ɪŋ/
 			Got (past) /UK ɡɒt/ /US ɡɑːt/
-			Got / Gotten (participle) /UK ɡɒt/ /US ˈɡɑː.tən/
+			Gotten (participle)  /US ˈɡɑː.tən/
 			
 			To look (v) /UK tuː lʊk/ /US tuː lʊk/ -> olhar, parecer
 			Look (base) /UK lʊk/ /US lʊk/
@@ -610,7 +610,7 @@ const rawTextDatabase = `
 			Sews (third) /UK səʊz/ /US soʊz/
 			Sewing (gerund) /UK ˈsəʊ.ɪŋ/ /US ˈsoʊ.ɪŋ/
 			Sewed (past) /UK səʊd/ /US soʊd/
-			Sewn / Sewed (participle) /UK səʊn/ /US soʊn/
+			Sewn (participle) /UK səʊn/ /US soʊn/
 			
 			To want (v) /UK tuː wɒnt/ /US tuː wɑːnt/ -> querer, desejar
 			Want (base) /UK wɒnt/ /US wɑːnt/
@@ -870,7 +870,7 @@ function playSuccessSound() {
             const o = ctx.createOscillator(); const g = ctx.createGain();
             o.type = 'triangle';
             o.frequency.setValueAtTime(f, ctx.currentTime + s);
-            g.gain.setValueAtTime(0.03, ctx.currentTime + s);
+            g.gain.setValueAtTime(0.02, ctx.currentTime + s);
             g.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + s + d);
             o.connect(g); g.connect(ctx.destination);
             o.start(ctx.currentTime + s); o.stop(ctx.currentTime + s + d);
