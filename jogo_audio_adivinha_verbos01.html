@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I Learn — Verb Forms Audio Training</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+    body { background-color: #0f172a; color: #f1f5f9; display: flex; justify-content: center;
+           align-items: center; min-height: 100vh; padding: 15px; }
+
+    .container { width: 100%; max-width: 800px; background-color: #1e293b;
+                 border: 1px solid #334155; border-radius: 12px; padding: 24px;
+                 box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); }
+
+    header { text-align: center; margin-bottom: 20px; }
+    h1 { font-size: 1.5rem; color: #99f4d6; margin-bottom: 6px; }
+    .subtitle { color: #94a3b8; font-size: 0.85rem; margin-bottom: 15px; }
+
+    .progress-container { background-color: #0f172a; border: 1px solid #334155;
+                          border-radius: 8px; padding: 12px; margin-bottom: 20px; }
+    .progress-info { display: flex; justify-content: space-between; font-size: 1rem;
+                     font-weight: 700; color: #99f4d6; margin-bottom: 6px; }
+    .progress-bar-bg { width: 100%; height: 20px; background-color: #334155;
+                       border-radius: 7px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background-color: #38bdf8; width: 0%;
+                         transition: width 0.3s ease; }
+
+    .controls-wrapper { display: flex; justify-content: center; align-items: center;
+                        gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+    .controls { background-color: #0f172a; padding: 6px 14px; border-radius: 6px;
+                border: 1px solid #334155; display: inline-flex; align-items: center; gap: 8px; }
+    .controls label { font-weight: 600; font-size: 0.8rem; color: #cbd5e1; }
+    .controls input[type="range"] { cursor: pointer; width: 90px; }
+    .rate-value { font-weight: 700; color: #38bdf8; min-width: 30px; font-size: 0.8rem; }
+
+    .audio-box { background-color: #0f172a; border: 1px solid #334155; border-radius: 8px;
+                 padding: 20px; text-align: center; margin-bottom: 20px; }
+    .audio-box p { font-size: 1.1rem; color: #99f4d6; margin-bottom: 15px; font-weight: 600; }
+    .audio-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .btn-audio { background-color: #1e293b; color: #ffffff; border: 1px solid #475569;
+                 padding: 10px 20px; border-radius: 6px; font-weight: 600; font-size: 0.9rem;
+                 cursor: pointer; transition: all 0.2s; }
+    .btn-audio:hover { background-color: #334155; border-color: #38bdf8; }
+
+    .status-msg { text-align: center; font-weight: 600; font-size: 0.9rem;
+                  color: #38bdf8; margin-bottom: 12px; min-height: 24px; }
+
+    .step-title { text-align: center; color: #facc15; font-size: 0.85rem;
+                  font-weight: 700; letter-spacing: 1px; margin-bottom: 12px;
+                  text-transform: uppercase; }
+
+    .options-container { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .option-btn { background-color: #0f172a; color: #f8fafc; border: 1px solid #475569;
+                  padding: 14px 16px; border-radius: 8px; font-size: 1.1rem; font-weight: 600;
+                  cursor: pointer; text-align: center; width: 100%; transition: all 0.2s ease; }
+    .option-btn:hover:not(:disabled) { background-color: #334155; border-color: #38bdf8; }
+    .option-btn.correct { background-color: #064e3b !important; border-color: #22c55e !important;
+                          color: #22c55e !important; }
+    .option-btn.wrong { background-color: #7f1d1d !important; border-color: #ef4444 !important;
+                        color: #fca5a5 !important; }
+
+    .reveal-box { background-color: #0f172a; border: 2px solid #22c55e; border-radius: 8px;
+                  padding: 20px; text-align: center; display: none; margin-bottom: 0px;
+                  box-shadow: 0 0 15px rgba(34, 197, 94, 0.15); }
+    .reveal-box h3 { color: #22c55e; font-size: 1.05rem; margin-bottom: 10px; }
+    .reveal-box p { font-size: 1.2rem; font-weight: 600; color: #f8fafc;
+                    line-height: 1.5; margin-bottom: 15px; }
+    .audio-buttons-reveal { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+    .action-bar { display: flex; justify-content: center; margin-top: 20px; }
+    .btn-action { background-color: #0284c7; color: white; border: none; padding: 12px 24px;
+                  border-radius: 8px; font-weight: 600; font-size: 0.95rem; cursor: pointer;
+                  transition: background 0.2s; }
+    .btn-action:hover { background-color: #0369a1; }
+
+    #congratsScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                      background-color: rgba(15, 23, 42, 0.95); display: none;
+                      flex-direction: column; justify-content: center; align-items: center;
+                      z-index: 99999; text-align: center; padding: 20px; }
+    #congratsScreen .emoji { font-size: 5rem; margin-bottom: 15px;
+                             animation: bounce 1s infinite alternate; }
+    #congratsScreen h2 { color: #99f4d6; font-size: 1.5rem; margin-bottom: 25px;
+                         max-width: 600px; }
+    @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-15px); } }
+
+    footer { margin-top: 20px; text-align: center; font-size: 0.75rem; color: #94a3b8; }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>I Learn — Verb Forms Audio Training</h1>
+        <p class="subtitle">Ouça o áudio, identifique o tempo verbal, o verbo e a forma exata</p>
+
+        <div class="progress-container">
+            <div class="progress-info">
+                <span id="progressText">Formas percorridas: 0 / 0</span>
+                <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressBarFill"></div>
+            </div>
+        </div>
+
+        <div class="controls-wrapper">
+            <div class="controls">
+                <label for="rateRange">Velocidade:</label>
+                <input type="range" id="rateRange" min="0.25" max="1.5" step="0.05" value="0.7"
+                       oninput="updateRateLabel(this.value)">
+                <span id="rateVal" class="rate-value">0.7x</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="audio-box">
+        <p>Clique abaixo para ouvir novamente a forma verbal sorteada:</p>
+        <div class="audio-buttons">
+            <button class="btn-audio" onclick="playSecretAudio('en-GB')">🇬🇧🔊 UK Audio</button>
+            <button class="btn-audio" onclick="playSecretAudio('en-US')">🇺🇸🔊 US Audio</button>
+        </div>
+    </div>
+
+    <div class="status-msg" id="statusMsg">Pronto para iniciar!</div>
+    <div class="step-title" id="stepTitle" style="display:none;">Etapa</div>
+
+    <div class="options-container" id="tenseContainer" style="display:none;"></div>
+    <div class="options-container" id="verbContainer"  style="display:none;"></div>
+    <div class="options-container" id="formContainer"  style="display:none;"></div>
+
+    <div class="reveal-box" id="revealBox">
+        <h3>🎉 Resposta Correta!</h3>
+        <p id="revealedDetails"></p>
+        <div class="audio-buttons-reveal">
+            <button class="btn-audio" onclick="playSecretAudio('en-GB')">🇬🇧🔊 UK Audio</button>
+            <button class="btn-audio" onclick="playSecretAudio('en-US')">🇺🇸🔊 US Audio</button>
+        </div>
+    </div>
+
+    <div class="action-bar">
+        <button class="btn-action" id="nextBtn" onclick="initGame()" style="display:none;">Próxima Forma ➔</button>
+    </div>
+
+    <div id="congratsScreen">
+        <div class="emoji">🎉</div>
+        <h2>Parabéns, você revisou todas as formas verbais.</h2>
+        <button class="btn-action" onclick="initGame()">Próxima Rodada ➔</button>
+    </div>
+
+    <footer>
+        <p>I Learn — Sistema Integrado de Vocabulário Automático.</p>
+    </footer>
+</div>
+
+<script>
+/* =====================================================================
+   BASE DE DADOS BRUTA
+   ---------------------------------------------------------------------
+   Formato:
+     To <verbo> (v) /UK .../ /US .../ -> tradução
+     <Forma> (base)        /UK .../ /US .../
+     <Forma> (third)       /UK .../ /US .../
+     <Forma> (gerund)      /UK .../ /US .../
+     <Forma> (past)        /UK .../ /US .../
+     <Forma> (participle)  /UK .../ /US .../
+
+   Separe cada verbo por UMA LINHA EM BRANCO.
+   Adicione mais verbos livremente abaixo.
+   ===================================================================== */
+const rawTextDatabase = `
+To think (v) /UK tuː θɪŋk/ /US tuː θɪŋk/ -> pensar, achar
+Think (base) /UK θɪŋk/ /US θɪŋk/
+Thinks (third) /UK θɪŋks/ /US θɪŋks/
+Thinking (gerund) /UK ˈθɪŋ.kɪŋ/ /US ˈθɪŋ.kɪŋ/
+Thought (past) /UK θɔːt/ /US θɑːt/
+Thought (participle) /UK θɔːt/ /US θɑːt/
+
+To go (v) /UK tuː ɡəʊ/ /US tuː ɡoʊ/ -> ir
+Go (base) /UK ɡəʊ/ /US ɡoʊ/
+Goes (third) /UK ɡəʊz/ /US ɡoʊz/
+Going (gerund) /UK ˈɡəʊ.ɪŋ/ /US ˈɡoʊ.ɪŋ/
+Went (past) /UK went/ /US went/
+Gone (participle) /UK ɡɒn/ /US ɡɔːn/
+
+To speak (v) /UK tuː spiːk/ /US tuː spiːk/ -> falar
+Speak (base) /UK spiːk/ /US spiːk/
+Speaks (third) /UK spiːks/ /US spiːks/
+Speaking (gerund) /UK ˈspiː.kɪŋ/ /US ˈspiː.kɪŋ/
+Spoke (past) /UK spəʊk/ /US spoʊk/
+Spoken (participle) /UK ˈspəʊ.kən/ /US ˈspoʊ.kən/
+`;
+
+/* =====================================================================
+   ESTADO
+   ===================================================================== */
+let vocabularyDatabase = [];   // todas as formas (urna)
+let allVerbs = [];             // lista de verbos pais
+let secretUrn = [];            // cópia embaralhada para sorteio
+let completedCount = 0;
+let currentSecretItem = null;
+let currentStep = 'idle';      // 'tense' | 'verb' | 'form'
+let isAnswered = false;
+
+/* =====================================================================
+   PARSER
+   ===================================================================== */
+function parseRawDatabase() {
+    const blocks = rawTextDatabase.split(/\n\s*\n/);
+    const verbs = [];
+    const allForms = [];
+
+    blocks.forEach(block => {
+        const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
+        if (lines.length === 0) return;
+
+        // Primeira linha: "To <verbo> (v) ..."
+        const firstLine = lines[0];
+        const firstMatch = firstLine.match(/^(.+?)\s*\(v\)/i);
+        if (!firstMatch) return;
+        const infinitiveText = firstMatch[1].trim();
+
+        // Parseia cada forma
+        const forms = [];
+        lines.forEach(line => {
+            const m = line.match(/^(.+?)\s*\(([^)]+)\)\s*\/UK\s*([^/]+?)\/\s*\/US\s*([^/]+?)\//);
+            if (!m) return;
+            const text    = m[1].trim();
+            const typeRaw = m[2].trim().toLowerCase();
+            const ipaUK   = m[3].trim();
+            const ipaUS   = m[4].trim();
+
+            let type = 'unknown';
+            if (typeRaw === 'v')                 type = 'infinitive';
+            else if (typeRaw.includes('base'))   type = 'base';
+            else if (typeRaw.includes('third'))  type = 'third';
+            else if (typeRaw.includes('gerund')) type = 'gerund';
+            else if (typeRaw.includes('participle')) type = 'participle';
+            else if (typeRaw.includes('past'))   type = 'past';
+
+            forms.push({ text, type, ipaUK, ipaUS, rawLine: line });
+        });
+
+        // Verifica se past === participle (comparação de texto)
+        const pastForm = forms.find(f => f.type === 'past');
+        const partForm = forms.find(f => f.type === 'participle');
+        const hasPastEqPart = !!(pastForm && partForm &&
+            pastForm.text.toLowerCase() === partForm.text.toLowerCase());
+
+        const verb = {
+            infinitive: infinitiveText,
+            forms: forms,
+            hasPastEqPart: hasPastEqPart
+        };
+        verbs.push(verb);
+
+        // Gera entradas da urna
+        let skipPart = hasPastEqPart;
+        forms.forEach(form => {
+            if (skipPart && form.type === 'participle') return; // funde em past_participle
+
+            let displayType = form.type;
+            if (hasPastEqPart && (form.type === 'past' || form.type === 'participle')) {
+                displayType = 'past_participle';
+            }
+
+            allForms.push({
+                text: form.text,
+                type: displayType,
+                ipaUK: form.ipaUK,
+                ipaUS: form.ipaUS,
+                rawLine: form.rawLine,
+                parentVerb: verb,
+                wordToSpeak: form.text
+            });
+        });
+    });
+
+    vocabularyDatabase = allForms;
+    allVerbs = verbs;
+}
+
+/* =====================================================================
+   ÁUDIO
+   ===================================================================== */
+function playSecretAudio(lang, onComplete = null) {
+    if (!currentSecretItem) return;
+    window.speechSynthesis.cancel();
+    const rate = parseFloat(document.getElementById('rateRange').value);
+    const u = new SpeechSynthesisUtterance(currentSecretItem.wordToSpeak);
+    u.lang = lang;
+    u.rate = rate;
+    if (onComplete) u.onend = onComplete;
+    window.speechSynthesis.speak(u);
+}
+
+function updateRateLabel(val) {
+    document.getElementById('rateVal').innerText = val + 'x';
+}
+
+function playSuccessSound() {
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const tone = (f, s, d) => {
+            const o = ctx.createOscillator(); const g = ctx.createGain();
+            o.type = 'triangle';
+            o.frequency.setValueAtTime(f, ctx.currentTime + s);
+            g.gain.setValueAtTime(0.15, ctx.currentTime + s);
+            g.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + s + d);
+            o.connect(g); g.connect(ctx.destination);
+            o.start(ctx.currentTime + s); o.stop(ctx.currentTime + s + d);
+        };
+        tone(523.25, 0, 0.1);
+        tone(659.25, 0.08, 0.15);
+        tone(783.99, 0.16, 0.2);
+    } catch (e) {}
+}
+
+/* =====================================================================
+   UTIL
+   ===================================================================== */
+function shuffle(arr) {
+    let a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+function updateProgressUI() {
+    const total = vocabularyDatabase.length;
+    const pct = total > 0 ? Math.round((completedCount / total) * 100) : 0;
+    document.getElementById('progressText').innerText =
+        `Formas percorridas: ${completedCount} / ${total}`;
+    document.getElementById('progressPercent').innerText = `${pct}%`;
+    document.getElementById('progressBarFill').style.width = `${pct}%`;
+}
+
+function setStatus(msg, color = '#38bdf8') {
+    const el = document.getElementById('statusMsg');
+    el.innerText = msg;
+    el.style.color = color;
+}
+
+function setStepTitle(text) {
+    const el = document.getElementById('stepTitle');
+    el.innerText = text || '';
+    el.style.display = text ? 'block' : 'none';
+}
+
+/* =====================================================================
+   BOTÕES DE TEMPO VERBAL (sempre os mesmos 7)
+   ===================================================================== */
+const TENSE_BUTTONS = [
+    { label: 'infinitive',            type: 'infinitive' },
+    { label: 'base',                  type: 'base' },
+    { label: 'third person singular', type: 'third' },
+    { label: 'gerund',                type: 'gerund' },
+    { label: 'past',                  type: 'past' },
+    { label: 'participle',            type: 'participle' },
+    { label: 'participle = past',     type: 'past_participle' }
+];
+
+/* =====================================================================
+   INÍCIO DE RODADA
+   ===================================================================== */
+function initGame() {
+    if (vocabularyDatabase.length === 0) {
+        setStatus('Nenhuma palavra encontrada na área de texto.');
+        return;
+    }
+
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    document.getElementById('congratsScreen').style.display = 'none';
+    document.getElementById('revealBox').style.display = 'none';
+    document.getElementById('nextBtn').style.display = 'none';
+    document.getElementById('tenseContainer').style.display = 'none';
+    document.getElementById('verbContainer').style.display = 'none';
+    document.getElementById('formContainer').style.display = 'none';
+
+    if (secretUrn.length === 0) {
+        secretUrn = [...vocabularyDatabase];
+        completedCount = 0;
+    }
+
+    isAnswered = false;
+    currentStep = 'tense';
+
+    const idx = Math.floor(Math.random() * secretUrn.length);
+    currentSecretItem = secretUrn.splice(idx, 1)[0];
+    completedCount++;
+    updateProgressUI();
+
+    setStepTitle('Etapa 1 de 3 — Tempo verbal');
+    setStatus('🎧 Ouça o áudio e escolha o TEMPO VERBAL correto.');
+    renderTenseOptions();
+
+    setTimeout(() => playSecretAudio('en-US'), 300);
+}
+
+/* =====================================================================
+   ETAPA 1 — TEMPO VERBAL
+   ===================================================================== */
+function renderTenseOptions() {
+    const c = document.getElementById('tenseContainer');
+    c.innerHTML = '';
+    c.style.display = 'flex';
+    TENSE_BUTTONS.forEach(opt => {
+        const b = document.createElement('button');
+        b.className = 'option-btn';
+        b.innerText = opt.label;
+        b.onclick = () => checkTense(opt, b);
+        c.appendChild(b);
+    });
+}
+
+function checkTense(opt, btn) {
+    if (isAnswered || currentStep !== 'tense') return;
+    if (opt.type === currentSecretItem.type) {
+        btn.classList.add('correct');
+        playSuccessSound();
+        setStatus('✅ Tempo verbal correto! Agora escolha o verbo.', '#22c55e');
+        document.querySelectorAll('#tenseContainer .option-btn').forEach(b => b.disabled = true);
+
+        setTimeout(() => {
+            currentStep = 'verb';
+            setStepTitle('Etapa 2 de 3 — Qual verbo?');
+            setStatus('🎯 A qual VERBO pertence essa forma?');
+            renderVerbOptions();
+        }, 650);
+    } else {
+        btn.classList.add('wrong');
+        setTimeout(() => btn.classList.remove('wrong'), 400);
+    }
+}
+
+/* =====================================================================
+   ETAPA 2 — ESCOLHER O VERBO
+   ===================================================================== */
+function renderVerbOptions() {
+    const c = document.getElementById('verbContainer');
+    c.innerHTML = '';
+    c.style.display = 'flex';
+
+    const correctVerb = currentSecretItem.parentVerb;
+    const others = allVerbs.filter(v => v !== correctVerb);
+    const picked = shuffle(others).slice(0, 2);
+    const options = shuffle([correctVerb, ...picked]);
+
+    options.forEach(v => {
+        const b = document.createElement('button');
+        b.className = 'option-btn';
+        b.innerText = v.infinitive;
+        b.onclick = () => checkVerb(v, b);
+        c.appendChild(b);
+    });
+
+    c.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function checkVerb(verb, btn) {
+    if (isAnswered || currentStep !== 'verb') return;
+    if (verb === currentSecretItem.parentVerb) {
+        btn.classList.add('correct');
+        playSuccessSound();
+        setStatus('✅ Verbo correto! Agora escolha a FORMA exata.', '#22c55e');
+        document.querySelectorAll('#verbContainer .option-btn').forEach(b => b.disabled = true);
+
+        setTimeout(() => {
+            currentStep = 'form';
+            setStepTitle('Etapa 3 de 3 — Forma exata');
+            setStatus('🔥 Clique na FORMA que você ouviu no áudio.');
+            renderFormOptions();
+        }, 650);
+    } else {
+        btn.classList.add('wrong');
+        setTimeout(() => btn.classList.remove('wrong'), 400);
+    }
+}
+
+/* =====================================================================
+   ETAPA 3 — ESCOLHER A FORMA EXATA (leque)
+   ===================================================================== */
+function renderFormOptions() {
+    const c = document.getElementById('formContainer');
+    c.innerHTML = '';
+    c.style.display = 'flex';
+
+    const verb = currentSecretItem.parentVerb;
+    const seen = new Set();
+    const unique = [];
+
+    // Deduplica formas (ex.: Thought past / participle viram um único botão)
+    verb.forms.forEach(f => {
+        const k = f.text.toLowerCase();
+        if (!seen.has(k)) {
+            seen.add(k);
+            unique.push(f);
+        }
+    });
+
+    unique.forEach(f => {
+        const b = document.createElement('button');
+        b.className = 'option-btn';
+        b.innerText = f.text;
+        b.onclick = () => checkForm(f, b);
+        c.appendChild(b);
+    });
+
+    c.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function checkForm(form, btn) {
+    if (isAnswered || currentStep !== 'form') return;
+    if (form.text.toLowerCase() === currentSecretItem.text.toLowerCase()) {
+        isAnswered = true;
+        btn.classList.add('correct');
+        playSuccessSound();
+        document.querySelectorAll('#formContainer .option-btn').forEach(b => b.disabled = true);
+
+        setStatus('🎉 Excelente! Resposta correta.', '#22c55e');
+        document.getElementById('revealedDetails').innerText = currentSecretItem.rawLine;
+        document.getElementById('revealBox').style.display = 'block';
+        document.getElementById('nextBtn').style.display = 'inline-block';
+        setStepTitle('');
+
+        // Auto-scroll para revelar detalhes + botões UK/US
+        document.getElementById('revealBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // Áudio US automático (e congela se completou todas)
+        setTimeout(() => {
+            if (completedCount >= vocabularyDatabase.length) {
+                playSecretAudio('en-US', () => {
+                    setTimeout(() => {
+                        document.getElementById('congratsScreen').style.display = 'flex';
+                    }, 10);
+                });
+            } else {
+                playSecretAudio('en-US');
+            }
+        }, 250);
+    } else {
+        btn.classList.add('wrong');
+        setTimeout(() => btn.classList.remove('wrong'), 400);
+    }
+}
+
+/* =====================================================================
+   INICIALIZA
+   ===================================================================== */
+window.onload = () => {
+    parseRawDatabase();
+    secretUrn = [...vocabularyDatabase];
+    updateProgressUI();
+    initGame();
+};
+</script>
+
+<!-- Controle de velocidade salva -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const v = localStorage.getItem('minhaVelocidadeVoz');
+    const r = document.getElementById("rateRange");
+    const l = document.getElementById("rateVal");
+    if (v && r && l) {
+        r.value = v;
+        l.textContent = v + 'x';
+        if (typeof updateRateLabel === 'function') updateRateLabel(v);
+    }
+});
+</script>
+
+<!-- Bandeiras -->
+<script src="https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
+<script src="emoji-fix.js"></script>
+
+</body>
+</html>
