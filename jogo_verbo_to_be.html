@@ -655,7 +655,7 @@ Been (particípio) /UK biːn/ /US bɪn/
                     const gain = audioCtx.createGain();
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
-                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime + startTime);
+                    gain.gain.setValueAtTime(0.05, audioCtx.currentTime + startTime);
                     gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + startTime + duration);
                     osc.connect(gain);
                     gain.connect(audioCtx.destination);
