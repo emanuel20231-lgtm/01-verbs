@@ -610,7 +610,7 @@
 			Gets (third) /UK ɡets/ /US ɡets/
 			Getting (gerund) /UK ˈɡet.ɪŋ/ /US ˈɡet̬.ɪŋ/
 			Got (past) /UK ɡɒt/ /US ɡɑːt/
-			Got / Gotten (participle) /UK ɡɒt/ /US ˈɡɑː.tən/
+			Gotten (participle)  /US ˈɡɑː.tən/
 			
 			To look (v) /UK tuː lʊk/ /US tuː lʊk/ -> olhar, parecer
 			Look (base) /UK lʊk/ /US lʊk/
@@ -1285,7 +1285,7 @@
                     const gain = audioCtx.createGain();
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
-                    gain.gain.setValueAtTime(0.6, audioCtx.currentTime + startTime);
+                    gain.gain.setValueAtTime(0.05, audioCtx.currentTime + startTime);
                     gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + startTime + duration);
                     osc.connect(gain);
                     gain.connect(audioCtx.destination);
