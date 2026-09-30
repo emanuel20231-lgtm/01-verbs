@@ -12,14 +12,20 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
+        /* ==================================================== */
+        /* FIX 1: align-items: flex-start (era center) —         */
+        /* evita que o topo seja cortado quando o conteúdo       */
+        /* excede a altura da tela no mobile                     */
+        /* ==================================================== */
         body {
             background-color: #0f172a;
             color: #f1f5f9;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
-            padding: 15px;
+            padding: 15px 15px 40px 15px;
+            overflow-x: hidden;
         }
 
         .container {
@@ -30,6 +36,7 @@
             border-radius: 12px;
             padding: 24px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            margin-top: 0;
         }
 
         header {
@@ -148,6 +155,7 @@
             display: flex;
             gap: 10px;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         .btn-audio {
@@ -214,6 +222,9 @@
             color: #fca5a5 !important;
         }
 
+        /* ==================================================== */
+        /* FIX 2: Reveal box simplificado e com margin-bottom    */
+        /* ==================================================== */
         .reveal-box {
             background-color: #0f172a;
             border: 2px solid #22c55e;
@@ -221,21 +232,38 @@
             padding: 20px;
             text-align: center;
             display: none;
-            margin-bottom: 0px;
+            margin-bottom: 20px;
             box-shadow: 0 0 15px rgba(34, 197, 94, 0.15);
         }
 
         .reveal-box h3 {
             color: #22c55e;
             font-size: 1.05rem;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
-        .reveal-box p {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #f8fafc;
-            line-height: 1.5;
+        .reveal-box .reveal-word {
+            display: block;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #99f4d6;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .reveal-box .reveal-ipa {
+            display: block;
+            font-size: 0.95rem;
+            color: #94a3b8;
+            margin-bottom: 4px;
+            font-family: "Lucida Sans Unicode", "DejaVu Sans", "Segoe UI Symbol", sans-serif;
+        }
+
+        .reveal-box .reveal-context {
+            display: block;
+            font-size: 0.9rem;
+            color: #99f4d6;
+            margin-top: 10px;
             margin-bottom: 15px;
         }
 
@@ -243,6 +271,7 @@
             display: flex;
             gap: 10px;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         .action-bar {
@@ -305,6 +334,26 @@
             font-size: 0.75rem;
             color: #94a3b8;
         }
+
+        /* Ajustes finos para celular */
+        @media (max-width: 500px) {
+            .container {
+                padding: 16px;
+            }
+            .audio-box .prompt-label {
+                font-size: 1.2rem;
+            }
+            .audio-box .prompt-word {
+                font-size: 1.6rem;
+            }
+            .reveal-box .reveal-word {
+                font-size: 1.6rem;
+            }
+            .option-btn {
+                font-size: 1rem;
+                padding: 12px 14px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -349,7 +398,10 @@
 
         <div class="reveal-box" id="revealBox">
             <h3>🎉 Resposta Correta!</h3>
-            <p id="revealedDetails"></p>
+            <span class="reveal-word" id="revealWord"></span>
+            <span class="reveal-ipa" id="revealIpaUK"></span>
+            <span class="reveal-ipa" id="revealIpaUS"></span>
+            <span class="reveal-context" id="revealContext"></span>
             <div class="audio-buttons-reveal">
                 <button class="btn-audio" onclick="playRevealAudio('en-GB')">🇬🇧🔊 UK Audio</button>
                 <button class="btn-audio" onclick="playRevealAudio('en-US')">🇺🇸🔊 US Audio</button>
@@ -519,7 +571,7 @@ Ride (base) /UK raɪd/ /US raɪd/
 Rides (third) /UK raɪdz/ /US raɪdz/
 Riding (gerund) /UK ˈraɪ.dɪŋ/ /US ˈraɪ.d̬ɪŋ/
 Rode (past) /UK rəʊd/ /US roʊd/
-Ridden (participle) /UK ˈrɪd.ən/ /US ˈrɪd.ən/
+Rridden (participle) /UK ˈrɪd.ən/ /US ˈrɪd.ən/
 
 To do (v) /UK tuː duː/ /US tuː duː/ -> fazer, realizar
 Do (base) /UK duː/ /US duː/
@@ -735,7 +787,7 @@ To hate (v) /UK tuː heɪt/ /US tuː heɪt/ -> odiar, detestar
 Hate (base) /UK heɪt/ /US heɪt/
 Hates (third) /UK heɪts/ /US heɪts/
 Hating (gerund) /UK ˈheɪ.tɪŋ/ /US ˈheɪ.t̬ɪŋ/
-Hated (past / participle) /UK ˈheɪ.tɪd/ /US ˈheɪ.t̬ɪd
+Hated (past / participle) /UK ˈheɪ.tɪd/ /US ˈheɪ.t̬ɪd/
 
 To strike (v) /UK tuː straɪk/ /US tuː straɪk/ -> golpear, atingir, fazer greve
 Strike (base) /UK straɪk/ /US straɪk/
@@ -1109,10 +1161,22 @@ Dressed (participle) /UK drest/ /US drest/
         let currentSecretItem = null;
         let isAnswered = false;
 
-        // ============================================
-        // FIX 1: Ordem de parsing corrigida.
-        // Caso "past / participle" primeiro, depois participle, depois past.
-        // ============================================
+        // ====================================================
+        // Função utilitária para extrair IPA (UK e US) de uma linha.
+        // Aceita /UK .../ e /US .../ ou /US ... (sem fechar /, até fim da linha)
+        // ====================================================
+        function extractIPA(text) {
+            let ukMatch = text.match(/\/UK\s+([^\/]+?)(?:\/|$)/);
+            let usMatch = text.match(/\/US\s+([^\/]+?)(?:\/|$)/);
+            return {
+                uk: ukMatch ? ukMatch[1].trim() : '',
+                us: usMatch ? usMatch[1].trim() : ''
+            };
+        }
+
+        // ====================================================
+        // Parsing: extrai cada forma com seu IPA
+        // ====================================================
         function parseRawDatabase() {
             const lines = rawTextDatabase.split('\n');
             let currentVerb = null;
@@ -1124,31 +1188,48 @@ Dressed (participle) /UK drest/ /US drest/
                 if (trimmed.startsWith('To ')) {
                     if (currentVerb) vocabularyDatabase.push(currentVerb);
                     let cleanInf = trimmed.split('/')[0].split('->')[0].split('(')[0].trim();
-                    currentVerb = { infinitive: cleanInf, base: '', third: '', gerund: '', past: '', participle: '' };
+                    currentVerb = {
+                        infinitive: cleanInf,
+                        infinitiveIPA: extractIPA(trimmed),
+                        base: null, baseIPA: { uk: '', us: '' },
+                        third: null, thirdIPA: { uk: '', us: '' },
+                        gerund: null, gerundIPA: { uk: '', us: '' },
+                        past: null, pastIPA: { uk: '', us: '' },
+                        participle: null, participleIPA: { uk: '', us: '' }
+                    };
                 } else if (currentVerb) {
                     let cleanWord = trimmed.split('/')[0].split('(')[0].trim();
                     let labelMatch = trimmed.match(/\(([^)]+)\)/);
                     let label = labelMatch ? labelMatch[1].toLowerCase() : '';
+                    let ipa = extractIPA(trimmed);
 
+                    // Ordem importa: primeiro "past / participle"
                     if (label.includes('past / participle') || label.includes('passado / particípio')) {
                         currentVerb.past = cleanWord;
+                        currentVerb.pastIPA = ipa;
                         currentVerb.participle = cleanWord;
+                        currentVerb.participleIPA = ipa;
                     } else if (label.includes('participle') || label.includes('particípio')) {
                         currentVerb.participle = cleanWord;
+                        currentVerb.participleIPA = ipa;
                     } else if (label.includes('past') || label.includes('passado')) {
                         currentVerb.past = cleanWord;
+                        currentVerb.pastIPA = ipa;
                     } else if (label.includes('base')) {
                         currentVerb.base = cleanWord;
+                        currentVerb.baseIPA = ipa;
                     } else if (label.includes('third') || label.includes('3ª p')) {
                         currentVerb.third = cleanWord;
+                        currentVerb.thirdIPA = ipa;
                     } else if (label.includes('gerund') || label.includes('gerúndio')) {
                         currentVerb.gerund = cleanWord;
+                        currentVerb.gerundIPA = ipa;
                     }
                 }
             });
             if (currentVerb) vocabularyDatabase.push(currentVerb);
 
-            // Validação: preenche o que faltar
+            // Fallback
             vocabularyDatabase.forEach(v => {
                 if (!v.base) v.base = v.infinitive.replace('To ', '').trim();
                 if (!v.third) v.third = v.base + 's';
@@ -1170,7 +1251,7 @@ Dressed (participle) /UK drest/ /US drest/
                     const gain = audioCtx.createGain();
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
-                    gain.gain.setValueAtTime(0.03, audioCtx.currentTime + startTime);
+                    gain.gain.setValueAtTime(0.05, audioCtx.currentTime + startTime);
                     gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + startTime + duration);
                     osc.connect(gain);
                     gain.connect(audioCtx.destination);
@@ -1217,15 +1298,21 @@ Dressed (participle) /UK drest/ /US drest/
             return arr;
         }
 
-        // ============================================
-        // FIX 2: Sempre 2 entradas por verbo (past + participle),
-        // mesmo quando iguais. Assim cada verbo é visto 2x.
-        // ============================================
         function generateUrn() {
             verbUrn = [];
             vocabularyDatabase.forEach(v => {
-                verbUrn.push({ verb: v, targetType: 'past', answer: v.past });
-                verbUrn.push({ verb: v, targetType: 'participle', answer: v.participle });
+                verbUrn.push({
+                    verb: v,
+                    targetType: 'past',
+                    answer: v.past,
+                    answerIPA: v.pastIPA
+                });
+                verbUrn.push({
+                    verb: v,
+                    targetType: 'participle',
+                    answer: v.participle,
+                    answerIPA: v.participleIPA
+                });
             });
             verbUrn = shuffle(verbUrn);
             totalRounds = verbUrn.length;
@@ -1255,14 +1342,13 @@ Dressed (participle) /UK drest/ /US drest/
             completedCount++;
             updateProgressUI();
 
-            // Atualiza o prompt
             document.getElementById('promptLabel').innerText = currentSecretItem.targetType === 'past' ? 'PAST OF:' : 'PARTICIPLE OF:';
             document.getElementById('questionText').innerText = currentSecretItem.verb.infinitive;
 
-            // ============================================
-            // FIX 3: A forma oposta é SEMPRE incluída como distrator
-            // quando for diferente da resposta correta.
-            // ============================================
+            // ====================================================
+            // Distratores: sempre inclui a forma oposta (past/participle)
+            // quando for diferente da resposta correta, mais base, third, gerund.
+            // ====================================================
             let v = currentSecretItem.verb;
             let otherForm = null;
             if (currentSecretItem.targetType === 'past' && v.participle && v.participle !== currentSecretItem.answer) {
@@ -1271,7 +1357,6 @@ Dressed (participle) /UK drest/ /US drest/
                 otherForm = v.past;
             }
 
-            // Pool de distratores: base, third, gerund
             let distractorPool = [];
             if (v.base && v.base !== currentSecretItem.answer && v.base !== otherForm) distractorPool.push(v.base);
             if (v.third && v.third !== currentSecretItem.answer && v.third !== otherForm) distractorPool.push(v.third);
@@ -1280,15 +1365,16 @@ Dressed (participle) /UK drest/ /US drest/
             distractorPool = [...new Set(distractorPool)];
             distractorPool = shuffle(distractorPool);
 
-            // Quantos precisamos do pool: 3 sem otherForm, 2 com otherForm
             let needed = otherForm ? 2 : 3;
             let chosen = distractorPool.slice(0, needed);
 
             let options = [currentSecretItem.answer, ...chosen];
             if (otherForm) options.push(otherForm);
 
-            // Fallback: preencher com formas de outros verbos se necessário
-            while (options.length < 4) {
+            // Fallback: se não tiver opções suficientes, busca de outros verbos
+            let safety = 0;
+            while (options.length < 4 && safety < 100) {
+                safety++;
                 let randVerb = vocabularyDatabase[Math.floor(Math.random() * vocabularyDatabase.length)];
                 let candidates = [randVerb.base, randVerb.third, randVerb.gerund, randVerb.past, randVerb.participle].filter(Boolean);
                 let randForm = candidates[Math.floor(Math.random() * candidates.length)];
@@ -1310,7 +1396,6 @@ Dressed (participle) /UK drest/ /US drest/
                 optionsContainer.appendChild(btn);
             });
 
-            // Áudio automático do infinitivo
             setTimeout(() => {
                 playSecretAudio('en-US');
             }, 300);
@@ -1330,18 +1415,33 @@ Dressed (participle) /UK drest/ /US drest/
                 document.getElementById('statusMsg').style.color = "#22c55e";
                 document.getElementById('statusMsg').innerText = "✨ Excelente! Resposta correta.";
 
-                let revealText = `<strong>${currentSecretItem.verb.infinitive}</strong> (v)<br>`;
-                revealText += `<span style="color: #94a3b8;">Base:</span> ${currentSecretItem.verb.base}<br>`;
-                revealText += `<span style="color: #94a3b8;">Third:</span> ${currentSecretItem.verb.third}<br>`;
-                revealText += `<span style="color: #94a3b8;">Gerund:</span> ${currentSecretItem.verb.gerund}<br>`;
-                revealText += `<span style="color: #94a3b8;">Past:</span> ${currentSecretItem.verb.past}<br>`;
-                revealText += `<span style="color: #94a3b8;">Participle:</span> ${currentSecretItem.verb.participle}`;
+                // ====================================================
+                // FIX 3: Reveal enxuto — apenas a resposta escolhida,
+                // seu IPA (UK/US) e um contexto curto.
+                // ====================================================
+                document.getElementById('revealWord').innerText = currentSecretItem.answer;
 
-                document.getElementById('revealedDetails').innerHTML = revealText;
+                let ipaUK = currentSecretItem.answerIPA && currentSecretItem.answerIPA.uk ? currentSecretItem.answerIPA.uk : '—';
+                let ipaUS = currentSecretItem.answerIPA && currentSecretItem.answerIPA.us ? currentSecretItem.answerIPA.us : '—';
+                document.getElementById('revealIpaUK').innerText = `UK: /${ipaUK}/`;
+                document.getElementById('revealIpaUS').innerText = `US: /${ipaUS}/`;
+
+                let contextLabel = currentSecretItem.targetType === 'past' ? 'Past' : 'Participle';
+                document.getElementById('revealContext').innerHTML = `${contextLabel} of <em>${currentSecretItem.verb.infinitive}</em>`;
+
                 document.getElementById('revealBox').style.display = 'block';
                 document.getElementById('nextBtn').style.display = 'inline-block';
 
-                document.getElementById('revealBox').scrollIntoView({ behavior: 'auto', block: 'center' });
+                // ====================================================
+                // FIX 4: Scroll suave e confiável para o reveal.
+                // Usa setTimeout para garantir que o DOM já renderizou.
+                // ====================================================
+                setTimeout(() => {
+                    document.getElementById('revealBox').scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }, 100);
 
                 setTimeout(() => {
                     if (completedCount >= totalRounds) {
