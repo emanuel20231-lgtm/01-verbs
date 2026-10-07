@@ -797,7 +797,7 @@ Times (noun plur) /UK taɪmz/ /US taɪmz/ -> tempos, vezes, horas
                     const gain = audioCtx.createGain();
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
-                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime + startTime);
+                    gain.gain.setValueAtTime(0.02, audioCtx.currentTime + startTime);
                     gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + startTime + duration);
                     osc.connect(gain);
                     gain.connect(audioCtx.destination);
