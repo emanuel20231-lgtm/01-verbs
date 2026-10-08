@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Learn — Verb Audio Training</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: #99f4d6;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        /* Barra de Progresso */
+        .progress-container {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #99f4d6;
+            margin-bottom: 6px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 20px;
+            background-color: #334155;
+            border-radius: 7px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #38bdf8;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Controles de Velocidade */
+        .controls-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            background-color: #0f172a;
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .controls label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #cbd5e1;
+        }
+
+        .controls input[type="range"] {
+            cursor: pointer;
+            width: 90px;
+        }
+
+        .rate-value {
+            font-weight: 700;
+            color: #38bdf8;
+            min-width: 30px;
+            font-size: 0.8rem;
+        }
+
+        /* Caixa de Áudio (Pergunta) */
+        .audio-box {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .audio-box p {
+            font-size: 1.1rem;
+            color: #99f4d6;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .audio-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-audio {
+            background-color: #1e293b;
+            color: #ffffff;
+            border: 1px solid #475569;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-audio:hover {
+            background-color: #334155;
+            border-color: #38bdf8;
+        }
+
+        .status-msg {
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #38bdf8;
+            margin-bottom: 20px;
+            min-height: 24px;
+        }
+
+        /* Opções (3 Palavras) */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background-color: #0f172a;
+            color: #f8fafc;
+            border: 1px solid #475569;
+            padding: 14px 16px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #334155;
+            border-color: #38bdf8;
+        }
+
+        .option-btn.correct {
+            background-color: #064e3b !important;
+            border-color: #22c55e !important;
+            color: #22c55e !important;
+        }
+
+        .option-btn.wrong {
+            background-color: #7f1d1d !important;
+            border-color: #ef4444 !important;
+            color: #fca5a5 !important;
+        }
+
+        /* Caixa de Revelação (Verde) */
+        .reveal-box {
+            background-color: #0f172a;
+            border: 2px solid #22c55e;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            display: none;
+            margin-bottom: 0px;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.15);
+        }
+
+        .reveal-box h3 {
+            color: #22c55e;
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+        }
+
+        .reveal-box p {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #f8fafc;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .audio-buttons-reveal {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-action {
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-action:hover {
+            background-color: #0369a1;
+        }
+
+        /* Tela de Parabéns */
+        #congratsScreen {
+            position: fixed;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+        #congratsScreen .emoji {
+            font-size: 5rem;
+            margin-bottom: 15px;
+            animation: bounce 1s infinite alternate;
+        }
+        #congratsScreen h2 {
+            color: #99f4d6;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            max-width: 600px;
+        }
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-15px); }
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>I Learn- jogo_audio_palavras01</h1>
+            <p class="subtitle">Ouça o áudio, identifique a forma verbal correta e treine seu vocabulário</p>
+
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span id="progressText">Formas percorridas: 0 / 0</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                </div>
+            </div>
+
+            <div class="controls-wrapper">
+                <div class="controls">
+                    <label for="rateRange">Velocidade:</label>
+                    <input type="range" id="rateRange" min="0.25" max="1.5" step="0.05" value="0.7" oninput="updateRateLabel(this.value)">
+                    <span id="rateVal" class="rate-value">0.7x</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="audio-box">
+            <p>Clique abaixo para ouvir a forma verbal selecionada ocultamente:</p>
+            <div class="audio-buttons">
+                <button class="btn-audio" onclick="playSecretAudio('en-GB')">🇬🇧🔊 UK Audio</button>
+                <button class="btn-audio" onclick="playSecretAudio('en-US')">🇺🇸🔊 US Audio</button>
+            </div>
+        </div>
+
+        <div class="status-msg" id="statusMsg">Pronto para iniciar!</div>
+
+        <div class="options-container" id="optionsContainer">
+            <!-- 3 Botões de Opção injetados via JavaScript -->
+        </div>
+
+        <div class="reveal-box" id="revealBox">
+            <h3>🎉 Resposta Correta!</h3>
+            <p id="revealedDetails"></p>
+            <div class="audio-buttons-reveal">
+                <button class="btn-audio" onclick="playSecretAudio('en-GB')">🇬🇧🔊 UK Audio</button>
+                <button class="btn-audio" onclick="playSecretAudio('en-US')">🇺🇸🔊 US Audio</button>
+            </div>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn-action" id="nextBtn" onclick="initGame()" style="display:none;">Próxima Forma ➔</button>
+        </div>
+
+        <div id="congratsScreen">
+            <div class="emoji">🎉</div>
+            <h2>Parabéns, você revisou todas as palavras.</h2>
+            <button class="btn-action" onclick="initGame()">Próxima Rodada ➔</button>
+        </div>
+
+        <footer>
+            <p>I Learn — Sistema Integrado de Vocabulário Automático.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Cole suas linhas de palavras brutas aqui embaixo:
+        const rawTextDatabase = `
+Alone (adj) /UK əˈləʊn/ /US əˈloʊn/ -> sozinho, solitário
+
+Always (adv) /UK ˈɔːl.weɪz/ /US ˈɑːl.weɪz/ -> sempre
+
+Care (noun) /UK keər/ /US ker/ -> cuidado, atenção
+Cares (noun plur) /UK keəz/ /US kerz/ -> cuidados, atenções
+
+Centre (noun) /UK ˈsen.tər/ /US ˈsen.tɚ/ -> centro
+Centres (noun plur) /UK ˈsen.təz/ /US ˈsen.tɚz/ -> centros
+
+City (noun) /UK ˈsɪt.i/ /US ˈsɪt̬.i/ -> cidade (grande e importante), o centro da cidade
+Cities (noun plur) /UK ˈsɪt.iz/ /US ˈsɪt̬.iz/ -> cidades
+
+Every (determiner) /UK ˈev.ri/ /US ˈev.ri/ -> cada, cada um, cada uma
+
+Far (adj) /UK fɑːr/ /US fɑːr/ -> distante, longe
+Farther / Further (comp) /UK ˈfɑː.ðər / ˈfɜː.ðər/ /US ˈfɑːr.ðɚ / ˈfɝː.ðɚ/ -> mais distante
+Farthest / Furthest (super) /UK ˈfɑː.ðɪst / ˈfɜː.ðɪst/ /US ˈfɑːr.ðɪst / ˈfɝː.ðɪst/ -> o mais distante
+
+From (prep) /UK frɒm/ /US frɑːm/ -> de
+
+Housewife (noun) /UK ˈhaʊs.waɪf/ /US ˈhaʊs.waɪf/ -> dona de casa
+Housewives (noun plur) /UK ˈhaʊs.waɪvz/ /US ˈhaʊs.waɪvz/ -> donas de casa
+
+How far? (phrase) /UK haʊ fɑːr/ /US haʊ fɑːr/ -> a que distância?
+
+Mile (noun) /UK maɪl/ /US maɪl/ -> milha (= 1,6 km)
+Miles (noun plur) /UK maɪlz/ /US maɪlz/ -> milhas
+
+Neighborhood (noun) /UK ˈneɪ.bə.hʊd/ /US ˈneɪ.bɚ.hʊd/ -> vizinhança, cercanias
+Neighborhoods (noun plur) /UK ˈneɪ.bə.hʊdz/ /US ˈneɪ.bɚ.hʊdz/ -> vizinhanças
+
+Over there (adv) /UK ˈəʊ.vər ðeər/ /US ˈoʊ.vɚ ðer/ -> lá, lá em cima
+
+Restaurant (noun) /UK ˈres.trɒnt/ /US ˈres.tə.rɑːnt/ -> restaurante
+Restaurants (noun plur) /UK ˈres.trɒnts/ /US ˈres.tə.rɑːnts/ -> restaurantes
+
+Shop (noun) /UK ʃɒp/ /US ʃɑːp/ -> loja, estabelecimento comercial
+Shops (noun plur) /UK ʃɒps/ /US ʃɑːps/ -> lojas, estabelecimentos comerciais
+
+Shopping centre (noun) /UK ˈʃɒp.ɪŋ ˌsen.tər/ /US ˈʃɑː.pɪŋ ˌsen.tɚ/ -> centro comercial
+Shopping centres (noun plur) /UK ˈʃɒp.ɪŋ ˌsen.təz/ /US ˈʃɑː.pɪŋ ˌsen.tɚz/ -> centros comerciais
+
+Someone (pronoun) /UK ˈsʌm.wʌn/ /US ˈsʌm.wʌn/ -> alguém
+
+Sometimes (adv) /UK ˈsʌm.taɪmz/ /US ˈsʌm.taɪmz/ -> às vezes, de vez em quando
+
+Station wagon (noun) /UK ˈsteɪ.ʃən ˌwæɡ.ən/ /US ˈsteɪ.ʃən ˌwæɡ.ən/ -> automóvel do tipo utilitário, perua
+Station wagons (noun plur) /UK ˈsteɪ.ʃən ˌwæɡ.ənz/ /US ˈsteɪ.ʃən ˌwæɡ.ənz/ -> automóveis do tipo utilitário, peruas
+
+Suburb (noun) /UK ˈsʌb.ɜːb/ /US ˈsʌb.ɝːb/ -> subúrbio, periferia
+Suburbs (noun plur) /UK ˈsʌb.ɜːbz/ /US ˈsʌb.ɝːbz/ -> subúrbios, periferia
+
+Train (noun) /UK treɪn/ /US treɪn/ -> trem
+Trains (noun plur) /UK treɪnz/ /US treɪnz/ -> trens
+
+Usually (adv) /UK ˈjuː.ʒu.ə.li/ /US ˈjuː.ʒu.ə.li/ -> com frequência, usualmente
+Worse (comp) /UK wɜːs/ /US wɝːs/ -> pior
+
+Bad (adj) /UK bæd/ /US bæd/ -> mau, ruim
+Worst (super) /UK wɜːst/ /US wɝːst/ -> o pior
+
+Carefully (adv) /UK ˈkeə.fəl.i/ /US ˈker.fəl.i/ -> cuidadosamente, com cuidado
+
+Careful (adj) /UK ˈkeə.fəl/ /US ˈker.fəl/ -> cuidadoso, atento
+More careful (comp) /UK mɔː ˈkeə.fəl/ /US mɔːr ˈker.fəl/ -> mais cuidadoso
+Most careful (super) /UK məʊst ˈkeə.fəl/ /US moʊst ˈker.fəl/ -> o mais cuidadoso
+
+Appliance (noun) /UK əˈplaɪ.əns/ /US əˈplaɪ.əns/ -> instrumento, aparelho, dispositivo, acessórios, aviamentos
+
+Aspirin (noun) /UK ˈæs.prɪn/ /US ˈæs.prɪn/ -> aspirina
+
+Bookshop (noun) /UK ˈbʊk.ʃɒp/ /US ˈbʊk.ʃɑːp/ -> livraria, ponto de venda de livros
+
+Chemist (noun) /UK ˈkem.ɪst/ /US ˈkem.ɪst/ -> químico, farmacêutico
+
+Chemist's (shop) (noun) /UK ˈkem.ɪsts ʃɒp/ /US ˈkem.ɪsts ʃɑːp/ -> farmácia
+
+Clothes (noun plur) /UK kləʊðz/ /US kloʊðz/ -> roupas, vestidos, peças de vestuário
+
+Clothing shop (noun) /UK ˈkləʊ.ðɪŋ ʃɒp/ /US ˈkloʊ.ðɪŋ ʃɑːp/ -> loja de roupas
+
+Dishwasher / Dishwashing-machine (noun) /UK ˈdɪʃˌwɒʃ.ər/ /US ˈdɪʃˌwɑː.ʃɚ/ -> máquina de lavar pratos
+
+Dryer (noun) /UK ˈdraɪ.ər/ /US ˈdraɪ.ɚ/ -> secadora de roupa
+
+Electric (adj) /UK ɪˈlek.trɪk/ /US iːˈlek.trɪk/ -> elétrico, movido a eletricidade
+
+Electrical (adj) /UK ɪˈlek.trɪ.kəl/ /US iːˈlek.trɪ.kəl/ -> elétrico (referente à eletricidade)
+
+Garage (noun) /UK ˈɡær.ɑːʒ/ /US ɡəˈrɑːʒ/ -> garagem, estacionamento, oficina mecânica
+
+Garden (noun) /UK ˈɡɑː.dən/ /US ˈɡɑːr.dən/ -> jardim
+
+Hammer (noun) /UK ˈhæm.ər/ /US ˈhæm.ɚ/ -> martelo
+
+Hardware (noun) /UK ˈhɑːd.weər/ /US ˈhɑːrd.wer/ -> ferramental
+
+Iron (noun) /UK aɪən/ /US aɪərn/ -> ferro, ferro de passar
+
+Iron (adj) /UK aɪən/ /US aɪərn/ -> de ferro
+
+Machine (noun) /UK məˈʃiːn/ /US məˈʃiːn/ -> máquina, mecatrónica, maquinaria
+
+Medicine (noun) /UK ˈmed.sən/ /US ˈmed.ɪ.sən/ -> remédio, medicina (ciência)
+
+Nail (noun) /UK neɪl/ /US neɪl/ -> prego, unha
+
+One (pronoun) /UK wʌn/ /US wʌn/ -> um, uma
+
+Rake (noun) /UK reɪk/ /US reɪk/ -> ancinho
+
+Saw (noun) /UK sɔː/ /US sɑː/ -> serrote
+
+Screw (noun) /UK skruː/ /US skruː/ -> parafuso
+
+Screwdriver (noun) /UK ˈskruːˌdraɪ.vər/ /US ˈskruːˌdraɪ.vɚ/ -> chave de fenda
+
+Several (determiner / pronoun) /UK ˈsev.ər.əl/ /US ˈsev.ɚ.əl/ -> vários, diversos
+
+Shelf (noun) /UK ʃelf/ /US ʃelf/ -> patamar, prateleira, estante
+Shelves (noun plur irregular) /UK ʃelvz/ /US ʃelvz/ -> patamares, prateleiras, estantes
+
+Spice (noun) /UK spaɪs/ /US spaɪs/ -> tempero
+Thing (noun) /UK θɪŋ/ /US θɪŋ/ -> coisa, objeto material, objetos pessoais
+Tool (noun) /UK tuːl/ /US tuːl/ -> ferramenta, utensílio
+Vacuum cleaner (noun) /UK ˈvæk.juːm ˌkliː.nər/ /US ˈvæk.juːm ˌkliː.nɚ/ -> aspirador de pó
+Washer / Washing-machine (noun) /UK ˈwɒʃ.ər/ /US ˈwɑː.ʃɚ/ -> máquina de lavar roupa
+Huge (adj) /UK hjuːdʒ/ /US hjuːdʒ/ -> enorme, imenso, gigantesco
+Rumor (noun) /UK ˈruː.mər/ /US ˈruː.mɚ/ -> rumor, boato
+Rumors (noun plur) /UK ˈruː.məz/ /US ˈruː.mɚz/ -> rumores, boatos
+Within (prep) /UK wɪˈð.ɪn/ /US wɪˈð.ɪn/ -> dentro de, no interior de, dentro do limite de
+Outfit (noun) /UK ˈaʊt.fɪt/ /US ˈaʊt.fɪt/ -> conjunto de roupa, traje, vestuário
+Striped (adj) /UK straɪpt/ /US straɪpt/ -> às riscas, listrado
+Horn (noun) /UK hɔːn/ /US hɔːrn/ -> chifre, corno, buzina, trompa
+Weird (adj) /UK wɪəd/ /US wɪrd/ -> estranho, esquisito
+Fur (noun) /UK fɜː/ /US fɝː/ -> pelo, pelagem, pele de animal
+Gravel (noun) /UK ˈɡræv.əl/ /US ˈɡræv.əl/ -> cascalho, brita
+Heart (noun) /UK hɑːt/ /US hɑːrt/ -> coração, centro, cerne
+Imagination (noun) /UK ɪˌmædʒ.ɪˈneɪ.ʃən/ /US ɪˌmædʒ.əˈneɪ.ʃən/ -> imaginação, fantasia
+Inch (noun) /UK ɪntʃ/ /US ɪntʃ/ -> polegada
+Inch (verb) /UK ɪntʃ/ /US ɪntʃ/ -> mover-se lentamente, avançar aos poucos
+Joke (noun) /UK dʒəʊk/ /US dʒoʊk/ -> piada, brincadeira
+Joke (verb) /UK dʒəʊk/ /US dʒoʊk/ -> brincar, fazer piadas
+Leg (noun) /UK leɡ/ /US leɡ/ -> perna, pata (de animal), perna de móvel
+Lens (noun) /UK lenz/ /US lenz/ -> lente, objetiva (de câmera)
+Lenses (noun plur) /UK ˈlen.zɪz/ /US ˈlen.zəz/ -> lentes
+Math (noun) /UK mæθ/ /US mæθ/ -> matemática (abreviação de mathematics
+Mom (noun) /UK mɒm/ /US mɑːm/ -> mãe, mamãe
+Mop (noun) /UK mɒp/ /US mɑːp/ -> esfregão, mopa
+Mop (verb) /UK mɒp/ /US mɑːp/ -> passar pano, limpar com esfregão
+Puddle (noun) /UK ˈpʌd.əl/ /US ˈpʌd.əl/ -> poça d'água, poça
+Purpose (noun) /UK ˈpɜː.pəs/ /US ˈpɝː.pəs/ -> propósito, intenção, finalidade
+Recess (noun) /UK rɪˈses/ /US ˈriː.ses/ -> recreio, intervalo, recesso
+Schoolyard (noun) /UK ˈskuːl.jɑːd/ /US ˈskuːl.jɑːrd/ -> pátio da escola, pátio escolar
+Shoulder (noun) /UK ˈʃəʊl.dər/ /US ˈʃoʊl.dɚ/ -> ombro, acostamento (de estrada)
+Shoulder pad (noun) /UK ˈʃəʊl.də pæd/ /US ˈʃoʊl.dɚ pæd/ -> hombreira, proteção para o ombro
+
+Shoulder pads (noun plur) /UK ˈʃəʊl.də pædz/ /US ˈʃoʊl.dɚ pædz/ -> hombreiras (de roupas), hombreiras de proteção (esportes)
+Smiley face (noun) /UK ˈsmaɪ.li feɪs/ /US ˈsmaɪ.li feɪs/ -> carinha feliz, emoji de carinha sorridente
+Species (noun) /UK ˈspiː.ʃiːz/ /US ˈspiː.ʃiːz/ -> espécie, espécies (o termo tem a mesma forma no singular e no plural)
+
+Stomach (noun) /UK ˈstʌm.ək/ /US ˈstʌm.ək/ -> estômago, barriga
+Senator (noun) /UK ˈsen.ə.tər/ /US ˈsen.ə.tɚ/ -> senador, senadora
+Report card (noun) /UK rɪˈpɔːt kɑːd/ /US rɪˈpɔːrt kɑːrd/ -> boletim escolar, boletim de notas
+Pad (noun) /UK pæd/ /US pæd/ -> bloco de notas, almofada, absorvente, protetor
+All (determiner / adjective / pronoun) /UK ɔːl/ /US ɑːl/ -> todo, todos, tudo
+
+Another (determiner / pronoun) /UK əˈnʌð.ər/ /US əˈnʌð.ɚ/ -> outro, outra, mais um
+
+Bad (adjective) /UK bæd/ /US bæd/ -> mau, ruim, grave
+
+Biggest (adjective superlative) /UK ˈbɪɡ.ɪst/ /US ˈbɪɡ.ɪst/ -> o maior, a maior
+
+Black (adjective) /UK blæk/ /US blæk/ -> preto, negro
+Black (noun) /UK blæk/ /US blæk/ -> a cor preta
+Black (verb) /UK blæk/ /US blæk/ -> escurecer, ficar preto
+
+Boring (adjective) /UK ˈbɔː.rɪŋ/ /US ˈbɔː.rɪŋ/ -> chato, entediante, monótono
+
+Brave (adjective) /UK breɪv/ /US breɪv/ -> corajoso, valente
+Brave (verb) /UK breɪv/ /US breɪv/ -> enfrentar, encarar com coragem
+
+Closer (adjective comparative) /UK ˈkləʊ.sər/ /US ˈkloʊ.sɚ/ -> mais perto, mais próximo
+Closer (noun) /UK ˈkləʊ.zər/ /US ˈkloʊ.zɚ/ -> aquele ou aquilo que fecha, encerramento
+
+Different (adjective) /UK ˈdɪf.ər.ənt/ /US ˈdɪf.ɚ.ənt/ -> diferente, distinto
+
+Dry (adjective) /UK draɪ/ /US draɪ/ -> seco, árido
+Dry (verb) /UK draɪ/ /US draɪ/ -> secar, enxugar
+
+Easy (adjective) /UK ˈiː.zi/ /US ˈiː.zi/ -> fácil, simples, tranquilo
+
+Enough (determiner / pronoun / adverb) /UK ɪˈnʌf/ /US əˈnʌf/ -> suficiente, bastante
+
+Every (determiner) /UK ˈev.ri/ /US ˈev.ri/ -> cada, todo, todos os
+
+Famous (adjective) /UK ˈfeɪ.məs/ /US ˈfeɪ.məs/ -> famoso, célebre
+
+Few (determiner / adjective / pronoun) /UK fjuː/ /US fjuː/ -> poucos, poucas, alguns
+
+First (ordinal number / adjective / adverb) /UK fɜːst/ /US fɝːst/ -> primeiro, em primeiro lugar
+
+Fluffy (adjective) /UK ˈflʌf.i/ /US ˈflʌf.i/ -> fofo, felpudo, macio
+
+Former (adjective) /UK ˈfɔː.mər/ /US ˈfɔːr.mɚ/ -> antigo, ex-, anterior
+
+Four (number) /UK fɔːr/ /US fɔːr/ -> quatro
+
+Full (adjective) /UK fʊl/ /US fʊl/ -> cheio, completo, satisfeito (alimentado)
+
+Good (adjective) /UK ɡʊd/ /US ɡʊd/ -> bom, boa
+Good (noun) /UK ɡʊd/ /US ɡʊd/ -> bem, proveito, bondade
+
+Green (adjective) /UK ɡriːn/ /US ɡriːn/ -> verde, ecológico, inexperiente
+Green (noun) /UK ɡriːn/ /US ɡriːn/ -> a cor verde, gramado
+
+Huge (adjective) /UK hjuːdʒ/ /US hjuːdʒ/ -> enorme, gigantesco
+
+Imaginary (adjective) /UK ɪˈmædʒ.ɪ.nər.i/ /US ɪˈmædʒ.ə.ner.i/ -> imaginário, fictício
+
+Impossible (adjective) /UK ɪmˈpɒs.ə.bəl/ /US ɪmˈpɑː.sə.bəl/ -> impossível
+
+Interested (adjective) /UK ˈɪn.trəs.tɪd/ /US ˈɪn.trɪ.stɪd/ -> interessado, atento
+
+Interesting (adjective) /UK ˈɪn.trəs.tɪŋ/ /US ˈɪn.trɪ.stɪŋ/ -> interessante, atraente
+
+Large (adjective) /UK lɑːdʒ/ /US lɑːrdʒ/ -> grande, amplo, espaçoso
+
+Last (adjective) /UK lɑːst/ /US læst/ -> último, passado
+Last (verb) /UK lɑːst/ /US læst/ -> durar, resistir
+
+Left (adjective) /UK left/ /US left/ -> esquerdo, da esquerda
+Left (noun / adverb) /UK left/ /US left/ -> esquerda, para a esquerda
+
+Little (adjective) /UK ˈlɪt.əl/ /US ˈlɪt̬.əl/ -> pequeno, pouco
+
+Long (adjective) /UK lɒŋ/ /US lɑːŋ/ -> longo, comprido
+Long (verb) /UK lɒŋ/ /US lɑːŋ/ -> ansiar, desejar muito
+
+Lost (adjective) /UK lɒst/ /US lɑːst/ -> perdido, extraviado
+
+Most (determiner / pronoun / adverb) /UK məʊst/ /US moʊst/ -> a maioria, o mais, a maior parte
+
+Nervous (adjective) /UK ˈnɜː.vəs/ /US ˈnɝː.vəs/ -> nervoso, ansioso
+
+New (adjective) /UK njuː/ /US nuː/ -> novo, recente
+
+Odd (adjective) /UK ɒd/ /US ɑːd/ -> estranho, esquisito, ímpar (número)
+
+One (number / pronoun) /UK wʌn/ /US wʌn/ -> um, uma
+
+Only (adjective) /UK ˈəʊn.li/ /US ˈoʊn.li/ -> único, só
+Only (adverb) /UK ˈəʊn.li/ /US ˈoʊn.li/ -> apenas, somente
+
+Open (adjective) /UK ˈəʊ.pən/ /US ˈoʊ.pən/ -> aberto, franco
+Open (verb) /UK ˈəʊ.pən/ /US ˈoʊ.pən/ -> abrir, inaugurar
+
+Other (determiner / pronoun / adjective) /UK ˈʌð.ər/ /US ˈʌð.ɚ/ -> outro, outra
+
+Real (adjective) /UK rɪəl/ /US rɪːəl/ -> real, verdadeiro, autêntico
+
+Right (adjective) /UK raɪt/ /US raɪt/ -> certo, correto, direito (lado)
+Right (noun) /UK raɪt/ /US raɪt/ -> direito (jurídico), direita (direção)
+
+Rude (adjective) /UK ruːd/ /US ruːd/ -> mal-educado, rude, grossado
+
+Same (adjective / pronoun) /UK seɪm/ /US seɪm/ -> mesmo, igual
+
+Second (ordinal number / adjective) /UK ˈsek.ənd/ /US ˈsek.ənd/ -> segundo
+Second (noun) /UK ˈsek.ənd/ /US ˈsek.ənd/ -> segundo (unidade de tempo)
+
+Shiny (adjective) /UK ˈʃaɪ.ni/ /US ˈʃaɪ.ni/ -> brilhante, reluzente
+
+Single (adjective) /UK ˈsɪŋ.ɡəl/ /US ˈsɪŋ.ɡəl/ -> único, solteiro, individual
+Single (verb) /UK ˈsɪŋ.ɡəl/ /US ˈsɪŋ.ɡəl/ -> selecionar, destacar (geralmente single out)
+
+Smiley (adjective) /UK ˈsmaɪ.li/ /US ˈsmaɪ.li/ -> sorridente, alegre
+
+Smushed (adjective) /UK smʌʃt/ /US smʌʃt/ -> esmagado, amassado
+
+Spectacled (adjective) /UK ˈspek.tə.kəld/ /US ˈspek.tə.kəld/ -> que usa óculos, de óculos
+
+Spectacular (adjective) /UK spekˈtæk.jə.lər/ /US spekˈtæk.jə.lɚ/ -> espetacular, impressionante
+
+State (noun) /UK steɪt/ /US steɪt/ -> estado, condição
+State (verb) /UK steɪt/ /US steɪt/ -> declarar, afirmar, estabelecer
+
+Striped (adjective) /UK straɪpt/ /US straɪpt/ -> listrado, com listras
+
+Strong (adjective) /UK strɒŋ/ /US strɑːŋ/ -> forte, resistente, intenso
+
+Stuck (adjective) /UK stʌk/ /US stʌk/ -> preso, emperrado, travado
+
+Supposed (adjective) /UK səˈpəʊzd/ /US səˈpoʊzd/ -> suposto, presumido, esperado (supposed to)
+
+Sure (adjective) /UK ʃɔːr/ /US ʃʊr/ -> certo, seguro, confiante
+
+Surprised (adjective) /UK səˈpraɪzd/ /US sɚˈpraɪzd/ -> surpreso, espantado
+
+Tiny (adjective) /UK ˈtaɪ.ni/ /US ˈtaɪ.ni/ -> minúsculo, pequenino
+
+True (adjective) /UK truː/ /US truː/ -> verdadeiro, real, fiel
+
+Two (number) /UK tuː/ /US tuː/ -> dois, duas
+
+Weird (adjective) /UK wɪəd/ /US wɪrd/ -> estranho, esquisito
+
+Wrong (adjective) /UK rɒŋ/ /US rɑːŋ/ -> errado, incorreto
+
+Gone (adjective) /UK ɡɒn/ /US ɡɑːn/ -> ausente, ido, desaparecido, acabado
+
+About (adverb / preposition) /UK əˈbaʊt/ /US əˈbaʊt/ -> cerca de, quase, sobre
+
+Birthday (noun) /UK ˈbɜːθ.deɪ/ /US ˈbɝːθ.deɪ/ -> aniversário
+
+Card (noun) /UK kɑːd/ /US kɑːrd/ -> cartão, carta de baralho
+
+Birthday card (noun) /UK ˈbɜːθ.deɪ kɑːd/ /US ˈbɝːθ.deɪ kɑːrd/ -> cartão de aniversário, cartão de felicitações
+
+Playing card (noun) /UK ˈpleɪ.ɪŋ kɑːd/ /US ˈpleɪ.ɪŋ kɑːrd/ -> carta de baralho
+
+Cinema (noun) /UK ˈsɪn.ə.mɑː/ /US ˈsɪn.ə.mə/ -> cinema, cinematógrafo
+
+Dear (adjective) /UK dɪər/ /US dɪr/ -> caro (afetuosamente), querido, caro (dispendioso)
+
+Enough (adverb / determiner) /UK ɪˈnʌf/ /US əˈnʌf/ -> bastante, suficientemente
+
+Errand (noun) /UK ˈer.ənd/ /US ˈer.ənd/ -> comissão, serviço, favor, tarefa
+
+Guitar (noun) /UK ɡɪˈtɑːr/ /US ɡɪˈtɑːr/ -> guitarra, violão
+
+Heavy (adjective) /UK ˈhev.i/ /US ˈhev.i/ -> pesado
+
+How often? (expression) /UK haʊ ˈɒf.ən/ /US haʊ ˈɑːf.ən/ -> quantas vezes?, com que frequência?
+
+Many (determiner / pronoun) /UK ˈmen.i/ /US ˈmen.i/ -> muitos, várias
+
+Movies (noun plur) /UK ˈmuː.viz/ /US ˈmuː.viz/ -> cinema, filmes
+
+Much (determiner / pronoun / adverb) /UK mʌtʃ/ /US mʌtʃ/ -> muito, muita
+
+Music (noun) /UK ˈmjuː.zɪk/ /US ˈmjuː.zɪk/ -> música
+
+Often (adverb) /UK ˈɒf.ən/ /US ˈɑːf.ən/ -> frequentemente, muitas vezes
+
+Once (adverb) /UK wʌns/ /US wʌns/ -> uma vez
+
+Party (noun) /UK ˈpɑː.ti/ /US ˈpɑːr.t̬i/ -> festa, recepção
+
+Piano (noun) /UK piˈæn.əʊ/ /US piˈæn.oʊ/ -> piano
+
+Shampoo (noun) /UK ʃæmˈpuː/ /US ʃæmˈpuː/ -> xampu
+
+Station (noun) /UK ˈsteɪ.ʃən/ /US ˈsteɪ.ʃən/ -> estação
+
+Time (noun) /UK taɪm/ /US taɪm/ -> vez, tempo
+
+Twice (adverb) /UK twaɪs/ /US twaɪs/ -> duas vezes
+
+Wardrobe (noun) /UK ˈwɔː.drəʊb/ /US ˈwɔːr.droʊb/ -> armário, guarda-roupa, o conjunto das roupas
+
+Way (noun) /UK weɪ/ /US weɪ/ -> caminho, maneira, modo
+
+Winter (noun) /UK ˈwɪn.tər/ /US ˈwɪn.t̬ɚ/ -> inverno
+
+All around (expression) /UK ɔːl əˈraʊnd/ /US ɑːl əˈraʊnd/ -> em toda a volta, por toda parte
+
+Autumn (noun) /UK ˈɔː.təm/ /US ˈɑː.t̬əm/ -> outono
+
+Bird (noun) /UK bɜːd/ /US bɝːd/ -> pássaro
+
+Bridge (noun) /UK brɪdʒ/ /US brɪdʒ/ -> ponte, bridge (o jogo)
+
+Cat (noun) /UK kæt/ /US kæt/ -> gato
+
+Cool (adjective) /UK kuːl/ /US kuːl/ -> fresco, calmo, tranquilo, legal
+
+Cosmetic (noun / adjective) /UK kɒzˈmet.ɪk/ /US kɑːzˈmet.ɪk/ -> cosmético
+
+Department (noun) /UK dɪˈpɑːt.mənt/ /US dɪˈpɑːrt.mənt/ -> departamento
+
+Department store (noun) /UK dɪˈpɑːt.mənt stɔːr/ /US dɪˈpɑːrt.mənt stɔːr/ -> loja de departamentos
+
+Dog (noun) /UK dɒɡ/ /US dɑːɡ/ -> cachorro, cão
+
+Each other (pronoun) /UK iːtʃ ˈʌð.ər/ /US iːtʃ ˈʌð.ɚ/ -> um ao outro, um para o outro
+
+Equipment (noun) /UK ɪˈkwɪp.mənt/ /US ɪˈkwɪp.mənt/ -> equipamento, aparelhamento
+
+Everything (pronoun) /UK ˈev.ri.θɪŋ/ /US ˈev.ri.θɪŋ/ -> tudo, cada coisa
+
+Fall (noun) /UK fɔːl/ /US fɑːl/ -> outono, queda
+
+Greeting (noun) /UK ˈɡriː.tɪŋ/ /US ˈɡriː.t̬ɪŋ/ -> cumprimento, saudação
+
+Greeting card (noun) /UK ˈɡriː.tɪŋ kɑːd/ /US ˈɡriː.t̬ɪŋ kɑːrd/ -> cartão de felicitações
+
+Hairdresser (noun) /UK ˈheəˌdres.ər/ /US ˈherˌdres.ɚ/ -> cabeleireiro, cabeleireira
+
+Italy (noun) /UK ˈɪt.əl.i/ /US ˈɪt̬.əl.i/ -> Itália
+
+Living room (noun) /UK ˈlɪv.ɪŋ ruːm/ /US ˈlɪv.ɪŋ ruːm/ -> sala de estar
+
+Neighbour (noun) /UK ˈneɪ.bər/ /US ˈneɪ.bɚ/ -> vizinho, vizinha
+
+Next-door neighbour (noun) /UK ˌnekst.dɔː ˈneɪ.bər/ /US ˌnekst.dɔːr ˈneɪ.bɚ/ -> vizinho da casa ao lado
+
+Pet (noun) /UK pet/ /US pet/ -> animal de estimação
+
+Rome (noun) /UK rəʊm/ /US roʊm/ -> Roma
+
+Sale (noun) /UK seɪl/ /US seɪl/ -> venda, liquidação, saldo
+
+Snow (noun) /UK snəʊ/ /US snoʊ/ -> neve
+
+Spring (noun) /UK sprɪŋ/ /US sprɪŋ/ -> primavera
+
+Store (noun) /UK stɔːr/ /US stɔːr/ -> loja, depósito, estabelecimento
+
+Storm (noun) /UK stɔːm/ /US stɔːrm/ -> tempestade, temporal
+
+Summer (noun) /UK ˈsʌm.ər/ /US ˈsʌm.ɚ/ -> verão
+
+The Bakers (proper noun) /UK ðə ˈbeɪ.kəz/ /US ðə ˈbeɪ.kɚz/ -> a família Baker, os Baker
+
+Thunder (noun) /UK ˈθʌn.dər/ /US ˈθʌn.dɚ/ -> trovão
+
+Thunderstorm (noun) /UK ˈθʌn.də.stɔːm/ /US ˈθʌn.dɚ.stɔːrm/ -> temporal, tempestade com trovoadas
+
+Towel (noun) /UK taʊəl/ /US taʊəl/ -> toalha de mão, toalha
+
+Veterinarian (noun) /UK ˌvet.ər.ɪˈneə.ri.ən/ /US ˌvet.ər.əˈner.i.ən/ -> veterinário, veterinária
+Afterwards (adverb) /UK ˈɑːf.tə.wədz/ /US ˈæf.tɚ.wɚdz/ -> depois, em seguida
+
+Attic (noun) /UK ˈæt.ɪk/ /US ˈæt̬.ɪk/ -> ático, sótão
+
+Aunt (noun) /UK ɑːnt/ /US ænt/ -> tia
+
+Candle (noun) /UK ˈkæn.dəl/ /US ˈkæn.dəl/ -> vela
+
+Cousin (noun) /UK ˈkʌz.ən/ /US ˈkʌz.ən/ -> primo, prima
+
+Date (noun) /UK deɪt/ /US deɪt/ -> data, encontro, tâmara
+
+Grandfather (noun) /UK ˈɡræn.fɑː.ðər/ /US ˈɡræn.fɑː.ðɚ/ -> avô
+
+Grandmother (noun) /UK ˈɡræn.mʌð.ər/ /US ˈɡræn.mʌð.ɚ/ -> avó
+
+Grandparents (noun plur) /UK ˈɡræn.peə.rənts/ /US ˈɡræn.per.ənts/ -> avós
+
+Happy Birthday! (expression) /UK ˌhæp.i ˈbɜːθ.deɪ/ /US ˌhæp.i ˈbɝːθ.deɪ/ -> Feliz aniversário!
+
+How old? (expression) /UK haʊ əʊld/ /US haʊ oʊld/ -> Quantos anos?, que idade?
+
+Midnight (noun) /UK ˈmɪd.naɪt/ /US ˈmɪd.naɪt/ -> meia-noite
+
+Oven (noun) /UK ˈʌv.ən/ /US ˈʌv.ən/ -> forno
+
+Present (noun) /UK ˈprez.ənt/ /US ˈprez.ənt/ -> presente
+
+Too (adverb) /UK tuː/ /US tuː/ -> muito, demais, também
+
+Uncle (noun) /UK ˈʌŋ.kəl/ /US ˈʌŋ.kəl/ -> tio
+
+Up (adverb / preposition) /UK ʌp/ /US ʌp/ -> para cima, sobre
+
+Walk (noun) /UK wɔːk/ /US wɑːk/ -> caminhada, passeio (a pé)
+
+Wet (adjective) /UK wet/ /US wet/ -> molhado, úmido
+Anybody (pronoun) /UK ˈen.iˌbɒd.i/ /US ˈen.iˌbɑː.di/ -> alguém?, ninguém
+
+Anything (pronoun) /UK ˈen.i.θɪŋ/ /US ˈen.i.θɪŋ/ -> alguma coisa?, nada
+
+Anywhere (adverb / pronoun) /UK ˈen.i.weər/ /US ˈen.i.wer/ -> em algum lugar?, em nenhum lugar
+
+Bank (noun) /UK bæŋk/ /US bæŋk/ -> banco
+
+Bank holiday (noun) /UK ˈbæŋk ˌhɒl.ə.deɪ/ /US ˈbæŋk ˌhɑː.lə.deɪ/ -> feriado bancário (feriado observado pelos bancos)
+
+Christmas (proper noun) /UK ˈkrɪs.məs/ /US ˈkrɪs.məs/ -> Natal
+
+Most (determiner / pronoun / adverb) /UK məʊst/ /US moʊst/ -> a maior parte de, a maioria de
+
+New Year's Day (proper noun) /UK ˌnjuː jɪəz ˈdeɪ/ /US ˌnuː jɪrz ˈdeɪ/ -> Dia de Ano Novo
+
+New Year's Eve (proper noun) /UK ˌnjuː jɪəz ˈiːv/ /US ˌnuː jɪrz ˈiːv/ -> Véspera de Ano Novo
+
+Nice (adjective) /UK naɪs/ /US naɪs/ -> gracioso, simpático, agradável, belo
+
+People (noun) /UK ˈpiː.pəl/ /US ˈpiː.pəl/ -> pessoas, gente, povo, nação
+
+Person (noun) /UK ˈpɜː.sən/ /US ˈpɝː.sən/ -> pessoa, indivíduo
+
+Season (noun) /UK ˈsiː.zən/ /US ˈsiː.zən/ -> estação
+
+So (adverb) /UK səʊ/ /US soʊ/ -> assim
+
+Somebody (pronoun) /UK ˈsʌm.bə.di/ /US ˈsʌm.bɑː.di/ -> alguém
+
+Something (pronoun) /UK ˈsʌm.θɪŋ/ /US ˈsʌm.θɪŋ/ -> alguma coisa
+
+Somewhere (adverb) /UK ˈsʌm.weər/ /US ˈsʌm.wer/ -> em algum lugar, de alguma parte
+
+Weekend (noun) /UK ˌwiːkˈend/ /US ˈwiːk.end/ -> fim de semana
+
+Whitsunday (proper noun) /UK ˌwɪtˈsʌn.deɪ/ /US ˌwɪtˈsʌn.deɪ/ -> domingo de Pentecostes
+
+
+
+        `;
+
+        let vocabularyDatabase = [];
+        let secretUrn = [];
+        let completedCount = 0;
+        let currentSecretItem = null;
+        let isAnswered = false;
+
+        // Limpeza inteligente: remove parênteses, barras de fonética e setas para o áudio e botões ficarem puros
+        function parseRawDatabase() {
+            const lines = rawTextDatabase.split('\n');
+            let parsedList = [];
+
+            lines.forEach(line => {
+                let trimmed = line.trim();
+                if (!trimmed) return;
+
+                // Extrai apenas o termo puro antes de barras, parênteses ou setas
+                let cleanWord = trimmed.split('/')[0].split('->')[0].split('(')[0].trim();
+
+                parsedList.push({
+                    wordToSpeak: cleanWord, // Apenas a palavra limpa para a voz da IA falar perfeitamente
+                    shortLabel: cleanWord,  // Apenas a palavra limpa estampada no botão de opção
+                    details: trimmed        // Guarda o texto completo original para exibir na caixa verde ao acertar
+                });
+            });
+
+            vocabularyDatabase = parsedList;
+        }
+
+        function updateRateLabel(val) {
+            document.getElementById('rateVal').innerText = val + 'x';
+        }
+
+        function playSuccessSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const playTone = (freq, startTime, duration) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
+                    gain.gain.setValueAtTime(0.002, audioCtx.currentTime + startTime);
+                    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + startTime + duration);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(audioCtx.currentTime + startTime);
+                    osc.stop(audioCtx.currentTime + startTime + duration);
+                };
+                playTone(523.25, 0, 0.1);
+                playTone(659.25, 0.08, 0.15);
+                playTone(783.99, 0.16, 0.2);
+            } catch (e) {}
+        }
+
+        // MODIFICADO: Agora aceita callback para saber quando o áudio termina
+        function playSecretAudio(lang, onComplete = null) {
+            if (!currentSecretItem) return;
+            window.speechSynthesis.cancel();
+
+            const currentRate = parseFloat(document.getElementById('rateRange').value);
+            const utterance = new SpeechSynthesisUtterance(currentSecretItem.wordToSpeak);
+            utterance.lang = lang;
+            utterance.rate = currentRate;
+
+            // NOVO: Se o áudio terminar, executa a função de callback
+            if (onComplete) {
+                utterance.onend = onComplete;
+            }
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function updateProgressUI() {
+            let total = vocabularyDatabase.length;
+            let percent = total > 0 ? Math.round((completedCount / total) * 100) : 0;
+            document.getElementById('progressText').innerText = `Formas percorridas: ${completedCount} / ${total}`;
+            document.getElementById('progressPercent').innerText = `${percent}%`;
+            document.getElementById('progressBarFill').style.width = `${percent}%`;
+        }
+
+        function shuffle(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function initGame() {
+            if (vocabularyDatabase.length === 0) {
+                document.getElementById('statusMsg').innerText = "Nenhuma palavra encontrada na área de texto.";
+                return;
+            }
+
+            // NOVO: Rolar a página para o topo automaticamente ao iniciar nova rodada
+            window.scrollTo({ top: 0, behavior: 'auto' });
+
+            // NOVO: Esconder a tela de parabéns ao iniciar nova rodada
+            document.getElementById('congratsScreen').style.display = 'none';
+
+            if (secretUrn.length === 0) {
+                secretUrn = [...vocabularyDatabase];
+                completedCount = 0;
+            }
+
+            isAnswered = false;
+            document.getElementById('revealBox').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('statusMsg').style.color = "#38bdf8";
+            document.getElementById('statusMsg').innerText = "Ouça o áudio e escolha a opção correspondente abaixo.";
+
+            let randomIndex = Math.floor(Math.random() * secretUrn.length);
+            currentSecretItem = secretUrn.splice(randomIndex, 1)[0];
+            completedCount++;
+            updateProgressUI();
+
+            let otherItems = vocabularyDatabase.filter(item => item.details !== currentSecretItem.details);
+            let shuffledOthers = shuffle(otherItems).slice(0, 2);
+
+            let optionsPool = [currentSecretItem, ...shuffledOthers];
+            let finalOptions = shuffle(optionsPool);
+
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            finalOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt.shortLabel; // Exibe apenas a palavra limpa no botão
+                btn.onclick = () => checkChoice(opt, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            // NOVO: Reproduzir o áudio US automaticamente no início da rodada
+            setTimeout(() => {
+                playSecretAudio('en-US');
+            }, 300);
+        }
+
+        function checkChoice(selectedItem, btn) {
+            if (isAnswered) return;
+
+            const allButtons = document.querySelectorAll('.option-btn');
+
+            if (selectedItem.details === currentSecretItem.details) {
+                isAnswered = true;
+                playSuccessSound();
+                btn.classList.add('correct');
+
+                allButtons.forEach(b => b.disabled = true);
+
+                document.getElementById('statusMsg').style.color = "#22c55e";
+                document.getElementById('statusMsg').innerText = "✨ Excelente! Resposta correta.";
+                
+                // Exibe os detalhes completos (com parênteses e traduções) apenas após o acerto na caixa verde
+                document.getElementById('revealedDetails').innerText = currentSecretItem.details;
+                document.getElementById('revealBox').style.display = 'block';
+                document.getElementById('nextBtn').style.display = 'inline-block';
+
+                // NOVO: Rolar a página para baixo automaticamente para mostrar a resposta
+                document.getElementById('revealBox').scrollIntoView({ behavior: 'auto', block: 'center' });
+
+                // NOVO: Reproduz o áudio US automaticamente e verifica se completou todas as palavras
+                setTimeout(() => {
+                    if (completedCount >= vocabularyDatabase.length) {
+                        playSecretAudio('en-US', () => {
+                            // Espera 10ms APÓS o áudio terminar para mostrar a tela de parabéns
+                            setTimeout(() => {
+                                document.getElementById('congratsScreen').style.display = 'flex';
+                            }, 10);
+                        });
+                    } else {
+                        playSecretAudio('en-US');
+                    }
+                }, 250);
+
+            } else {
+                btn.classList.add('wrong');
+                setTimeout(() => {
+                    btn.classList.remove('wrong');
+                }, 400);
+            }
+        }
+
+        window.onload = () => {
+            parseRawDatabase();
+            secretUrn = [...vocabularyDatabase];
+            updateProgressUI();
+            initGame();
+        };
+    </script>
+    <!-- add em cada arquivo html antes de body (no final ) para controlar a velocidade no pc(0.65x)/celular(0.5x) -->  
+        <script>
+              document.addEventListener("DOMContentLoaded", function() {
+                // Pega a velocidade que foi salva pelo index.html
+                const velocidadeSalva = localStorage.getItem('minhaVelocidadeVoz');
+                
+                const rateRange = document.getElementById("rateRange");
+                const rateVal = document.getElementById("rateVal");
+            
+                if (velocidadeSalva && rateRange && rateVal) {
+                  // Atualiza o controle deslizante visualmente
+                  rateRange.value = velocidadeSalva;
+                  rateVal.textContent = velocidadeSalva + 'x';
+                  
+                  // Se você tiver uma função chamada updateRateLabel no seu código, chame-a para atualizar a voz
+                  if (typeof updateRateLabel === 'function') {
+                    updateRateLabel(velocidadeSalva);
+                  }
+                }
+              });
+        </script>
+  
+  <!-- Cole isso antes de </body> em TODOS os arquivos HTML para que as bandeiras apareçam -->
+	<script src="https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
+	<script src="emoji-fix.js"></script>
+  
+</body>
+</html>
