@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dicionário HTML vocabulário_01</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #1a2233;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        header {
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #99f4d6;
+            margin-bottom: 8px;
+        }
+
+        
+
+        .subtitle {
+            color: #adb5bd;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+
+        .controls {
+            background-color: #242f44;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin-bottom: 24px;
+            width: fit-content;
+        }
+
+        .controls label {
+            font-weight: 600;
+            font-size: 0.99rem;
+            color: #99f4d6;
+        }
+
+        .controls input[type="range"] {
+            cursor: pointer;
+        }
+
+        .rate-value {
+            font-weight: 800;
+            color: #99f4d6;
+            min-width: 50px;
+        }
+
+        .card-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background-color: #242f44;
+            border-radius: 8px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #334155;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+
+        .card.active {
+            border-color: #38bdf8;
+            background-color: rgba(56, 189, 248, 0.15);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+        }
+
+        .word-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .word {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            min-width: 180px;
+        }
+
+        .translation {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            font-weight: 500;
+            margin-right: 8px;
+        }
+
+        .ipa {
+            font-family: "Lucida Sans Unicode", "DejaVu Sans", "Segoe UI Symbol", sans-serif;
+            color: #94a3b8;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .audio-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-audio {
+            background-color: #0f172a;
+            color: #ffffff;
+            border: 1px solid #475569;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-audio:hover {
+            background-color: #334155;
+            border-color: #64748b;
+        }
+
+        .btn-audio:active {
+            transform: scale(0.96);
+        }
+
+        .btn-audio svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        footer {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .word-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            .audio-buttons {
+                width: 100%;
+            }
+
+            .btn-audio {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap;">
+                <h1 style="margin-bottom: 0;">Lista de Palavras</h1>
+                <span class="word-counter" id="wordCounter">0 / 0</span>
+            </div>
+
+            <p class="subtitle">Clique em UK ou US para ouvir cada forma.</p>
+
+            <div class="controls">
+                <label for="rateRange">Velocidade da voz:</label>
+                <input type="range" id="rateRange" min="0.25" max="1.5" step="0.05" value="0.5" oninput="updateRateLabel(this.value)">
+                <span id="rateVal" class="rate-value">0.5x</span>
+            </div>
+        </header>
+
+        <main class="card-list" id="cardList">
+            <!-- Os cartões serão construídos automaticamente aqui -->
+        </main>
+
+        <footer>
+            <p>A pronúncia é reproduzida pela síntese de voz do navegador na velocidade selecionada.</p>
+        </footer>
+    </div>
+
+    <script>
+        // ============================================
+        // DEPÓSITO BRUTO DE PALAVRAS
+        // Formato: Word (pos) /UK ipa/ /US ipa/ -> translation
+        // ============================================
+        const rawTextDatabase = `
+
+To hang out (v) /UK tuː hæŋ aʊt/ /US tuː hæŋ aʊt/ -> passar o tempo, curtir, ficar de bobeira (com amigos)
+Hang out (base) /UK hæŋ aʊt/ /US hæŋ aʊt/
+Hangs out (third) /UK hæŋz aʊt/ /US hæŋz aʊt/
+Hanging out (gerund) /UK ˈhæŋ.ɪŋ aʊt/ /US ˈhæŋ.ɪŋ aʊt/
+Hung out (past) /UK hʌŋ aʊt/ /US hʌŋ aʊt/
+Hung out (participle) /UK hʌŋ aʊt/ /US hʌŋ aʊt/
+
+
+        `;
+
+        // ============================================
+        // SVG do ícone de alto-falante (usado nos botões)
+        // ============================================
+        const SPEAKER_SVG = '<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>';
+
+        // ============================================
+        // PARSER: extrai word, pos, uk, us e translation
+        // ============================================
+        function parseRawDatabase() {
+            const lines = rawTextDatabase.split('\n');
+            let parsedList = [];
+
+            lines.forEach(line => {
+                let trimmed = line.trim();
+                if (!trimmed) return;
+
+                // Word: tudo antes do primeiro '('
+                let wordMatch = trimmed.match(/^([^(]+)/);
+                let word = wordMatch ? wordMatch[1].trim() : '';
+                if (!word) return;
+
+                // Pos: dentro do primeiro parêntese
+                let posMatch = trimmed.match(/\(([^)]+)\)/);
+                let pos = posMatch ? posMatch[1].trim() : '';
+
+                // UK IPA: /UK .../
+                let ukMatch = trimmed.match(/\/UK\s+([^\/]+)\//);
+                let uk = ukMatch ? ukMatch[1].trim() : '';
+
+                // US IPA: /US .../ (aceita final de linha sem barra de fechamento)
+                let usMatch = trimmed.match(/\/US\s+([^\/]+?)(?:\/|$)/);
+                let us = usMatch ? usMatch[1].trim() : '';
+
+                // Translation: tudo após '->'
+                let transParts = trimmed.split('->');
+                let translation = transParts.length > 1 ? transParts[1].trim() : '';
+
+                parsedList.push({ word, pos, uk, us, translation });
+            });
+
+            return parsedList;
+        }
+
+        // ============================================
+        // CONSTRÓI OS CARDS DINAMICAMENTE
+        // ============================================
+        function buildCards() {
+            const cardList = document.getElementById('cardList');
+            if (!cardList) return;
+
+            const items = parseRawDatabase();
+            cardList.innerHTML = '';
+
+            items.forEach(item => {
+                // Card
+                const card = document.createElement('div');
+                card.className = 'card';
+
+                // Word info
+                const wordInfo = document.createElement('div');
+                wordInfo.className = 'word-info';
+
+                // Palavra principal (branca)
+                const wordSpan = document.createElement('span');
+                wordSpan.className = 'word';
+                wordSpan.innerText = item.word;
+                wordInfo.appendChild(wordSpan);
+
+                // (pos) translation (cinza)
+                const translationSpan = document.createElement('span');
+                translationSpan.className = 'translation';
+                translationSpan.innerText = `(${item.pos}) ${item.translation}`.trim();
+                wordInfo.appendChild(translationSpan);
+
+                // IPA (cinza)
+                const ipaSpan = document.createElement('span');
+                ipaSpan.className = 'ipa';
+                let ipaText = '';
+                if (item.uk) ipaText += `/UK ${item.uk}/ `;
+                if (item.us) ipaText += `/US ${item.us}/`;
+                ipaSpan.innerText = ipaText.trim();
+                wordInfo.appendChild(ipaSpan);
+
+                card.appendChild(wordInfo);
+
+                // Audio buttons
+                const audioButtons = document.createElement('div');
+                audioButtons.className = 'audio-buttons';
+
+                // Botão UK
+                const ukBtn = document.createElement('button');
+                ukBtn.className = 'btn-audio';
+                ukBtn.innerHTML = `<small>🇬🇧</small>${SPEAKER_SVG}UK`;
+                ukBtn.onclick = () => speak(item.word.toLowerCase(), 'en-GB');
+                audioButtons.appendChild(ukBtn);
+
+                // Botão US
+                const usBtn = document.createElement('button');
+                usBtn.className = 'btn-audio';
+                usBtn.innerHTML = `<small>🇺🇸</small>${SPEAKER_SVG}US`;
+                usBtn.onclick = () => speak(item.word.toLowerCase(), 'en-US');
+                audioButtons.appendChild(usBtn);
+
+                card.appendChild(audioButtons);
+
+                cardList.appendChild(card);
+            });
+        }
+
+        // ============================================
+        // FUNÇÕES DE ÁUDIO E VELOCIDADE (iguais ao original)
+        // ============================================
+        function updateRateLabel(val) {
+            document.getElementById('rateVal').innerText = val + 'x';
+        }
+
+        function speak(text, lang) {
+            window.speechSynthesis.cancel();
+
+            const currentRate = parseFloat(document.getElementById('rateRange').value);
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang;
+            utterance.rate = currentRate;
+
+            const voices = window.speechSynthesis.getVoices();
+            const selectedVoice = voices.find(voice => voice.lang === lang || voice.lang.replace('_', '-') === lang);
+
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+            }
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        window.speechSynthesis.onvoiceschanged = () => {
+            window.speechSynthesis.getVoices();
+        };
+
+        // ============================================
+        // CONTADOR DINÂMICO E EFEITO DE CLIQUE (iguais ao original)
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1) Constrói os cards a partir do depósito bruto
+            buildCards();
+
+            // 2) Contador e efeito de clique
+            const cards = document.querySelectorAll('.card-list .card');
+            const wordCounter = document.getElementById('wordCounter');
+
+            if (wordCounter) {
+                const validCards = Array.from(cards).filter(card => card.querySelector('.word'));
+                const total = validCards.length;
+
+                wordCounter.innerText = `0 / ${total}`;
+
+                const audioButtons = document.querySelectorAll('.btn-audio');
+
+                audioButtons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+
+                        const currentCard = this.closest('.card');
+                        if (currentCard) {
+                            currentCard.classList.add('active');
+
+                            const index = validCards.indexOf(currentCard);
+                            if (index !== -1) {
+                                wordCounter.innerText = `${index + 1} / ${total}`;
+                            }
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+
+    <!-- Cole isso antes de </body> em TODOS os arquivos HTML -->
+    <script src="https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
+    <script src="emoji-fix.js"></script>
+
+    <!-- novo código (controlar velocidade salva) -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const velocidadeSalva = localStorage.getItem('minhaVelocidadeVoz');
+
+            const rateRange = document.getElementById("rateRange");
+            const rateVal = document.getElementById("rateVal");
+
+            if (velocidadeSalva && rateRange && rateVal) {
+                rateRange.value = velocidadeSalva;
+                rateVal.textContent = velocidadeSalva + 'x';
+
+                if (typeof updateRateLabel === 'function') {
+                    updateRateLabel(velocidadeSalva);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
