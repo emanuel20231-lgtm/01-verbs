@@ -371,67 +371,127 @@
         // Formato: palavra (gênero) -> tradução
         // ====================================================
         const rawTextDatabase = `
-allo ! -> /a.lo/ alô!
-après-midi -> /a.pʁɛ.mi.di/ tarde
-avenue -> /a.və.ny/ avenida
-beaucoup -> /bo.ku/ muito
-bibliothèque -> /bi.bli.jɔ.tɛk/ biblioteca
-bientôt -> /bjɛ̃.to/ logo
-capitale -> /ka.pi.tal/ capital
-cinq -> /sɛ̃k/ cinco
-commercial -> /kɔ.mɛʁ.sjal/ comercial
-cours -> /kuʁ/ curso / aula
-d'accord -> /da.kɔʁ/ de acordo / certo / combinado
-dommage ! -> /dɔ.maʒ/ é pena! / é lamentável!
-en -> /ɑ̃/ em
-examen -> /ɛɡ.za.mɛ̃/ exame / prova
-export (commercial) -> /ɛk.spɔʁ/ exportação
-film -> /film/ filme
-français -> /fʁɑ̃.sɛ/ francês
-France -> /fʁɑ̃s/ França
-gentil -> /ʒɑ̃.ti/ gentil / cortês
-hôtel de ville -> /o.tɛl də vil/ prefeitura
-huit -> /ɥit/ oito
-ici -> /i.si/ aqui
-import (commercial) -> /ɛ̃.pɔʁ/ importação
-impossible -> /ɛ̃.pɔ.sibl/ impossível
-instant -> /ɛ̃.stɑ̃/ instante / momento
-livre -> /livʁ/ livro
-mais -> /mɛ/ mas
-neuf -> /nœf/ nove
-numéro -> /ny.me.ʁo/ número
-panorama -> /pa.nɔ.ʁa.ma/ panorama / vista
-peu -> /pø/ pouco
-peut-être -> /pø.tɛtʁ/ talvez
-quai (masc.) -> /kɛ/ plataforma de embarque / cais
-quand -> /kɑ̃/ quando
-quatre -> /katʁ/ quatro
-raison -> /ʁɛ.zɔ̃/ razão
-rendez-vous -> /ʁɑ̃.de.vu/ encontro
-sept -> /sɛt/ sete
-six -> /sis/ seis
-taxi -> /tak.si/ táxi
-téléphone -> /te.le.fɔn/ telefone
-théâtre -> /te.atʁ/ teatro
-timide -> /ti.mid/ tímido
-tort (avoir tort) -> /tɔʁ/ erro / estar errado
-tout -> /tu/ todo / tudo
-tout de suite -> /tu də sɥit/ imediatamente / já
-trois -> /tʁwa/ três
-vachement (coloq.) -> /vaʃ.mɑ̃/ extremamente
-ville -> /vil/ cidade
-vrai -> /vʁɛ/ verdadeiro / verdade
-verbos
-admirer -> /ad.mi.ʁe/ admirar
-avoir -> /a.vwaʁ/ ter
-jouer -> /ʒwe/ jogar / brincar / tocar
-lire -> /liʁ/ ler
-monter -> /mɔ̃.te/ subir
-passer -> /pa.se/ passar
-remonter -> /ʁə.mɔ̃.te/ subir / subir novamente
-téléphoner -> /te.le.fɔ.ne/ telefonar
-trouver -> /tʁu.ve/ achar / encontrar
-visiter -> /vi.zi.te/ visitar
+allo ! -> /aˈlo/
+
+après-midi -> /a.pʁɛ.miˈdi/
+
+avenue -> /a.vəˈny/
+
+beaucoup -> /boˈku/
+
+bibliothèque -> /bi.bli.jɔˈtɛk/
+
+bientôt -> /bjɛ̃ˈto/
+
+capitale -> /ka.piˈtal/
+
+cinq -> /ˈsɛ̃k/
+
+commercial -> /kɔ.mɛʁˈsjal/
+
+cours -> /ˈkuʁ/
+
+d'accord -> /daˈkɔʁ/
+
+dommage ! -> /dɔˈmaʒ/
+
+en -> /ˈɑ̃/
+
+examen -> /ɛɡ.zaˈmɛ̃/
+
+export -> /ɛkˈspɔʁ/
+
+film -> /ˈfilm/
+
+français -> /fʁɑ̃ˈsɛ/
+
+France -> /ˈfʁɑ̃s/
+
+gentil -> /ʒɑ̃ˈti/
+
+hôtel de ville -> /o.tɛl də ˈvil/
+
+huit -> /ˈɥit/
+
+ici -> /iˈsi/
+
+import -> /ɛ̃ˈpɔʁ/
+
+impossible -> /ɛ̃.pɔˈsibl/
+
+instant -> /ɛ̃ˈstɑ̃/
+
+livre -> /ˈlivʁ/
+
+mais -> /ˈmɛ/
+
+neuf -> /ˈnœf/
+
+numéro -> /ny.meˈʁo/
+
+panorama -> /pa.nɔ.ʁaˈma/
+
+peu -> /ˈpø/
+
+peut-être -> /pøˈtɛtʁ/
+
+quai -> /ˈkɛ/
+
+quand -> /ˈkɑ̃/
+
+quatre -> /ˈkatʁ/
+
+raison -> /ʁɛˈzɔ̃/
+
+rendez-vous -> /ʁɑ̃.deˈvu/
+
+sept -> /ˈsɛt/
+
+six -> /ˈsis/
+
+taxi -> /takˈsi/
+
+téléphone -> /te.leˈfɔn/
+
+théâtre -> /teˈatʁ/
+
+timide -> /tiˈmid/
+
+tort -> /ˈtɔʁ/
+
+tout -> /ˈtu/
+
+tout de suite -> /tu də ˈsɥit/
+
+trois -> /ˈtʁwa/
+
+vachement -> /vaʃˈmɑ̃/
+
+ville -> /ˈvil/
+
+vrai -> /ˈvʁɛ/
+
+
+
+admirer -> /ad.miˈʁe/
+
+avoir -> /aˈvwaʁ/
+
+jouer -> /ʒˈwe/
+
+lire -> /ˈliʁ/
+
+monter -> /mɔ̃ˈte/
+
+passer -> /paˈse/
+
+remonter -> /ʁə.mɔ̃ˈte/
+
+téléphoner -> /te.le.fɔˈne/
+
+trouver -> /tʁuˈve/
+
+visiter -> /vi.ziˈte/
 
 
 
