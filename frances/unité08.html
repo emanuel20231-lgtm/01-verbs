@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Learn — Entraînement Audio Français</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: #99f4d6;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        /* Barra de Progresso */
+        .progress-container {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #99f4d6;
+            margin-bottom: 6px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 20px;
+            background-color: #334155;
+            border-radius: 7px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #38bdf8;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Controles de Velocidade */
+        .controls-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            background-color: #0f172a;
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .controls label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #cbd5e1;
+        }
+
+        .controls input[type="range"] {
+            cursor: pointer;
+            width: 90px;
+        }
+
+        .rate-value {
+            font-weight: 700;
+            color: #38bdf8;
+            min-width: 30px;
+            font-size: 0.8rem;
+        }
+
+        /* Caixa de Áudio (Pergunta) */
+        .audio-box {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .audio-box p {
+            font-size: 1.1rem;
+            color: #99f4d6;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .audio-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-audio {
+            background-color: #1e293b;
+            color: #ffffff;
+            border: 1px solid #475569;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-audio:hover {
+            background-color: #334155;
+            border-color: #38bdf8;
+        }
+
+        .status-msg {
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #38bdf8;
+            margin-bottom: 20px;
+            min-height: 24px;
+        }
+
+        /* Opções (3 Palavras) */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background-color: #0f172a;
+            color: #f8fafc;
+            border: 1px solid #475569;
+            padding: 14px 16px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #334155;
+            border-color: #38bdf8;
+        }
+
+        .option-btn.correct {
+            background-color: #064e3b !important;
+            border-color: #22c55e !important;
+            color: #22c55e !important;
+        }
+
+        .option-btn.wrong {
+            background-color: #7f1d1d !important;
+            border-color: #ef4444 !important;
+            color: #fca5a5 !important;
+        }
+
+        /* Caixa de Revelação (Verde) */
+        .reveal-box {
+            background-color: #0f172a;
+            border: 2px solid #22c55e;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            display: none;
+            margin-bottom: 0px;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.15);
+        }
+
+        .reveal-box h3 {
+            color: #22c55e;
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+        }
+
+        .reveal-box p {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #f8fafc;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .audio-buttons-reveal {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-action {
+            background-color: #0284c7;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-action:hover {
+            background-color: #0369a1;
+        }
+
+        /* Tela de Parabéns */
+        #congratsScreen {
+            position: fixed;
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+        #congratsScreen .emoji {
+            font-size: 5rem;
+            margin-bottom: 15px;
+            animation: bounce 1s infinite alternate;
+        }
+        #congratsScreen h2 {
+            color: #99f4d6;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            max-width: 600px;
+        }
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-15px); }
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>I Learn — Entraînement Audio Français</h1>
+            <p class="subtitle">Écoutez l'audio, identifiez la forme correcte et entraînez votre vocabulaire</p>
+
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span id="progressText">Formes parcourues: 0 / 0</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                </div>
+            </div>
+
+            <div class="controls-wrapper">
+                <div class="controls">
+                    <label for="rateRange">Vitesse:</label>
+                    <input type="range" id="rateRange" min="0.25" max="1.5" step="0.05" value="0.7" oninput="updateRateLabel(this.value)">
+                    <span id="rateVal" class="rate-value">0.7x</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="audio-box">
+            <p>Cliquez ci-dessous pour écouter la forme sélectionnée :</p>
+            <div class="audio-buttons">
+                <button class="btn-audio" onclick="playSecretAudio('fr-FR')">🇫🇷🔊 Audio Français</button>
+            </div>
+        </div>
+
+        <div class="status-msg" id="statusMsg">Prêt à commencer !</div>
+
+        <div class="options-container" id="optionsContainer">
+            <!-- 3 Botões de Opção injetados via JavaScript -->
+        </div>
+
+        <div class="reveal-box" id="revealBox">
+            <h3>🎉 Réponse correcte !</h3>
+            <p id="revealedDetails"></p>
+            <div class="audio-buttons-reveal">
+                <button class="btn-audio" onclick="playSecretAudio('fr-FR')">🇫🇷🔊 Audio Français</button>
+            </div>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn-action" id="nextBtn" onclick="initGame()" style="display:none;">Forme suivante ➔</button>
+        </div>
+
+        <div id="congratsScreen">
+            <div class="emoji">🎉</div>
+            <h2>Félicitations, vous avez révisé tous les mots !</h2>
+            <button class="btn-action" onclick="initGame()">Prochaine série ➔</button>
+        </div>
+
+        <footer>
+            <p>I Learn — Écouter, Assembler et Apprendre.</p>
+        </footer>
+    </div>
+
+    <script>
+        // ====================================================
+        // DEPÓSITO BRUTO DE PALAVRAS FRANCESAS
+        // Formato: palavra (gênero) -> tradução
+        // ====================================================
+        const rawTextDatabase = `
+
+actualité -> /ak.tɥa.li.tˈe/ atualidade
+amer -> /a.mˈɛʁ/ amargo / amarga
+après -> /a.pʁˈɛ/ depois
+arrivée -> /a.ʁi.vˈe/ chegada
+artériel -> /aʁ.te.ʁjˈɛl/ arterial
+avant -> /a.vˈɑ̃/ antes
+avion -> /a.vjˈɔ̃/ avião
+Barcelone -> /baʁ.sə.lˈɔn/ Barcelona
+buffet -> /by.fˈɛ/ bar de estação
+café -> /ka.fˈe/ café
+ce -> /sˈə/ este
+chaîne -> /ʃˈɛn/ canal / rede (de televisão) / corrente
+chaud -> /ʃˈo/ quente
+compartiment -> /kɔ̃.paʁ.ti.mˈɑ̃/ compartimento
+compartiment-fumeurs -> /kɔ̃.paʁ.ti.mɑ̃.fy.mˈœʁ/ compartimento para fumantes
+complet -> /kɔ̃.plˈɛ/ completo / lotado
+concert -> /kɔ̃.sˈɛʁ/ concerto
+déjà -> /de.ʒˈa/ já
+demi -> /də.mˈi/ meio
+départ (masc.) -> /de.pˈaʁ/ partida
+doute -> /dˈut/ dúvida
+en direct -> /ɑ̃ di.ʁˈɛkt/ transmissão direta / ao vivo
+fenêtre -> /fə.nˈɛtʁ/ janela
+football -> /fut.bˈɔl/ futebol
+fumeur -> /fy.mˈœʁ/ fumante
+gare -> /ɡˈaʁ/ estação
+hier -> /jˈɛʁ/ ontem
+hôtesse -> /o.tˈɛs/ aeromoça
+hypertension -> /i.pɛʁ.tɑ̃.sjˈɔ̃/ hipertensão
+jeton -> /ʒə.tˈɔ̃/ ficha de telefone
+jeu -> /ʒˈø/ jogo / diversão
+journal -> /ʒuʁ.nˈal/ jornal
+là -> /lˈa/ lá / aí
+libre -> /lˈibʁ/ livre
+magazine (masc.) -> /ma.ɡa.zˈin/ revista
+Marseille -> /maʁ.sˈɛj/ Marselha
+match -> /mˈatʃ/ competição / jogo / partida
+matin (masc.) -> /ma.tˈɛ̃/ manhã
+médical -> /me.di.kˈal/ médico / medicinal
+minuit (masc.) -> /mi.nɥˈi/ meia-noite
+moins -> /mwˈɛ̃/ menos
+monde -> /mˈɔ̃d/ mundo / gente / pessoal
+nouveau -> /nu.vˈo/ novo
+orange -> /ɔ.ʁˈɑ̃ʒ/ laranja
+orchestre (masc.) -> /ɔʁ.kˈɛstʁ/ orquestra
+parking -> /paʁ.kˈiŋ/ estacionamento
+place (fem.) -> /plˈas/ lugar
+plus -> /plˈy/ mais
+premier -> /pʁə.mjˈe/ primeiro / primeira
+quai (masc.) -> /kˈɛ/ plataforma de embarque / cais
+quart -> /kˈaʁ/ quarto / quarta parte
+réservation -> /ʁe.zɛʁ.va.sjˈɔ̃/ reserva
+restaurant -> /ʁɛs.tɔ.ʁˈɑ̃/ restaurante
+retour -> /ʁə.tˈuʁ/ retorno
+sans -> /sˈɑ̃/ sem
+sans doute -> /sɑ̃ dˈut/ sem dúvida
+symphonie -> /sɛ̃.fɔ.nˈi/ sinfonia
+tableau -> /ta.blˈo/ quadro / painel / mostrador
+téléfilm -> /te.le.fˈilm/ filme para televisão
+télévision (télé) -> /te.le.vi.zjˈɔ̃/ televisão (TV)
+train -> /tʁˈɛ̃/ trem
+troisième -> /tʁwa.zjˈɛm/ terceiro
+vie -> /vˈi/ vida
+voiture -> /vwa.tˈyʁ/ automóvel / vagão
+vol -> /vˈɔl/ roubo / furto
+voyageur -> /vwa.ja.ʒˈœʁ/ viajante
+wagon -> /va.ɡˈɔ̃/ vagão
+wagon-restaurant -> /va.ɡɔ̃.ʁɛs.tɔ.ʁˈɑ̃/ vagão-restaurante
+boire -> /bwˈaʁ/ beber
+déjeuner -> /de.ʒø.nˈe/ almoçar
+déposer -> /de.pɔ.zˈe/ depositar / pôr / deixar
+diriger -> /di.ʁi.ʒˈe/ dirigir
+fumer -> /fy.mˈe/ fumar
+interpréter -> /ɛ̃.tɛʁ.pʁe.tˈe/ interpretar
+laisser -> /lɛ.sˈe/ deixar
+ouvrir -> /u.vʁˈiʁ/ abrir
+partir -> /paʁ.tˈiʁ/ partir / ir embora
+prendre -> /pʁˈɑ̃dʁ/ pegar
+rater -> /ʁa.tˈe/ perder / falhar / deixar escapar
+regarder -> /ʁə.ɡaʁ.dˈe/ olhar
+
+        `;
+
+        let vocabularyDatabase = [];
+        let secretUrn = [];
+        let completedCount = 0;
+        let currentSecretItem = null;
+        let isAnswered = false;
+
+        // ====================================================
+        // Limpeza inteligente: extrai apenas a palavra francesa
+        // (remove parênteses, setas e a tradução)
+        // ====================================================
+        function parseRawDatabase() {
+            const lines = rawTextDatabase.split('\n');
+            let parsedList = [];
+
+            lines.forEach(line => {
+                let trimmed = line.trim();
+                if (!trimmed) return;
+
+                // Extrai apenas o termo puro antes de parênteses ou setas
+                let cleanWord = trimmed.split('->')[0].split('(')[0].trim();
+
+                parsedList.push({
+                    wordToSpeak: cleanWord, // Apenas a palavra limpa para a voz da IA falar
+                    shortLabel: cleanWord,  // Apenas a palavra limpa estampada no botão de opção
+                    details: trimmed        // Texto completo original para exibir na caixa verde
+                });
+            });
+
+            vocabularyDatabase = parsedList;
+        }
+
+        function updateRateLabel(val) {
+            document.getElementById('rateVal').innerText = val + 'x';
+        }
+
+        function playSuccessSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const playTone = (freq, startTime, duration) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + startTime);
+                    gain.gain.setValueAtTime(0.002, audioCtx.currentTime + startTime);
+                    gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + startTime + duration);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(audioCtx.currentTime + startTime);
+                    osc.stop(audioCtx.currentTime + startTime + duration);
+                };
+                playTone(523.25, 0, 0.1);
+                playTone(659.25, 0.08, 0.15);
+                playTone(783.99, 0.16, 0.2);
+            } catch (e) {}
+        }
+
+        // Reproduz o áudio em francês (fr-FR) com callback opcional
+        function playSecretAudio(lang, onComplete = null) {
+            if (!currentSecretItem) return;
+            window.speechSynthesis.cancel();
+
+            const currentRate = parseFloat(document.getElementById('rateRange').value);
+            const utterance = new SpeechSynthesisUtterance(currentSecretItem.wordToSpeak);
+            utterance.lang = lang;
+            utterance.rate = currentRate;
+
+            // Prioriza voz francesa nativa se disponível
+            const voices = window.speechSynthesis.getVoices();
+            const frVoice = voices.find(v => v.lang === 'fr-FR' || v.lang.replace('_', '-') === 'fr-FR');
+            if (frVoice) utterance.voice = frVoice;
+
+            if (onComplete) {
+                utterance.onend = onComplete;
+            }
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function updateProgressUI() {
+            let total = vocabularyDatabase.length;
+            let percent = total > 0 ? Math.round((completedCount / total) * 100) : 0;
+            document.getElementById('progressText').innerText = `Formes parcourues: ${completedCount} / ${total}`;
+            document.getElementById('progressPercent').innerText = `${percent}%`;
+            document.getElementById('progressBarFill').style.width = `${percent}%`;
+        }
+
+        function shuffle(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function initGame() {
+            if (vocabularyDatabase.length === 0) {
+                document.getElementById('statusMsg').innerText = "Nenhuma palavra encontrada na área de texto.";
+                return;
+            }
+
+            // Rolar a página para o topo automaticamente
+            window.scrollTo({ top: 0, behavior: 'auto' });
+
+            // Esconder a tela de parabéns ao iniciar nova rodada
+            document.getElementById('congratsScreen').style.display = 'none';
+
+            if (secretUrn.length === 0) {
+                secretUrn = [...vocabularyDatabase];
+                completedCount = 0;
+            }
+
+            isAnswered = false;
+            document.getElementById('revealBox').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('statusMsg').style.color = "#38bdf8";
+            document.getElementById('statusMsg').innerText = "Écoutez l'audio et choisissez l'option correspondante.";
+
+            let randomIndex = Math.floor(Math.random() * secretUrn.length);
+            currentSecretItem = secretUrn.splice(randomIndex, 1)[0];
+            completedCount++;
+            updateProgressUI();
+
+            let otherItems = vocabularyDatabase.filter(item => item.details !== currentSecretItem.details);
+            let shuffledOthers = shuffle(otherItems).slice(0, 2);
+
+            let optionsPool = [currentSecretItem, ...shuffledOthers];
+            let finalOptions = shuffle(optionsPool);
+
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            finalOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt.shortLabel;
+                btn.onclick = () => checkChoice(opt, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            // Reproduzir o áudio FR automaticamente no início da rodada
+            setTimeout(() => {
+                playSecretAudio('fr-FR');
+            }, 300);
+        }
+
+        function checkChoice(selectedItem, btn) {
+            if (isAnswered) return;
+
+            const allButtons = document.querySelectorAll('.option-btn');
+
+            if (selectedItem.details === currentSecretItem.details) {
+                isAnswered = true;
+                playSuccessSound();
+                btn.classList.add('correct');
+
+                allButtons.forEach(b => b.disabled = true);
+
+                document.getElementById('statusMsg').style.color = "#22c55e";
+                document.getElementById('statusMsg').innerText = "✨ Excellent ! Réponse correcte.";
+
+                // Exibe os detalhes completos na caixa verde
+                document.getElementById('revealedDetails').innerText = currentSecretItem.details;
+                document.getElementById('revealBox').style.display = 'block';
+                document.getElementById('nextBtn').style.display = 'inline-block';
+
+                // Rolar a página para baixo automaticamente
+                document.getElementById('revealBox').scrollIntoView({ behavior: 'auto', block: 'center' });
+
+                // Reproduz o áudio FR da resposta correta
+                setTimeout(() => {
+                    if (completedCount >= vocabularyDatabase.length) {
+                        playSecretAudio('fr-FR', () => {
+                            setTimeout(() => {
+                                document.getElementById('congratsScreen').style.display = 'flex';
+                            }, 10);
+                        });
+                    } else {
+                        playSecretAudio('fr-FR');
+                    }
+                }, 250);
+
+            } else {
+                btn.classList.add('wrong');
+                setTimeout(() => {
+                    btn.classList.remove('wrong');
+                }, 400);
+            }
+        }
+
+        window.onload = () => {
+            parseRawDatabase();
+            secretUrn = [...vocabularyDatabase];
+            updateProgressUI();
+            initGame();
+        };
+    </script>
+
+    <!-- Controle de velocidade salva -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const velocidadeSalva = localStorage.getItem('minhaVelocidadeVoz');
+            const rateRange = document.getElementById("rateRange");
+            const rateVal = document.getElementById("rateVal");
+
+            if (velocidadeSalva && rateRange && rateVal) {
+                rateRange.value = velocidadeSalva;
+                rateVal.textContent = velocidadeSalva + 'x';
+                if (typeof updateRateLabel === 'function') {
+                    updateRateLabel(velocidadeSalva);
+                }
+            }
+        });
+    </script>
+
+    <!-- Twemoji para as bandeiras -->
+    <script src="https://cdn.jsdelivr.net/npm/@twemoji/api@latest/dist/twemoji.min.js" crossorigin="anonymous"></script>
+    <script src="emoji-fix.js"></script>
+
+</body>
+</html>
